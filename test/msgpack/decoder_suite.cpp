@@ -856,7 +856,7 @@ BOOST_AUTO_TEST_CASE(test_float64_missing_eight)
 }
 
 //-----------------------------------------------------------------------------
-// Containers
+// Raw
 //-----------------------------------------------------------------------------
 
 BOOST_AUTO_TEST_CASE(test_raw8_empty)
@@ -1000,6 +1000,129 @@ BOOST_AUTO_TEST_CASE(test_raw32_one)
     std::vector<protoc::uint8_t> container = decoder.get_raw();
     BOOST_REQUIRE_EQUAL(container.size(), 1U);
     BOOST_REQUIRE_EQUAL(container[0], 0x12);
+    BOOST_REQUIRE_EQUAL(decoder.next(), msgpack::token_eof);
+}
+
+//-----------------------------------------------------------------------------
+// Array
+//-----------------------------------------------------------------------------
+
+BOOST_AUTO_TEST_CASE(test_array8_empty)
+{
+    const char input[] = "\x90";
+    msgpack::decoder decoder(input, input + sizeof(input) - 1);
+    BOOST_REQUIRE_EQUAL(decoder.next(), msgpack::token_array8);
+    BOOST_REQUIRE_EQUAL(decoder.get_count(), 0U);
+    BOOST_REQUIRE_EQUAL(decoder.next(), msgpack::token_eof);
+}
+
+BOOST_AUTO_TEST_CASE(test_array8_missing_one)
+{
+    const char input[] = "\x91";
+    msgpack::decoder decoder(input, input + sizeof(input) - 1);
+    BOOST_REQUIRE_EQUAL(decoder.next(), msgpack::token_array8);
+    BOOST_REQUIRE_EQUAL(decoder.get_count(), 1U);
+    BOOST_REQUIRE_EQUAL(decoder.next(), msgpack::token_eof);
+}
+
+BOOST_AUTO_TEST_CASE(test_array8_one)
+{
+    const char input[] = "\x91\xC0";
+    msgpack::decoder decoder(input, input + sizeof(input) - 1);
+    BOOST_REQUIRE_EQUAL(decoder.next(), msgpack::token_array8);
+    BOOST_REQUIRE_EQUAL(decoder.get_count(), 1U);
+    BOOST_REQUIRE_EQUAL(decoder.next(), msgpack::token_null);
+    BOOST_REQUIRE_EQUAL(decoder.next(), msgpack::token_eof);
+}
+
+BOOST_AUTO_TEST_CASE(test_array8_two)
+{
+    const char input[] = "\x92\xC0\xC0";
+    msgpack::decoder decoder(input, input + sizeof(input) - 1);
+    BOOST_REQUIRE_EQUAL(decoder.next(), msgpack::token_array8);
+    BOOST_REQUIRE_EQUAL(decoder.get_count(), 2U);
+    BOOST_REQUIRE_EQUAL(decoder.next(), msgpack::token_null);
+    BOOST_REQUIRE_EQUAL(decoder.next(), msgpack::token_null);
+    BOOST_REQUIRE_EQUAL(decoder.next(), msgpack::token_eof);
+}
+
+BOOST_AUTO_TEST_CASE(test_array16_missing_one)
+{
+    const char input[] = "\xDC\x00";
+    msgpack::decoder decoder(input, input + sizeof(input) - 1);
+    BOOST_REQUIRE_EQUAL(decoder.next(), msgpack::token_eof);
+}
+
+BOOST_AUTO_TEST_CASE(test_array16_missing_two)
+{
+    const char input[] = "\xDC";
+    msgpack::decoder decoder(input, input + sizeof(input) - 1);
+    BOOST_REQUIRE_EQUAL(decoder.next(), msgpack::token_eof);
+}
+
+BOOST_AUTO_TEST_CASE(test_array16_empty)
+{
+    const char input[] = "\xDC\x00\x00";
+    msgpack::decoder decoder(input, input + sizeof(input) - 1);
+    BOOST_REQUIRE_EQUAL(decoder.next(), msgpack::token_array16);
+    BOOST_REQUIRE_EQUAL(decoder.get_count(), 0U);
+    BOOST_REQUIRE_EQUAL(decoder.next(), msgpack::token_eof);
+}
+
+BOOST_AUTO_TEST_CASE(test_array16_one)
+{
+    const char input[] = "\xDC\x00\x01\xC0";
+    msgpack::decoder decoder(input, input + sizeof(input) - 1);
+    BOOST_REQUIRE_EQUAL(decoder.next(), msgpack::token_array16);
+    BOOST_REQUIRE_EQUAL(decoder.get_count(), 1U);
+    BOOST_REQUIRE_EQUAL(decoder.next(), msgpack::token_null);
+    BOOST_REQUIRE_EQUAL(decoder.next(), msgpack::token_eof);
+}
+
+BOOST_AUTO_TEST_CASE(test_array32_missing_one)
+{
+    const char input[] = "\xDD\x00\x00\x00";
+    msgpack::decoder decoder(input, input + sizeof(input) - 1);
+    BOOST_REQUIRE_EQUAL(decoder.next(), msgpack::token_eof);
+}
+
+BOOST_AUTO_TEST_CASE(test_array32_missing_two)
+{
+    const char input[] = "\xDD\x00\x00";
+    msgpack::decoder decoder(input, input + sizeof(input) - 1);
+    BOOST_REQUIRE_EQUAL(decoder.next(), msgpack::token_eof);
+}
+
+BOOST_AUTO_TEST_CASE(test_array32_missing_three)
+{
+    const char input[] = "\xDD\x00";
+    msgpack::decoder decoder(input, input + sizeof(input) - 1);
+    BOOST_REQUIRE_EQUAL(decoder.next(), msgpack::token_eof);
+}
+
+BOOST_AUTO_TEST_CASE(test_array32_missing_four)
+{
+    const char input[] = "\xDD";
+    msgpack::decoder decoder(input, input + sizeof(input) - 1);
+    BOOST_REQUIRE_EQUAL(decoder.next(), msgpack::token_eof);
+}
+
+BOOST_AUTO_TEST_CASE(test_array32_empty)
+{
+    const char input[] = "\xDD\x00\x00\x00\x00";
+    msgpack::decoder decoder(input, input + sizeof(input) - 1);
+    BOOST_REQUIRE_EQUAL(decoder.next(), msgpack::token_array32);
+    BOOST_REQUIRE_EQUAL(decoder.get_count(), 0U);
+    BOOST_REQUIRE_EQUAL(decoder.next(), msgpack::token_eof);
+}
+
+BOOST_AUTO_TEST_CASE(test_array32_one)
+{
+    const char input[] = "\xDD\x00\x00\x00\x01\xC0";
+    msgpack::decoder decoder(input, input + sizeof(input) - 1);
+    BOOST_REQUIRE_EQUAL(decoder.next(), msgpack::token_array32);
+    BOOST_REQUIRE_EQUAL(decoder.get_count(), 1U);
+    BOOST_REQUIRE_EQUAL(decoder.next(), msgpack::token_null);
     BOOST_REQUIRE_EQUAL(decoder.next(), msgpack::token_eof);
 }
 

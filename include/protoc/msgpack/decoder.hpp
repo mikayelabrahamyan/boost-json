@@ -47,6 +47,7 @@ public:
     protoc::float32_t get_float32() const;
     protoc::float64_t get_float64() const;
     std::vector<protoc::uint8_t> get_raw() const;
+    protoc::uint32_t get_count() const;
 
 private:
     token next_int8();
@@ -62,6 +63,9 @@ private:
     token next_raw8();
     token next_raw16();
     token next_raw32();
+    token next_array8();
+    token next_array16();
+    token next_array32();
  
 private:
     input_range input;

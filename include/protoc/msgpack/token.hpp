@@ -47,7 +47,11 @@ enum token
 
     token_raw8,
     token_raw16,
-    token_raw32
+    token_raw32,
+
+    token_array8,
+    token_array16,
+    token_array32
 };
 
 }

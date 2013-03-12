@@ -59,10 +59,15 @@ token decoder::next()
         current.range = input_range(input.begin(), input.begin() + 1);
         ++input;
     }
-    else if ((value & 0xA0) == 0xA0)
+    else if ((value & 0xE0) == 0xA0)
     {
         // Fix raw
         current.type = next_raw8();
+    }
+    else if ((value & 0xF0) == 0x90)
+    {
+        // Fix array
+        current.type = next_array8();
     }
     else
     {
@@ -129,6 +134,14 @@ token decoder::next()
 
         case '\xDB':
             current.type = next_raw32();
+            break;
+
+        case '\xDC':
+            current.type = next_array16();
+            break;
+
+        case '\xDD':
+            current.type = next_array32();
             break;
 
         default:
@@ -205,7 +218,8 @@ protoc::uint8_t decoder::get_uint8() const
 
 protoc::uint16_t decoder::get_uint16() const
 {
-    assert(current.type == token_uint16);
+    assert((current.type == token_uint16) ||
+           (current.type == token_array16));
     assert(current.range.size() == sizeof(protoc::uint16_t));
 
     const protoc::uint16_t endian = 0x0001;
@@ -218,7 +232,8 @@ protoc::uint16_t decoder::get_uint16() const
 
 protoc::uint32_t decoder::get_uint32() const
 {
-    assert(current.type == token_uint32);
+    assert((current.type == token_uint32) ||
+           (current.type == token_array32));
     assert(current.range.size() == sizeof(protoc::uint32_t));
 
     const protoc::uint32_t endian = 0x00010203;
@@ -294,6 +309,29 @@ std::vector<protoc::uint8_t> decoder::get_raw() const
 
     std::vector<protoc::uint8_t> result(current.range.begin(), current.range.end());
     return result;
+}
+
+protoc::uint32_t decoder::get_count() const
+{
+    assert((current.type == token_array8) ||
+           (current.type == token_array16) ||
+           (current.type == token_array32));
+
+    switch (current.type)
+    {
+    case token_array8:
+        return static_cast<protoc::uint32_t>(*current.range & 0x0F);
+
+    case token_array16:
+        return get_uint16();
+
+    case token_array32:
+        return get_uint32();
+
+    default:
+        assert(false);
+        return 0;
+    }
 }
 
 token decoder::next_int8()
@@ -525,6 +563,47 @@ token decoder::next_raw32()
     input += length;
 
     return token_raw32;
+}
+
+token decoder::next_array8()
+{
+    current.range = input_range(input.begin(), input.begin() + 1);
+
+    ++input; // Skip token
+
+    return token_array8;
+}
+
+token decoder::next_array16()
+{
+    ++input; // Skip token
+
+    const std::size_t size = sizeof(protoc::uint16_t);
+    if (input.size() < size)
+    {
+        return token_eof;
+    }
+
+    current.range = input_range(input.begin(), input.begin() + size);
+    input += size;
+
+    return token_array16;
+}
+
+token decoder::next_array32()
+{
+    ++input; // Skip token
+
+    const std::size_t size = sizeof(protoc::uint32_t);
+    if (input.size() < size)
+    {
+        return token_eof;
+    }
+
+    current.range = input_range(input.begin(), input.begin() + size);
+    input += size;
+
+    return token_array32;
 }
 
 }
