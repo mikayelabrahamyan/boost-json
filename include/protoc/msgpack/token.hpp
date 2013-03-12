@@ -1,5 +1,5 @@
-#ifndef PROTOC_TYPES_HPP
-#define PROTOC_TYPES_HPP
+#ifndef PROTOC_MSGPACK_TOKEN_HPP
+#define PROTOC_MSGPACK_TOKEN_HPP
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -18,25 +18,39 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-#include <cstddef> // std::size_t
-#include <boost/cstdint.hpp>
-
 namespace protoc
 {
+namespace msgpack
+{
 
-typedef boost::int8_t int8_t;
-typedef boost::int16_t int16_t;
-typedef boost::int32_t int32_t;
-typedef boost::int64_t int64_t;
+enum token
+{
+    token_eof,
+    token_error,
 
-typedef boost::uint8_t uint8_t;
-typedef boost::uint16_t uint16_t;
-typedef boost::uint32_t uint32_t;
-typedef boost::uint64_t uint64_t;
+    token_null,
+    token_true,
+    token_false,
 
-typedef float float32_t;
-typedef double float64_t;
+    token_int8,
+    token_int16,
+    token_int32,
+    token_int64,
+
+    token_uint8,
+    token_uint16,
+    token_uint32,
+    token_uint64,
+
+    token_float32,
+    token_float64,
+
+    token_raw8,
+    token_raw16,
+    token_raw32
+};
 
 }
+}
 
-#endif /* PROTOC_TYPES_HPP */
+#endif /* PROTOC_MSGPACK_TOKEN_HPP */
