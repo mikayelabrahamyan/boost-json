@@ -1,6 +1,3 @@
-#ifndef PROTOC_UBJSON_ENCODER_HPP
-#define PROTOC_UBJSON_ENCODER_HPP
-
 ///////////////////////////////////////////////////////////////////////////////
 //
 // http://protoc.sourceforge.net/
@@ -18,37 +15,25 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-#include <string>
-#include <protoc/types.hpp>
-#include <protoc/output_range.hpp>
+#include <protoc/ubjson/archive.hpp>
 
 namespace protoc
 {
 namespace ubjson
 {
 
-class encoder
+oarchive::oarchive()
+    : boost::archive::detail::common_oarchive<oarchive>(),
+      buffer(),
+      output(buffer.data(), buffer.data() + buffer.size())
 {
-public:
-    encoder(char *begin, char *end);
+}
 
-    std::size_t capacity() const; // Null
-    std::size_t put(); // Null
-    std::size_t put(bool);
-    std::size_t put(protoc::int8_t);
-    std::size_t put(protoc::int16_t);
-    std::size_t put(protoc::int32_t);
-    std::size_t put(protoc::int64_t);
-    std::size_t put(protoc::float32_t);
-    std::size_t put(protoc::float64_t);
-    std::size_t put(const char *);
-    std::size_t put(const std::string&);
+void oarchive::save_override(const boost::serialization::nvp<bool>& data, int)
+{
+    output.put(data.value());
+}
 
-private:
-    output_range output;
-};
 
 }
 }
-
-#endif /* PROTOC_UBJSON_ENCODER_HPP */

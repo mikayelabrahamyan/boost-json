@@ -30,9 +30,14 @@ encoder::encoder(char *begin, char *end)
 {
 };
 
+std::size_t encoder::capacity() const
+{
+    return sizeof('Z');
+}
+
 std::size_t encoder::put()
 {
-    const std::size_t size = sizeof('Z');
+    const std::size_t size = capacity();
 
     if (output.size() < size)
     {

@@ -1,5 +1,5 @@
-#ifndef PROTOC_UBJSON_ENCODER_HPP
-#define PROTOC_UBJSON_ENCODER_HPP
+#ifndef PROTOC_PARSER_HPP
+#define PROTOC_PARSER_HPP
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -18,37 +18,17 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-#include <string>
-#include <protoc/types.hpp>
-#include <protoc/output_range.hpp>
-
 namespace protoc
 {
-namespace ubjson
-{
 
-class encoder
+class parser
 {
 public:
-    encoder(char *begin, char *end);
-
-    std::size_t capacity() const; // Null
-    std::size_t put(); // Null
-    std::size_t put(bool);
-    std::size_t put(protoc::int8_t);
-    std::size_t put(protoc::int16_t);
-    std::size_t put(protoc::int32_t);
-    std::size_t put(protoc::int64_t);
-    std::size_t put(protoc::float32_t);
-    std::size_t put(protoc::float64_t);
-    std::size_t put(const char *);
-    std::size_t put(const std::string&);
+    bool parse(const std::string&);
 
 private:
-    output_range output;
 };
 
 }
-}
 
-#endif /* PROTOC_UBJSON_ENCODER_HPP */
+#endif /* PROTOC_PARSER_HPP */
