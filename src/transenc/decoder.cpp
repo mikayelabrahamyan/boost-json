@@ -90,8 +90,16 @@ token decoder::next()
             current.type = next_int32();
             break;
 
+        case '\xB2':
+            current.type = next_float32();
+            break;
+
         case '\xC0':
             current.type = next_int64();
+            break;
+
+        case '\xC2':
+            current.type = next_float64();
             break;
 
         case '\xE3':
@@ -150,6 +158,42 @@ protoc::int64_t decoder::get_int64() const
     const protoc::int64_t endian = 0x0001020304050607;
     const input_range::const_iterator data = current.range.begin();
     protoc::int64_t result;
+    ((volatile protoc::int8_t *)&result)[((protoc::int8_t *)&endian)[0]] = static_cast<protoc::int8_t>(data[0]);
+    ((volatile protoc::int8_t *)&result)[((protoc::int8_t *)&endian)[1]] = static_cast<protoc::int8_t>(data[1]);
+    ((volatile protoc::int8_t *)&result)[((protoc::int8_t *)&endian)[2]] = static_cast<protoc::int8_t>(data[2]);
+    ((volatile protoc::int8_t *)&result)[((protoc::int8_t *)&endian)[3]] = static_cast<protoc::int8_t>(data[3]);
+    ((volatile protoc::int8_t *)&result)[((protoc::int8_t *)&endian)[4]] = static_cast<protoc::int8_t>(data[4]);
+    ((volatile protoc::int8_t *)&result)[((protoc::int8_t *)&endian)[5]] = static_cast<protoc::int8_t>(data[5]);
+    ((volatile protoc::int8_t *)&result)[((protoc::int8_t *)&endian)[6]] = static_cast<protoc::int8_t>(data[6]);
+    ((volatile protoc::int8_t *)&result)[((protoc::int8_t *)&endian)[7]] = static_cast<protoc::int8_t>(data[7]);
+    return result;
+}
+
+protoc::float32_t decoder::get_float32() const
+{
+    assert(current.type == token_float32);
+    assert(current.range.size() == sizeof(protoc::float32_t));
+
+    // IEEE 754 single precision
+    const protoc::int32_t endian = 0x00010203;
+    const input_range::const_iterator data = current.range.begin();
+    protoc::float32_t result;
+    ((volatile protoc::int8_t *)&result)[((protoc::int8_t *)&endian)[0]] = static_cast<protoc::int8_t>(data[0]);
+    ((volatile protoc::int8_t *)&result)[((protoc::int8_t *)&endian)[1]] = static_cast<protoc::int8_t>(data[1]);
+    ((volatile protoc::int8_t *)&result)[((protoc::int8_t *)&endian)[2]] = static_cast<protoc::int8_t>(data[2]);
+    ((volatile protoc::int8_t *)&result)[((protoc::int8_t *)&endian)[3]] = static_cast<protoc::int8_t>(data[3]);
+    return result;
+}
+
+protoc::float64_t decoder::get_float64() const
+{
+    assert(current.type == token_float64);
+    assert(current.range.size() == sizeof(protoc::float64_t));
+
+    // IEEE 754 double precision
+    const protoc::int64_t endian = 0x0001020304050607;
+    const input_range::const_iterator data = current.range.begin();
+    protoc::float64_t result;
     ((volatile protoc::int8_t *)&result)[((protoc::int8_t *)&endian)[0]] = static_cast<protoc::int8_t>(data[0]);
     ((volatile protoc::int8_t *)&result)[((protoc::int8_t *)&endian)[1]] = static_cast<protoc::int8_t>(data[1]);
     ((volatile protoc::int8_t *)&result)[((protoc::int8_t *)&endian)[2]] = static_cast<protoc::int8_t>(data[2]);
@@ -265,18 +309,36 @@ token decoder::next_int64()
     return token_int64;
 }
 
-token decoder::next_unknown(std::size_t size)
+token decoder::next_float32()
 {
     ++input; // Skip token
 
+    const std::size_t size = sizeof(protoc::float32_t);
     if (input.size() < size)
     {
         return token_eof;
     }
 
+    current.range = input_range(input.begin(), input.begin() + size);
     input += size;
 
-    return token_null;
+    return token_float32;
+}
+
+token decoder::next_float64()
+{
+    ++input; // Skip token
+
+    const std::size_t size = sizeof(protoc::float64_t);
+    if (input.size() < size)
+    {
+        return token_eof;
+    }
+
+    current.range = input_range(input.begin(), input.begin() + size);
+    input += size;
+
+    return token_float64;
 }
 
 token decoder::next_string()
@@ -354,6 +416,20 @@ token decoder::next_string()
     current.range = input_range(input.begin(), input.begin() + length);
     input += length;
     return token_string;
+}
+
+token decoder::next_unknown(std::size_t size)
+{
+    ++input; // Skip token
+
+    if (input.size() < size)
+    {
+        return token_eof;
+    }
+
+    input += size;
+
+    return token_null;
 }
 
 }

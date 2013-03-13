@@ -39,6 +39,8 @@ public:
     protoc::int16_t get_int16() const;
     protoc::int32_t get_int32() const;
     protoc::int64_t get_int64() const;
+    protoc::float32_t get_float32() const;
+    protoc::float64_t get_float64() const;
     std::string get_string() const;
 
 private:
@@ -46,6 +48,8 @@ private:
     token next_int16();
     token next_int32();
     token next_int64();
+    token next_float32();
+    token next_float64();
     token next_string();
 
     token next_unknown();

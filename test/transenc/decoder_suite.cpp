@@ -393,6 +393,185 @@ BOOST_AUTO_TEST_CASE(test_int64_7FFFFFFFFFFFFFFF)
 }
 
 //-----------------------------------------------------------------------------
+// Floating-point
+//-----------------------------------------------------------------------------
+
+BOOST_AUTO_TEST_CASE(test_float32_zero)
+{
+    const char input[] = "\xB2\x00\x00\x00\x00";
+    transenc::decoder decoder(input, input + sizeof(input) - 1);
+    BOOST_REQUIRE_EQUAL(decoder.next(), transenc::token_float32);
+    BOOST_REQUIRE_EQUAL(decoder.get_float32(), 0.0f);
+    BOOST_REQUIRE_EQUAL(decoder.next(), transenc::token_eof);
+}
+
+BOOST_AUTO_TEST_CASE(test_float32_one)
+{
+    const char input[] = "\xB2\x3F\x80\x00\x00";
+    transenc::decoder decoder(input, input + sizeof(input) - 1);
+    BOOST_REQUIRE_EQUAL(decoder.next(), transenc::token_float32);
+    BOOST_REQUIRE_EQUAL(decoder.get_float32(), 1.0f);
+    BOOST_REQUIRE_EQUAL(decoder.next(), transenc::token_eof);
+}
+
+BOOST_AUTO_TEST_CASE(test_float32_minus_one)
+{
+    const char input[] = "\xB2\xBF\x80\x00\x00";
+    transenc::decoder decoder(input, input + sizeof(input) - 1);
+    BOOST_REQUIRE_EQUAL(decoder.next(), transenc::token_float32);
+    BOOST_REQUIRE_EQUAL(decoder.get_float32(), -1.0f);
+    BOOST_REQUIRE_EQUAL(decoder.next(), transenc::token_eof);
+}
+
+BOOST_AUTO_TEST_CASE(test_float32_two)
+{
+    const char input[] = "\xB2\x40\x00\x00\x00";
+    transenc::decoder decoder(input, input + sizeof(input) - 1);
+    BOOST_REQUIRE_EQUAL(decoder.next(), transenc::token_float32);
+    BOOST_REQUIRE_EQUAL(decoder.get_float32(), 2.0f);
+    BOOST_REQUIRE_EQUAL(decoder.next(), transenc::token_eof);
+}
+
+BOOST_AUTO_TEST_CASE(test_float32_minus_two)
+{
+    const char input[] = "\xB2\xC0\x00\x00\x00";
+    transenc::decoder decoder(input, input + sizeof(input) - 1);
+    BOOST_REQUIRE_EQUAL(decoder.next(), transenc::token_float32);
+    BOOST_REQUIRE_EQUAL(decoder.get_float32(), -2.0f);
+    BOOST_REQUIRE_EQUAL(decoder.next(), transenc::token_eof);
+}
+
+BOOST_AUTO_TEST_CASE(test_float32_missing_one)
+{
+    const char input[] = "\xB2\x00\x00\x00";
+    transenc::decoder decoder(input, input + sizeof(input) - 1);
+    BOOST_REQUIRE_EQUAL(decoder.next(), transenc::token_eof);
+}
+
+BOOST_AUTO_TEST_CASE(test_float32_missing_two)
+{
+    const char input[] = "\xB2\x00\x00";
+    transenc::decoder decoder(input, input + sizeof(input) - 1);
+    BOOST_REQUIRE_EQUAL(decoder.next(), transenc::token_eof);
+}
+
+BOOST_AUTO_TEST_CASE(test_float32_missing_three)
+{
+    const char input[] = "\xB2\x00";
+    transenc::decoder decoder(input, input + sizeof(input) - 1);
+    BOOST_REQUIRE_EQUAL(decoder.next(), transenc::token_eof);
+}
+
+BOOST_AUTO_TEST_CASE(test_float32_missing_four)
+{
+    const char input[] = "\xB2";
+    transenc::decoder decoder(input, input + sizeof(input) - 1);
+    BOOST_REQUIRE_EQUAL(decoder.next(), transenc::token_eof);
+}
+
+BOOST_AUTO_TEST_CASE(test_float64_zero)
+{
+    const char input[] = "\xC2\x00\x00\x00\x00\x00\x00\x00\x00";
+    transenc::decoder decoder(input, input + sizeof(input) - 1);
+    BOOST_REQUIRE_EQUAL(decoder.next(), transenc::token_float64);
+    BOOST_REQUIRE_EQUAL(decoder.get_float64(), 0.0);
+    BOOST_REQUIRE_EQUAL(decoder.next(), transenc::token_eof);
+}
+
+BOOST_AUTO_TEST_CASE(test_float64_one)
+{
+    const char input[] = "\xC2\x3F\xF0\x00\x00\x00\x00\x00\x00";
+    transenc::decoder decoder(input, input + sizeof(input) - 1);
+    BOOST_REQUIRE_EQUAL(decoder.next(), transenc::token_float64);
+    BOOST_REQUIRE_EQUAL(decoder.get_float64(), 1.0);
+    BOOST_REQUIRE_EQUAL(decoder.next(), transenc::token_eof);
+}
+
+BOOST_AUTO_TEST_CASE(test_float64_minus_one)
+{
+    const char input[] = "\xC2\xBF\xF0\x00\x00\x00\x00\x00\x00";
+    transenc::decoder decoder(input, input + sizeof(input) - 1);
+    BOOST_REQUIRE_EQUAL(decoder.next(), transenc::token_float64);
+    BOOST_REQUIRE_EQUAL(decoder.get_float64(), -1.0);
+    BOOST_REQUIRE_EQUAL(decoder.next(), transenc::token_eof);
+}
+
+BOOST_AUTO_TEST_CASE(test_float64_two)
+{
+    const char input[] = "\xC2\x40\x00\x00\x00\x00\x00\x00\x00";
+    transenc::decoder decoder(input, input + sizeof(input) - 1);
+    BOOST_REQUIRE_EQUAL(decoder.next(), transenc::token_float64);
+    BOOST_REQUIRE_EQUAL(decoder.get_float64(), 2.0);
+    BOOST_REQUIRE_EQUAL(decoder.next(), transenc::token_eof);
+}
+
+BOOST_AUTO_TEST_CASE(test_float64_minus_two)
+{
+    const char input[] = "\xC2\xC0\x00\x00\x00\x00\x00\x00\x00";
+    transenc::decoder decoder(input, input + sizeof(input) - 1);
+    BOOST_REQUIRE_EQUAL(decoder.next(), transenc::token_float64);
+    BOOST_REQUIRE_EQUAL(decoder.get_float64(), -2.0);
+    BOOST_REQUIRE_EQUAL(decoder.next(), transenc::token_eof);
+}
+
+BOOST_AUTO_TEST_CASE(test_float64_missing_one)
+{
+    const char input[] = "\xC2\x00\x00\x00\x00\x00\x00\x00";
+    transenc::decoder decoder(input, input + sizeof(input) - 1);
+    BOOST_REQUIRE_EQUAL(decoder.next(), transenc::token_eof);
+}
+
+BOOST_AUTO_TEST_CASE(test_float64_missing_two)
+{
+    const char input[] = "\xC2\x00\x00\x00\x00\x00\x00";
+    transenc::decoder decoder(input, input + sizeof(input) - 1);
+    BOOST_REQUIRE_EQUAL(decoder.next(), transenc::token_eof);
+}
+
+BOOST_AUTO_TEST_CASE(test_float64_missing_three)
+{
+    const char input[] = "\xC2\x00\x00\x00\x00\x00";
+    transenc::decoder decoder(input, input + sizeof(input) - 1);
+    BOOST_REQUIRE_EQUAL(decoder.next(), transenc::token_eof);
+}
+
+BOOST_AUTO_TEST_CASE(test_float64_missing_four)
+{
+    const char input[] = "\xC2\x00\x00\x00\x00";
+    transenc::decoder decoder(input, input + sizeof(input) - 1);
+    BOOST_REQUIRE_EQUAL(decoder.next(), transenc::token_eof);
+}
+
+BOOST_AUTO_TEST_CASE(test_float64_missing_five)
+{
+    const char input[] = "\xC2\x00\x00\x00";
+    transenc::decoder decoder(input, input + sizeof(input) - 1);
+    BOOST_REQUIRE_EQUAL(decoder.next(), transenc::token_eof);
+}
+
+BOOST_AUTO_TEST_CASE(test_float64_missing_six)
+{
+    const char input[] = "\xC2\x00\x00";
+    transenc::decoder decoder(input, input + sizeof(input) - 1);
+    BOOST_REQUIRE_EQUAL(decoder.next(), transenc::token_eof);
+}
+
+BOOST_AUTO_TEST_CASE(test_float64_missing_seven)
+{
+    const char input[] = "\xC2\x00";
+    transenc::decoder decoder(input, input + sizeof(input) - 1);
+    BOOST_REQUIRE_EQUAL(decoder.next(), transenc::token_eof);
+}
+
+BOOST_AUTO_TEST_CASE(test_float64_missing_eight)
+{
+    const char input[] = "\xC2";
+    transenc::decoder decoder(input, input + sizeof(input) - 1);
+    BOOST_REQUIRE_EQUAL(decoder.next(), transenc::token_eof);
+}
+
+
+//-----------------------------------------------------------------------------
 // Strings
 //-----------------------------------------------------------------------------
 
