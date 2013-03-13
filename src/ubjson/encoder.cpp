@@ -40,6 +40,7 @@ std::size_t encoder::put()
     }
 
     *output = 'Z';
+    ++output;
 
     return size;
 }
@@ -54,6 +55,7 @@ std::size_t encoder::put(bool value)
     }
 
     *output = (value) ? 'T' : 'F';
+    ++output;
 
     return size;
 }
