@@ -50,6 +50,7 @@ add_library(protoc STATIC
   src/input_range.cpp
   src/output_range.cpp
   src/msgpack/decoder.cpp
+  src/msgpack/encoder.cpp
   src/transenc/decoder.cpp
   src/ubjson/decoder.cpp
   src/ubjson/encoder.cpp
@@ -62,6 +63,7 @@ add_library(protoc STATIC
 add_executable(protoctest
   test/runner.cpp
   test/msgpack/decoder_suite.cpp
+  test/msgpack/encoder_suite.cpp
   test/transenc/decoder_suite.cpp
   test/ubjson/decoder_suite.cpp
   test/ubjson/encoder_suite.cpp
