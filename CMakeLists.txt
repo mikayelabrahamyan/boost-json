@@ -48,7 +48,6 @@ set(EXTRA_LIBS -lprotoc ${EXTRA_LIBS})
 
 add_library(protoc STATIC
   src/input_range.cpp
-  src/output_range.cpp
   src/output_vector.cpp
   src/msgpack/decoder.cpp
   src/msgpack/encoder.cpp
