@@ -1,3 +1,6 @@
+#ifndef PROTOC_TRANSENC_ENCODER_HPP
+#define PROTOC_TRANSENC_ENCODER_HPP
+
 ///////////////////////////////////////////////////////////////////////////////
 //
 // http://protoc.sourceforge.net/
@@ -15,39 +18,40 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-#include <protoc/output_range.hpp>
+#include <string>
+#include <protoc/types.hpp>
+#include <protoc/output.hpp>
 
 namespace protoc
 {
-
-output_range::output_range()
-    : input_range()
+namespace transenc
 {
-}
 
-output_range::~output_range()
+class encoder
 {
+public:
+    encoder(output&);
+
+    std::size_t put(); // Null
+    std::size_t put(bool);
+    std::size_t put(protoc::int8_t);
+    std::size_t put(protoc::int16_t);
+    std::size_t put(protoc::int32_t);
+    std::size_t put(protoc::int64_t);
+    std::size_t put(protoc::uint8_t);
+    std::size_t put(protoc::uint16_t);
+    std::size_t put(protoc::uint32_t);
+    std::size_t put(protoc::uint64_t);
+    std::size_t put(protoc::float32_t);
+    std::size_t put(protoc::float64_t);
+    std::size_t put(const char *);
+    std::size_t put(const std::string&);
+
+private:
+    output& buffer;
+};
+
+}
 }
 
-output_range::output_range(iterator first, iterator last)
-    : input_range(const_cast<const_iterator>(first),
-                  const_cast<const_iterator>(last))
-{
-}
-
-output_range::value_type& output_range::operator * ()
-{
-    return const_cast<value_type&>(*current);
-}
-
-output_range::iterator output_range::begin()
-{
-    return const_cast<iterator>(current);
-}
-
-output_range::iterator output_range::end()
-{
-    return const_cast<iterator>(last);
-}
-
-}
+#endif /* PROTOC_TRANSENC_ENCODER_HPP */

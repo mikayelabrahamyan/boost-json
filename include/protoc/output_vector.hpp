@@ -1,5 +1,5 @@
-#ifndef PROTOC_OUTPUT_RANGE_HPP
-#define PROTOC_OUTPUT_RANGE_HPP
+#ifndef PROTOC_OUTPUT_VECTOR_HPP
+#define PROTOC_OUTPUT_VECTOR_HPP
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -18,24 +18,39 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-#include <protoc/input_range.hpp>
+#include <cstddef> // std::size_t
+#include <vector>
+#include <protoc/output.hpp>
 
 namespace protoc
 {
 
-class output_range : public input_range
+class output_vector : public output
 {
 public:
-    output_range();
-    virtual ~output_range();
-    output_range(iterator first, iterator last);
+    typedef std::vector<value_type>::iterator iterator;
+    typedef std::vector<value_type>::const_iterator const_iterator;
+    typedef value_type& reference;
+    typedef const value_type& const_reference;
 
-    value_type& operator * ();
+public:
+    const_iterator begin() const;
+    const_iterator end() const;
 
-    iterator begin();
-    iterator end();
+    size_type size() const;
+    size_type capacity() const;
+
+    const_reference operator [] (size_type ix) const;
+
+private:
+    // Implementation of protoc::output interface
+    virtual bool grow(size_type delta);
+    virtual void write(value_type value);
+
+private:
+    std::vector<value_type> buffer;
 };
 
 }
 
-#endif /* PROTOC_OUTPUT_RANGE_HPP */
+#endif /* PROTOC_OUTPUT_VECTOR_HPP */

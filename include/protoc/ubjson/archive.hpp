@@ -19,8 +19,10 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 #include <vector>
+#include <ostream>
 #include <boost/archive/detail/common_oarchive.hpp>
 #include <protoc/types.hpp>
+#include <protoc/output_stream.hpp>
 #include <protoc/ubjson/encoder.hpp>
 
 namespace protoc
@@ -28,17 +30,17 @@ namespace protoc
 namespace ubjson
 {
 
+// FIXME: Null via boost::optional
 class oarchive : public boost::archive::detail::common_oarchive<oarchive>
 {
     friend class boost::archive::save_access;
 
 public:
-    oarchive();
+    oarchive(std::ostream& stream);
     ~oarchive();
 
     // The const variants are needed when used in containers
     void save_override(const boost::serialization::nvp<bool>&, int);
-#if 0
     void save_override(const boost::serialization::nvp<const bool>&, int);
     void save_override(const boost::serialization::nvp<protoc::int8_t>&, int);
     void save_override(const boost::serialization::nvp<const protoc::int8_t>&, int);
@@ -52,6 +54,7 @@ public:
     void save_override(const boost::serialization::nvp<const protoc::float32_t>&, int);
     void save_override(const boost::serialization::nvp<protoc::float64_t>&, int);
     void save_override(const boost::serialization::nvp<const protoc::float64_t>&, int);
+#if 0
     void save_override(const boost::serialization::nvp<std::string>&, int);
     void save_override(const boost::serialization::nvp<const std::string>&, int);
 #endif
@@ -69,7 +72,7 @@ public:
   void save_binary(void *, std::size_t) {}
 
 private:
-    std::vector<char> buffer;
+    protoc::output_stream buffer;
     encoder output;
 };
 

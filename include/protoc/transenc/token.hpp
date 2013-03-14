@@ -1,5 +1,5 @@
-#ifndef PROTOC_UBJSON_ENCODER_HPP
-#define PROTOC_UBJSON_ENCODER_HPP
+#ifndef PROTOC_TRANSENC_TOKEN_HPP
+#define PROTOC_TRANSENC_TOKEN_HPP
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -18,37 +18,34 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-#include <string>
-#include <protoc/types.hpp>
-#include <protoc/output.hpp>
-
 namespace protoc
 {
-namespace ubjson
+namespace transenc
 {
 
-class encoder
+enum token
 {
-public:
-    encoder(output&);
+    token_eof,
+    token_error,
 
-    std::size_t capacity() const; // Null
-    std::size_t put(); // Null
-    std::size_t put(bool);
-    std::size_t put(protoc::int8_t);
-    std::size_t put(protoc::int16_t);
-    std::size_t put(protoc::int32_t);
-    std::size_t put(protoc::int64_t);
-    std::size_t put(protoc::float32_t);
-    std::size_t put(protoc::float64_t);
-    std::size_t put(const char *);
-    std::size_t put(const std::string&);
+    token_null,
+    token_true,
+    token_false,
 
-private:
-    output& buffer;
+    token_int8,
+    token_int16,
+    token_int32,
+    token_int64,
+    token_int128,
+
+    token_float32,
+    token_float64,
+
+    token_string,
+    token_array
 };
 
 }
 }
 
-#endif /* PROTOC_UBJSON_ENCODER_HPP */
+#endif /* PROTOC_TRANSENC_TOKEN_HPP */

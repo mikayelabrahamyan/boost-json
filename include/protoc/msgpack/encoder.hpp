@@ -1,5 +1,5 @@
-#ifndef PROTOC_UBJSON_ENCODER_HPP
-#define PROTOC_UBJSON_ENCODER_HPP
+#ifndef PROTOC_MSGPACK_ENCODER_HPP
+#define PROTOC_MSGPACK_ENCODER_HPP
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -24,7 +24,7 @@
 
 namespace protoc
 {
-namespace ubjson
+namespace msgpack
 {
 
 class encoder
@@ -32,13 +32,16 @@ class encoder
 public:
     encoder(output&);
 
-    std::size_t capacity() const; // Null
     std::size_t put(); // Null
     std::size_t put(bool);
     std::size_t put(protoc::int8_t);
     std::size_t put(protoc::int16_t);
     std::size_t put(protoc::int32_t);
     std::size_t put(protoc::int64_t);
+    std::size_t put(protoc::uint8_t);
+    std::size_t put(protoc::uint16_t);
+    std::size_t put(protoc::uint32_t);
+    std::size_t put(protoc::uint64_t);
     std::size_t put(protoc::float32_t);
     std::size_t put(protoc::float64_t);
     std::size_t put(const char *);
@@ -51,4 +54,4 @@ private:
 }
 }
 
-#endif /* PROTOC_UBJSON_ENCODER_HPP */
+#endif /* PROTOC_MSGPACK_ENCODER_HPP */

@@ -1,5 +1,5 @@
-#ifndef PROTOC_UBJSON_ENCODER_HPP
-#define PROTOC_UBJSON_ENCODER_HPP
+#ifndef PROTOC_OUTPUT_STREAM_HPP
+#define PROTOC_OUTPUT_STREAM_HPP
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -18,37 +18,40 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-#include <string>
-#include <protoc/types.hpp>
+#include <cstddef> // std::size_t
+#include <ostream>
 #include <protoc/output.hpp>
 
 namespace protoc
 {
-namespace ubjson
-{
 
-class encoder
+class output_stream : public output
 {
 public:
-    encoder(output&);
+    typedef value_type& reference;
+    typedef const value_type& const_reference;
 
-    std::size_t capacity() const; // Null
-    std::size_t put(); // Null
-    std::size_t put(bool);
-    std::size_t put(protoc::int8_t);
-    std::size_t put(protoc::int16_t);
-    std::size_t put(protoc::int32_t);
-    std::size_t put(protoc::int64_t);
-    std::size_t put(protoc::float32_t);
-    std::size_t put(protoc::float64_t);
-    std::size_t put(const char *);
-    std::size_t put(const std::string&);
+    output_stream(std::ostream& stream)
+        : stream(stream)
+    {
+    }
 
 private:
-    output& buffer;
+    // Implementation of protoc::output interface
+    virtual bool grow(size_type delta)
+    {
+        return stream.good();
+    }
+
+    virtual void write(value_type value)
+    {
+        stream << value;
+    }
+
+private:
+    std::ostream& stream;
 };
 
 }
-}
 
-#endif /* PROTOC_UBJSON_ENCODER_HPP */
+#endif /* PROTOC_OUTPUT_STREAM_HPP */

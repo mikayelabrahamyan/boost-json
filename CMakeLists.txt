@@ -30,7 +30,7 @@ set(CMAKE_CXX_FLAGS_DEBUG "-g -Wall")
 ###############################################################################
 
 # FIXME: Probably ok to use older version than 1.47
-find_package(Boost 1.47.0 COMPONENTS unit_test_framework)
+find_package(Boost 1.47.0 COMPONENTS unit_test_framework serialization)
 if (NOT ${Boost_FOUND})
   message(FATAL_ERROR "Boost not found (or too old)")
 endif()
@@ -48,8 +48,12 @@ set(EXTRA_LIBS -lprotoc ${EXTRA_LIBS})
 
 add_library(protoc STATIC
   src/input_range.cpp
-  src/output_range.cpp
   src/msgpack/decoder.cpp
+  src/output_vector.cpp
+  src/msgpack/decoder.cpp
+  src/msgpack/encoder.cpp
+  src/transenc/decoder.cpp
+  src/transenc/encoder.cpp
   src/ubjson/archive.cpp
   src/ubjson/decoder.cpp
   src/ubjson/encoder.cpp
@@ -62,6 +66,10 @@ add_library(protoc STATIC
 add_executable(protoctest
   test/runner.cpp
   test/msgpack/decoder_suite.cpp
+  test/msgpack/encoder_suite.cpp
+  test/transenc/decoder_suite.cpp
+  test/transenc/encoder_suite.cpp
+  test/ubjson/archive_suite.cpp
   test/ubjson/decoder_suite.cpp
   test/ubjson/encoder_suite.cpp
 )

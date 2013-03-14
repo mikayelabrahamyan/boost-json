@@ -25,8 +25,8 @@ namespace protoc
 namespace ubjson
 {
 
-encoder::encoder(char *begin, char *end)
-    : output(begin, end)
+encoder::encoder(output& buffer)
+    : buffer(buffer)
 {
 };
 
@@ -39,12 +39,12 @@ std::size_t encoder::put()
 {
     const std::size_t size = capacity();
 
-    if (output.size() < size)
+    if (!buffer.grow(size))
     {
         return 0;
     }
 
-    *output = 'Z';
+    buffer.write('Z');
 
     return size;
 }
@@ -53,106 +53,87 @@ std::size_t encoder::put(bool value)
 {
     const std::size_t size = sizeof('T');
 
-    if (output.size() < size)
+    if (!buffer.grow(size))
     {
         return 0;
     }
 
-    *output = (value) ? 'T' : 'F';
+    buffer.write((value) ? 'T' : 'F');
 
     return size;
 }
 
 std::size_t encoder::put(protoc::int8_t value)
 {
-    const output_range::value_type type('B');
+    const output::value_type type('B');
     const std::size_t size = sizeof(type) + sizeof(protoc::int8_t);
 
-    if (output.size() < size)
+    if (!buffer.grow(size))
     {
         return 0;
     }
 
-    *output = type;
-    ++output;
-    *output = static_cast<output_range::value_type>(value);
-    ++output;
+    buffer.write(type);
+    buffer.write(static_cast<output::value_type>(value));
 
     return size;
 }
 
 std::size_t encoder::put(protoc::int16_t value)
 {
-    const output_range::value_type type('i');
+    const output::value_type type('i');
     const std::size_t size = sizeof(type) + sizeof(protoc::int16_t);
 
-    if (output.size() < size)
+    if (!buffer.grow(size))
     {
         return 0;
     }
 
-    *output = type;
-    ++output;
-    *output = static_cast<output_range::value_type>((value >> 8) & 0xFF);
-    ++output;
-    *output = static_cast<output_range::value_type>(value & 0xFF);
-    ++output;
+    buffer.write(type);
+    buffer.write(static_cast<output::value_type>((value >> 8) & 0xFF));
+    buffer.write(static_cast<output::value_type>(value & 0xFF));
 
     return size;
 }
 
 std::size_t encoder::put(protoc::int32_t value)
 {
-    const output_range::value_type type('I');
+    const output::value_type type('I');
     const std::size_t size = sizeof(type) + sizeof(protoc::int32_t);
 
-    if (output.size() < size)
+    if (!buffer.grow(size))
     {
         return 0;
     }
 
-    *output = type;
-    ++output;
-    *output = static_cast<output_range::value_type>((value >> 24) & 0xFF);
-    ++output;
-    *output = static_cast<output_range::value_type>((value >> 16) & 0xFF);
-    ++output;
-    *output = static_cast<output_range::value_type>((value >> 8) & 0xFF);
-    ++output;
-    *output = static_cast<output_range::value_type>(value & 0xFF);
-    ++output;
+    buffer.write(type);
+    buffer.write(static_cast<output::value_type>((value >> 24) & 0xFF));
+    buffer.write(static_cast<output::value_type>((value >> 16) & 0xFF));
+    buffer.write(static_cast<output::value_type>((value >> 8) & 0xFF));
+    buffer.write(static_cast<output::value_type>(value & 0xFF));
 
     return size;
 }
 
 std::size_t encoder::put(protoc::int64_t value)
 {
-    const output_range::value_type type('L');
+    const output::value_type type('L');
     const std::size_t size = sizeof(type) + sizeof(protoc::int64_t);
 
-    if (output.size() < size)
+    if (!buffer.grow(size))
     {
         return 0;
     }
 
-    *output = type;
-    ++output;
-    *output = static_cast<output_range::value_type>((value >> 54) & 0xFF);
-    ++output;
-    *output = static_cast<output_range::value_type>((value >> 48) & 0xFF);
-    ++output;
-    *output = static_cast<output_range::value_type>((value >> 40) & 0xFF);
-    ++output;
-    *output = static_cast<output_range::value_type>((value >> 32) & 0xFF);
-    ++output;
-    *output = static_cast<output_range::value_type>((value >> 24) & 0xFF);
-    ++output;
-    *output = static_cast<output_range::value_type>((value >> 16) & 0xFF);
-    ++output;
-    *output = static_cast<output_range::value_type>((value >> 8) & 0xFF);
-    ++output;
-    *output = static_cast<output_range::value_type>(value & 0xFF);
-    ++output;
+    buffer.write(type);
+    buffer.write(static_cast<output::value_type>((value >> 54) & 0xFF));
+    buffer.write(static_cast<output::value_type>((value >> 48) & 0xFF));
+    buffer.write(static_cast<output::value_type>((value >> 40) & 0xFF));
+    buffer.write(static_cast<output::value_type>((value >> 32) & 0xFF));
+    buffer.write(static_cast<output::value_type>((value >> 24) & 0xFF));
+    buffer.write(static_cast<output::value_type>((value >> 16) & 0xFF));
+    buffer.write(static_cast<output::value_type>((value >> 8) & 0xFF));
+    buffer.write(static_cast<output::value_type>(value & 0xFF));
 
     return size;
 }
@@ -166,27 +147,22 @@ std::size_t encoder::put(float value)
         return put();
     }
 
-    const output_range::value_type type('d');
+    const output::value_type type('d');
     const std::size_t size = sizeof(type) + sizeof(float);
 
-    if (output.size() < size)
+    if (!buffer.grow(size))
     {
         return 0;
     }
 
-    *output = type;
-    ++output;
+    buffer.write(type);
     // IEEE 754 single precision
     const protoc::int32_t ix = 0x00010203;
     protoc::int8_t *value_buffer = (protoc::int8_t *)&value;
-    *output = static_cast<output_range::value_type>(value_buffer[((protoc::int8_t *)&ix)[0]]);
-    ++output;
-    *output = static_cast<output_range::value_type>(value_buffer[((protoc::int8_t *)&ix)[1]]);
-    ++output;
-    *output = static_cast<output_range::value_type>(value_buffer[((protoc::int8_t *)&ix)[2]]);
-    ++output;
-    *output = static_cast<output_range::value_type>(value_buffer[((protoc::int8_t *)&ix)[3]]);
-    ++output;
+    buffer.write(static_cast<output::value_type>(value_buffer[((protoc::int8_t *)&ix)[0]]));
+    buffer.write(static_cast<output::value_type>(value_buffer[((protoc::int8_t *)&ix)[1]]));
+    buffer.write(static_cast<output::value_type>(value_buffer[((protoc::int8_t *)&ix)[2]]));
+    buffer.write(static_cast<output::value_type>(value_buffer[((protoc::int8_t *)&ix)[3]]));
 
     return size;
 }
@@ -201,35 +177,26 @@ std::size_t encoder::put(double value)
     }
 
 
-    const output_range::value_type type('D');
+    const output::value_type type('D');
     const std::size_t size = sizeof(type) + sizeof(double);
 
-    if (output.size() < size)
+    if (!buffer.grow(size))
     {
         return 0;
     }
 
-    *output = type;
-    ++output;
+    buffer.write(type);
     // IEEE 754 double precision
     const protoc::int64_t ix = 0x0001020304050607;
     protoc::int8_t *value_buffer = (protoc::int8_t *)&value;
-    *output = static_cast<output_range::value_type>(value_buffer[((protoc::int8_t *)&ix)[0]]);
-    ++output;
-    *output = static_cast<output_range::value_type>(value_buffer[((protoc::int8_t *)&ix)[1]]);
-    ++output;
-    *output = static_cast<output_range::value_type>(value_buffer[((protoc::int8_t *)&ix)[2]]);
-    ++output;
-    *output = static_cast<output_range::value_type>(value_buffer[((protoc::int8_t *)&ix)[3]]);
-    ++output;
-    *output = static_cast<output_range::value_type>(value_buffer[((protoc::int8_t *)&ix)[4]]);
-    ++output;
-    *output = static_cast<output_range::value_type>(value_buffer[((protoc::int8_t *)&ix)[5]]);
-    ++output;
-    *output = static_cast<output_range::value_type>(value_buffer[((protoc::int8_t *)&ix)[6]]);
-    ++output;
-    *output = static_cast<output_range::value_type>(value_buffer[((protoc::int8_t *)&ix)[7]]);
-    ++output;
+    buffer.write(static_cast<output::value_type>(value_buffer[((protoc::int8_t *)&ix)[0]]));
+    buffer.write(static_cast<output::value_type>(value_buffer[((protoc::int8_t *)&ix)[1]]));
+    buffer.write(static_cast<output::value_type>(value_buffer[((protoc::int8_t *)&ix)[2]]));
+    buffer.write(static_cast<output::value_type>(value_buffer[((protoc::int8_t *)&ix)[3]]));
+    buffer.write(static_cast<output::value_type>(value_buffer[((protoc::int8_t *)&ix)[4]]));
+    buffer.write(static_cast<output::value_type>(value_buffer[((protoc::int8_t *)&ix)[5]]));
+    buffer.write(static_cast<output::value_type>(value_buffer[((protoc::int8_t *)&ix)[6]]));
+    buffer.write(static_cast<output::value_type>(value_buffer[((protoc::int8_t *)&ix)[7]]));
 
     return size;
 }
@@ -241,16 +208,15 @@ std::size_t encoder::put(const char *value)
 
 std::size_t encoder::put(const std::string& value)
 {
-    const output_range::value_type type('s');
+    const output::value_type type('s');
     const std::string::size_type length = value.size();
     std::size_t size = 0;
 
     if (length < static_cast<std::string::size_type>(std::numeric_limits<protoc::int8_t>::max()))
     {
-        if (output.size() >= sizeof(type) + sizeof('B') + sizeof(protoc::int8_t) + length)
+        if (buffer.grow(sizeof(type) + sizeof('B') + sizeof(protoc::int8_t) + length))
         {
-            *output = type;
-            ++output;
+            buffer.write(type);
             size = put(static_cast<int8_t>(length));
             if (size > 0)
                 goto success;
@@ -258,10 +224,9 @@ std::size_t encoder::put(const std::string& value)
     }
     else if (length < static_cast<std::string::size_type>(std::numeric_limits<protoc::int16_t>::max()))
     {
-        if (output.size() >= sizeof(type) + sizeof('i') + sizeof(protoc::int16_t) + length)
+        if (buffer.grow(sizeof(type) + sizeof('i') + sizeof(protoc::int16_t) + length))
         {
-            *output = type;
-            ++output;
+            buffer.write(type);
             size = put(static_cast<int16_t>(length));
             if (size > 0)
                 goto success;
@@ -269,10 +234,9 @@ std::size_t encoder::put(const std::string& value)
     }
     else if (length < static_cast<std::string::size_type>(std::numeric_limits<protoc::int32_t>::max()))
     {
-        if (output.size() >= sizeof(type) + sizeof('I') + sizeof(protoc::int32_t) + length)
+        if (buffer.grow(sizeof(type) + sizeof('I') + sizeof(protoc::int32_t) + length))
         {
-            *output = type;
-            ++output;
+            buffer.write(type);
             size = put(static_cast<int32_t>(length));
             if (size > 0)
                 goto success;
@@ -281,10 +245,9 @@ std::size_t encoder::put(const std::string& value)
     }
     else
     {
-        if (output.size() >= sizeof(type) + sizeof('L') + sizeof(protoc::int64_t) + length)
+        if (buffer.grow(sizeof(type) + sizeof('L') + sizeof(protoc::int64_t) + length))
         {
-            *output = type;
-            ++output;
+            buffer.write(type);
             size = put(static_cast<int64_t>(length));
             if (size > 0)
                 goto success;
@@ -293,8 +256,10 @@ std::size_t encoder::put(const std::string& value)
     return 0;
 
  success:
-    std::copy(value.begin(), value.end(), output.begin());
-    output += length;
+    for (std::string::const_iterator it = value.begin(); it != value.end(); ++it)
+    {
+        buffer.write(*it);
+    }
 
     return sizeof(type) + size + length;
 }
