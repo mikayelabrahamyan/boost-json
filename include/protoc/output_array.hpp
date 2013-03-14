@@ -28,8 +28,6 @@ template<std::size_t N>
 class output_array : public output
 {
 public:
-    typedef char value_type;
-    typedef std::size_t size_type;
     typedef value_type* iterator;
     typedef const value_type* const_iterator;
     typedef value_type& reference;

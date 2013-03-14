@@ -28,8 +28,6 @@ namespace protoc
 class output_vector : public output
 {
 public:
-    typedef char value_type;
-    typedef std::size_t size_type;
     typedef std::vector<value_type>::iterator iterator;
     typedef std::vector<value_type>::const_iterator const_iterator;
     typedef value_type& reference;

@@ -20,7 +20,7 @@
 
 #include <string>
 #include <protoc/types.hpp>
-#include <protoc/output_range.hpp>
+#include <protoc/output.hpp>
 
 namespace protoc
 {
@@ -30,7 +30,7 @@ namespace ubjson
 class encoder
 {
 public:
-    encoder(char *begin, char *end);
+    encoder(output&);
 
     std::size_t put(); // Null
     std::size_t put(bool);
@@ -44,7 +44,7 @@ public:
     std::size_t put(const std::string&);
 
 private:
-    output_range output;
+    output& buffer;
 };
 
 }
