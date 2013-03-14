@@ -100,6 +100,7 @@ BOOST_AUTO_TEST_CASE(test_int8_zero)
     output_vector buffer;
     msgpack::encoder encoder(buffer);
     BOOST_REQUIRE_EQUAL(encoder.put(protoc::int8_t(0)), 2);
+    BOOST_REQUIRE_EQUAL(buffer.size(), 2);
     BOOST_REQUIRE_EQUAL(buffer[0], '\xD0');
     BOOST_REQUIRE_EQUAL(buffer[1], '\x00');
 }
@@ -109,6 +110,7 @@ BOOST_AUTO_TEST_CASE(test_int8_one)
     output_vector buffer;
     msgpack::encoder encoder(buffer);
     BOOST_REQUIRE_EQUAL(encoder.put(protoc::int8_t(1)), 2);
+    BOOST_REQUIRE_EQUAL(buffer.size(), 2);
     BOOST_REQUIRE_EQUAL(buffer[0], '\xD0');
     BOOST_REQUIRE_EQUAL(buffer[1], '\x01');
 }
