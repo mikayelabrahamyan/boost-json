@@ -1,5 +1,5 @@
-#ifndef PROTOC_MSGPACK_ENCODER_HPP
-#define PROTOC_MSGPACK_ENCODER_HPP
+#ifndef PROTOC_OUTPUT_HPP
+#define PROTOC_OUTPUT_HPP
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -18,40 +18,24 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-#include <string>
-#include <protoc/types.hpp>
-#include <protoc/output.hpp>
+#include <cstddef> // std::size_t
 
 namespace protoc
 {
-namespace msgpack
-{
 
-class encoder
+// Interface for encoder output
+class output
 {
 public:
-    encoder(output&);
+    typedef char value_type;
+    typedef std::size_t size_type;
 
-    std::size_t put(); // Null
-    std::size_t put(bool);
-    std::size_t put(protoc::int8_t);
-    std::size_t put(protoc::int16_t);
-    std::size_t put(protoc::int32_t);
-    std::size_t put(protoc::int64_t);
-    std::size_t put(protoc::uint8_t);
-    std::size_t put(protoc::uint16_t);
-    std::size_t put(protoc::uint32_t);
-    std::size_t put(protoc::uint64_t);
-    std::size_t put(protoc::float32_t);
-    std::size_t put(protoc::float64_t);
-    std::size_t put(const char *);
-    std::size_t put(const std::string&);
+    virtual ~output() {}
 
-private:
-    output& buffer;
+    virtual bool grow(size_type) = 0;
+    virtual void write(value_type) = 0;
 };
 
 }
-}
 
-#endif /* PROTOC_MSGPACK_ENCODER_HPP */
+#endif /* PROTOC_OUTPUT_HPP */
