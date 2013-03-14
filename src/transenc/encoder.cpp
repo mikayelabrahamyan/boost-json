@@ -56,5 +56,35 @@ std::size_t encoder::put(bool value)
     return size;
 }
 
+std::size_t encoder::put(protoc::int8_t value)
+{
+    if (value >= -16)
+    {
+        const std::size_t size = sizeof(output::value_type);
+
+        if (!buffer.grow(size))
+        {
+            return 0;
+        }
+
+        buffer.write(value);
+        return size;
+    }
+    else
+    {
+        const output::value_type type('\x90');
+        const std::size_t size = sizeof(type) + sizeof(protoc::int8_t);
+
+        if (!buffer.grow(size))
+        {
+            return 0;
+        }
+
+        buffer.write(type);
+        buffer.write(static_cast<output::value_type>(value));
+        return size;
+    }
+}
+
 }
 }

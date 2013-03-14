@@ -81,4 +81,73 @@ BOOST_AUTO_TEST_CASE(test_false)
     BOOST_REQUIRE_EQUAL(buffer.size(), 1);
 }
 
+//-----------------------------------------------------------------------------
+// Integer
+//-----------------------------------------------------------------------------
+
+BOOST_AUTO_TEST_CASE(test_int8_zero)
+{
+    output_array<1> buffer;
+    transenc::encoder encoder(buffer);
+    BOOST_REQUIRE_EQUAL(encoder.put(protoc::int8_t(0)), 1);
+    BOOST_REQUIRE_EQUAL(buffer.size(), 1);
+    BOOST_REQUIRE_EQUAL(buffer[0], '\x00');
+}
+
+BOOST_AUTO_TEST_CASE(test_int8_one)
+{
+    output_array<1> buffer;
+    transenc::encoder encoder(buffer);
+    BOOST_REQUIRE_EQUAL(encoder.put(protoc::int8_t(1)), 1);
+    BOOST_REQUIRE_EQUAL(buffer.size(), 1);
+    BOOST_REQUIRE_EQUAL(buffer[0], '\x01');
+}
+
+BOOST_AUTO_TEST_CASE(test_int8_127)
+{
+    output_array<1> buffer;
+    transenc::encoder encoder(buffer);
+    BOOST_REQUIRE_EQUAL(encoder.put(protoc::int8_t(127)), 1);
+    BOOST_REQUIRE_EQUAL(buffer.size(), 1);
+    BOOST_REQUIRE_EQUAL(buffer[0], '\x7F');
+}
+
+BOOST_AUTO_TEST_CASE(test_int8_minus_one)
+{
+    output_array<1> buffer;
+    transenc::encoder encoder(buffer);
+    BOOST_REQUIRE_EQUAL(encoder.put(protoc::int8_t(-1)), 1);
+    BOOST_REQUIRE_EQUAL(buffer.size(), 1);
+    BOOST_REQUIRE_EQUAL(buffer[0], '\xFF');
+}
+
+BOOST_AUTO_TEST_CASE(test_int8_minus_16)
+{
+    output_array<1> buffer;
+    transenc::encoder encoder(buffer);
+    BOOST_REQUIRE_EQUAL(encoder.put(protoc::int8_t(-16)), 1);
+    BOOST_REQUIRE_EQUAL(buffer.size(), 1);
+    BOOST_REQUIRE_EQUAL(buffer[0], '\xF0');
+}
+
+BOOST_AUTO_TEST_CASE(test_int8_minus_17)
+{
+    output_array<2> buffer;
+    transenc::encoder encoder(buffer);
+    BOOST_REQUIRE_EQUAL(encoder.put(protoc::int8_t(-17)), 2);
+    BOOST_REQUIRE_EQUAL(buffer.size(), 2);
+    BOOST_REQUIRE_EQUAL(buffer[0], '\x90');
+    BOOST_REQUIRE_EQUAL(buffer[1], '\xEF');
+}
+
+BOOST_AUTO_TEST_CASE(test_int8_minus_128)
+{
+    output_array<2> buffer;
+    transenc::encoder encoder(buffer);
+    BOOST_REQUIRE_EQUAL(encoder.put(protoc::int8_t(-128)), 2);
+    BOOST_REQUIRE_EQUAL(buffer.size(), 2);
+    BOOST_REQUIRE_EQUAL(buffer[0], '\x90');
+    BOOST_REQUIRE_EQUAL(buffer[1], '\x80');
+}
+
 BOOST_AUTO_TEST_SUITE_END()
