@@ -52,6 +52,7 @@ add_library(protoc STATIC
   src/msgpack/decoder.cpp
   src/msgpack/encoder.cpp
   src/transenc/decoder.cpp
+  src/transenc/encoder.cpp
   src/ubjson/decoder.cpp
   src/ubjson/encoder.cpp
 )
@@ -65,6 +66,7 @@ add_executable(protoctest
   test/msgpack/decoder_suite.cpp
   test/msgpack/encoder_suite.cpp
   test/transenc/decoder_suite.cpp
+  test/transenc/encoder_suite.cpp
   test/ubjson/decoder_suite.cpp
   test/ubjson/encoder_suite.cpp
 )
