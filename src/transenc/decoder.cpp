@@ -102,6 +102,10 @@ token decoder::next()
             current.type = next_float64();
             break;
 
+        case '\xE0':
+            current.type = next_tlv();
+            break;
+
         case '\xE3':
             current.type = next_string();
             break;
@@ -205,6 +209,13 @@ protoc::float64_t decoder::get_float64() const
     return result;
 }
 
+std::string decoder::get_array() const
+{
+    assert(current.type == token_array);
+
+    return std::string(current.range.begin(), current.range.size());
+}
+
 std::string decoder::get_string() const
 {
     assert(current.type == token_string);
@@ -235,7 +246,7 @@ token decoder::next_unknown()
         return next_unknown(16);
 
     case '\xE0':
-        return next_string(); // FIXME: next_tlv()
+        return next_tlv();
 
     default:
         ++input;
@@ -343,6 +354,12 @@ token decoder::next_float64()
 
 token decoder::next_string()
 {
+    token type = next_tlv();
+    return (type == token_array) ? token_string : type;
+}
+
+token decoder::next_tlv()
+{
     ++input; // Skip token
 
     if (input.empty())
@@ -415,7 +432,7 @@ token decoder::next_string()
 
     current.range = input_range(input.begin(), input.begin() + length);
     input += length;
-    return token_string;
+    return token_array;
 }
 
 token decoder::next_unknown(std::size_t size)

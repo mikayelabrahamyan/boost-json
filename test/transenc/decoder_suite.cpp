@@ -572,6 +572,83 @@ BOOST_AUTO_TEST_CASE(test_float64_missing_eight)
 
 
 //-----------------------------------------------------------------------------
+// Binary data
+//-----------------------------------------------------------------------------
+
+BOOST_AUTO_TEST_CASE(test_array_empty)
+{
+    const char input[] = "\xE0" "\x00";
+    transenc::decoder decoder(input, input + sizeof(input) - 1);
+    BOOST_REQUIRE_EQUAL(decoder.next(), transenc::token_array);
+    BOOST_REQUIRE_EQUAL(decoder.get_array(), "");
+    BOOST_REQUIRE_EQUAL(decoder.next(), transenc::token_eof);
+}
+
+BOOST_AUTO_TEST_CASE(test_array_int8_empty)
+{
+    const char input[] = "\xE0" "\x90\x00";
+    transenc::decoder decoder(input, input + sizeof(input) - 1);
+    BOOST_REQUIRE_EQUAL(decoder.next(), transenc::token_array);
+    BOOST_REQUIRE_EQUAL(decoder.get_array(), "");
+    BOOST_REQUIRE_EQUAL(decoder.next(), transenc::token_eof);
+}
+
+BOOST_AUTO_TEST_CASE(test_array_one)
+{
+    const char input[] = "\xE0" "\x01" "\x12";
+    transenc::decoder decoder(input, input + sizeof(input) - 1);
+    BOOST_REQUIRE_EQUAL(decoder.next(), transenc::token_array);
+    BOOST_REQUIRE_EQUAL(decoder.get_array(), "\x12");
+    BOOST_REQUIRE_EQUAL(decoder.next(), transenc::token_eof);
+}
+
+BOOST_AUTO_TEST_CASE(test_array_int8_one)
+{
+    const char input[] = "\xE0" "\x90\x00";
+    transenc::decoder decoder(input, input + sizeof(input) - 1);
+    BOOST_REQUIRE_EQUAL(decoder.next(), transenc::token_array);
+    BOOST_REQUIRE_EQUAL(decoder.get_array(), "");
+    BOOST_REQUIRE_EQUAL(decoder.next(), transenc::token_eof);
+}
+
+BOOST_AUTO_TEST_CASE(test_array_two)
+{
+    const char input[] = "\xE0" "\x02" "\x12\x34";
+    transenc::decoder decoder(input, input + sizeof(input) - 1);
+    BOOST_REQUIRE_EQUAL(decoder.next(), transenc::token_array);
+    BOOST_REQUIRE_EQUAL(decoder.get_array(), "\x12\x34");
+    BOOST_REQUIRE_EQUAL(decoder.next(), transenc::token_eof);
+}
+
+BOOST_AUTO_TEST_CASE(test_array_missing_length)
+{
+    const char input[] = "\xE0";
+    transenc::decoder decoder(input, input + sizeof(input) - 1);
+    BOOST_REQUIRE_EQUAL(decoder.next(), transenc::token_eof);
+}
+
+BOOST_AUTO_TEST_CASE(test_array_missing_content)
+{
+    const char input[] = "\xE0" "\x01";
+    transenc::decoder decoder(input, input + sizeof(input) - 1);
+    BOOST_REQUIRE_EQUAL(decoder.next(), transenc::token_eof);
+}
+
+BOOST_AUTO_TEST_CASE(test_array_invalid_length)
+{
+    const char input[] = "\xE0" "\xFF" "\x12";
+    transenc::decoder decoder(input, input + sizeof(input) - 1);
+    BOOST_REQUIRE_EQUAL(decoder.next(), transenc::token_error);
+}
+
+BOOST_AUTO_TEST_CASE(test_array_invalid_false)
+{
+    const char input[] = "\xE0" "\x80";
+    transenc::decoder decoder(input, input + sizeof(input) - 1);
+    BOOST_REQUIRE_EQUAL(decoder.next(), transenc::token_error);
+}
+
+//-----------------------------------------------------------------------------
 // Strings
 //-----------------------------------------------------------------------------
 
