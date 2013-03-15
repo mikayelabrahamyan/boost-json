@@ -49,15 +49,13 @@ public:
     {
     }
 
-#if 0 // FIXME: Structs
-    template<typename T>
+    template<typename value_type>
     void save_override(const boost::serialization::nvp<value_type>& data, long)
     {
         this->This()->save_start(data.name());
         boost::archive::save(*this->This(), const_cast<const value_type&>(data.value()));
         this->This()->save_end(data.name());
     }
-#endif
 
     // The const variants are needed when used in containers
     void save_override(const boost::serialization::nvp<bool>&, int);

@@ -314,7 +314,7 @@ BOOST_AUTO_TEST_CASE(test_object_bool_one)
     std::map<std::string, bool> value;
     value["A"] = true;
     ar << boost::serialization::make_nvp("value", value);
-    BOOST_REQUIRE_EQUAL(result.str().data(), "{sB" "\x01" "AT}");
+    BOOST_REQUIRE_EQUAL(result.str().data(), "{sB\x01" "A" "T}");
 }
 
 BOOST_AUTO_TEST_CASE(test_object_bool_two)
@@ -325,7 +325,34 @@ BOOST_AUTO_TEST_CASE(test_object_bool_two)
     value["A"] = true;
     value["B"] = false;
     ar << boost::serialization::make_nvp("value", value);
-    BOOST_REQUIRE_EQUAL(result.str().data(), "{sB" "\x01" "ATsB" "\x01" "BF}");
+    BOOST_REQUIRE_EQUAL(result.str().data(), "{sB\x01" "A" "T" "sB\x01" "B" "F}");
+}
+
+struct person
+{
+    person(const std::string& name, int age)
+        : name(name),
+          age(age)
+    {}
+
+    template<typename T>
+    void serialize(T& archive, const unsigned int)
+    {
+        archive & boost::serialization::make_nvp("name", name);
+        archive & boost::serialization::make_nvp("age", age);
+    }
+
+    std::string name;
+    protoc::int16_t age;
+};
+
+BOOST_AUTO_TEST_CASE(test_array_struct)
+{
+    std::ostringstream result;
+    ubjson::oarchive ar(result);
+    person value("Kant", 127);
+    ar << boost::serialization::make_nvp("value", value);
+    BOOST_REQUIRE_EQUAL(result.str().data(), "sB\x04" "Kant" "i\x00\x7F");
 }
 
 BOOST_AUTO_TEST_SUITE_END()
