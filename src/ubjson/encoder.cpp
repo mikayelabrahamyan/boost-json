@@ -30,37 +30,14 @@ encoder::encoder(output& buffer)
 {
 };
 
-std::size_t encoder::capacity() const
-{
-    return sizeof('Z');
-}
-
 std::size_t encoder::put()
 {
-    const std::size_t size = capacity();
-
-    if (!buffer.grow(size))
-    {
-        return 0;
-    }
-
-    buffer.write('Z');
-
-    return size;
+    return put_token('Z');
 }
 
 std::size_t encoder::put(bool value)
 {
-    const std::size_t size = sizeof('T');
-
-    if (!buffer.grow(size))
-    {
-        return 0;
-    }
-
-    buffer.write((value) ? 'T' : 'F');
-
-    return size;
+    return put_token((value) ? 'T' : 'F');
 }
 
 std::size_t encoder::put(protoc::int8_t value)
@@ -262,6 +239,40 @@ std::size_t encoder::put(const std::string& value)
     }
 
     return sizeof(type) + size + length;
+}
+
+std::size_t encoder::put_object_begin()
+{
+    return put_token('{');
+}
+
+std::size_t encoder::put_object_end()
+{
+    return put_token('}');
+}
+
+std::size_t encoder::put_array_begin()
+{
+    return put_token('[');
+}
+
+std::size_t encoder::put_array_end()
+{
+    return put_token(']');
+}
+
+std::size_t encoder::put_token(output::value_type value)
+{
+    const std::size_t size = sizeof(value);
+
+    if (!buffer.grow(size))
+    {
+        return 0;
+    }
+
+    buffer.write(value);
+
+    return size;
 }
 
 }

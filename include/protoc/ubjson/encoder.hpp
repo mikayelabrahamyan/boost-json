@@ -32,7 +32,6 @@ class encoder
 public:
     encoder(output&);
 
-    std::size_t capacity() const; // Null
     std::size_t put(); // Null
     std::size_t put(bool);
     std::size_t put(protoc::int8_t);
@@ -43,6 +42,14 @@ public:
     std::size_t put(protoc::float64_t);
     std::size_t put(const char *);
     std::size_t put(const std::string&);
+
+    std::size_t put_object_begin();
+    std::size_t put_object_end();
+    std::size_t put_array_begin();
+    std::size_t put_array_end();
+
+private:
+    std::size_t put_token(output::value_type);
 
 private:
     output& buffer;

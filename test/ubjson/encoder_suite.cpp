@@ -822,4 +822,76 @@ BOOST_AUTO_TEST_CASE(test_string_medium_a)
     BOOST_REQUIRE_EQUAL(buffer[4+0x7F], 'a');
 }
 
+//-----------------------------------------------------------------------------
+// Container
+//-----------------------------------------------------------------------------
+
+BOOST_AUTO_TEST_CASE(test_array_begin)
+{
+    output_array<1> buffer;
+    ubjson::encoder encoder(buffer);
+    BOOST_REQUIRE_EQUAL(encoder.put_array_begin(), 1);
+    BOOST_REQUIRE_EQUAL(buffer.size(), 1);
+    BOOST_REQUIRE_EQUAL(buffer[0], '[');
+}
+
+BOOST_AUTO_TEST_CASE(test_array_begin_empty)
+{
+    output_array<0> buffer;
+    ubjson::encoder encoder(buffer);
+    BOOST_REQUIRE_EQUAL(encoder.put_array_begin(), 0);
+    BOOST_REQUIRE_EQUAL(buffer.size(), 0);
+}
+
+BOOST_AUTO_TEST_CASE(test_array_end)
+{
+    output_array<1> buffer;
+    ubjson::encoder encoder(buffer);
+    BOOST_REQUIRE_EQUAL(encoder.put_array_end(), 1);
+    BOOST_REQUIRE_EQUAL(buffer.size(), 1);
+    BOOST_REQUIRE_EQUAL(buffer[0], ']');
+}
+
+BOOST_AUTO_TEST_CASE(test_array_end_empty)
+{
+    output_array<0> buffer;
+    ubjson::encoder encoder(buffer);
+    BOOST_REQUIRE_EQUAL(encoder.put_array_end(), 0);
+    BOOST_REQUIRE_EQUAL(buffer.size(), 0);
+}
+
+BOOST_AUTO_TEST_CASE(test_object_begin)
+{
+    output_array<1> buffer;
+    ubjson::encoder encoder(buffer);
+    BOOST_REQUIRE_EQUAL(encoder.put_object_begin(), 1);
+    BOOST_REQUIRE_EQUAL(buffer.size(), 1);
+    BOOST_REQUIRE_EQUAL(buffer[0], '{');
+}
+
+BOOST_AUTO_TEST_CASE(test_object_begin_empty)
+{
+    output_array<0> buffer;
+    ubjson::encoder encoder(buffer);
+    BOOST_REQUIRE_EQUAL(encoder.put_object_begin(), 0);
+    BOOST_REQUIRE_EQUAL(buffer.size(), 0);
+}
+
+BOOST_AUTO_TEST_CASE(test_object_end)
+{
+    output_array<1> buffer;
+    ubjson::encoder encoder(buffer);
+    BOOST_REQUIRE_EQUAL(encoder.put_object_end(), 1);
+    BOOST_REQUIRE_EQUAL(buffer.size(), 1);
+    BOOST_REQUIRE_EQUAL(buffer[0], '}');
+}
+
+BOOST_AUTO_TEST_CASE(test_object_end_empty)
+{
+    output_array<0> buffer;
+    ubjson::encoder encoder(buffer);
+    BOOST_REQUIRE_EQUAL(encoder.put_object_end(), 0);
+    BOOST_REQUIRE_EQUAL(buffer.size(), 0);
+}
+
 BOOST_AUTO_TEST_SUITE_END()
