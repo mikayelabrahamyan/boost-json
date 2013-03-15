@@ -136,5 +136,39 @@ void iarchive::load_override(boost::serialization::nvp<protoc::int64_t> data, in
     }
 }
 
+void iarchive::load_override(boost::serialization::nvp<protoc::float32_t> data, int)
+{
+    ubjson::token type = input.next();
+    if (type == token_float32)
+    {
+        data.value() = input.get_float32();
+    }
+    else
+    {
+        std::ostringstream error;
+        error << type;
+        throw unexpected_token(error.str());
+    }
+}
+
+void iarchive::load_override(boost::serialization::nvp<protoc::float64_t> data, int)
+{
+    ubjson::token type = input.next();
+    if (type == token_float64)
+    {
+        data.value() = input.get_float64();
+    }
+    else if (type == token_float32)
+    {
+        data.value() = input.get_float32();
+    }
+    else
+    {
+        std::ostringstream error;
+        error << type;
+        throw unexpected_token(error.str());
+    }
+}
+
 }
 }

@@ -150,4 +150,35 @@ BOOST_AUTO_TEST_CASE(test_int64_one_int8)
     BOOST_REQUIRE_EQUAL(value, 1);
 }
 
+//-----------------------------------------------------------------------------
+// Floating-point
+//-----------------------------------------------------------------------------
+
+BOOST_AUTO_TEST_CASE(test_float_one)
+{
+    const char input[] = "d\x3F\x80\x00\x00";
+    ubjson::iarchive in(input, input + sizeof(input));
+    protoc::float32_t value = 0.0f;
+    in >> boost::serialization::make_nvp("value", value);
+    BOOST_REQUIRE_EQUAL(value, 1.0f);
+}
+
+BOOST_AUTO_TEST_CASE(test_double_one)
+{
+    const char input[] = "D\x3F\xF0\x00\x00\x00\x00\x00\x00";
+    ubjson::iarchive in(input, input + sizeof(input));
+    protoc::float64_t value = 0.0;
+    in >> boost::serialization::make_nvp("value", value);
+    BOOST_REQUIRE_EQUAL(value, 1.0);
+}
+
+BOOST_AUTO_TEST_CASE(test_double_one_float)
+{
+    const char input[] = "d\x3F\x80\x00\x00";
+    ubjson::iarchive in(input, input + sizeof(input));
+    protoc::float64_t value = 0.0;
+    in >> boost::serialization::make_nvp("value", value);
+    BOOST_REQUIRE_EQUAL(value, 1.0);
+}
+
 BOOST_AUTO_TEST_SUITE_END()
