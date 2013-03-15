@@ -97,8 +97,8 @@ public:
         this->save_override(boost::serialization::make_nvp(data.name(), const_cast<const std::vector<value_type, allocator_type>&>(data.value())), version);
     }
 
-    template<typename key_type, typename value_type, typename predicate_type, typename allocator_type>
-    void save_override(const boost::serialization::nvp< const std::map<key_type, value_type, predicate_type, allocator_type> >& data, int)
+    template<typename key_type, typename value_type, typename key_compare, typename allocator_type>
+    void save_override(const boost::serialization::nvp< const std::map<key_type, value_type, key_compare, allocator_type> >& data, int)
     {
         output.put_object_begin();
         for (typename std::map<key_type, value_type>::const_iterator it = data.value().begin();
@@ -111,10 +111,10 @@ public:
         output.put_object_end();
     }
 
-    template<typename key_type, typename value_type, typename predicate_type, typename allocator_type>
-    void save_override(const boost::serialization::nvp< std::map<key_type, value_type, predicate_type, allocator_type> >& data, int version)
+    template<typename key_type, typename value_type, typename key_compare, typename allocator_type>
+    void save_override(const boost::serialization::nvp< std::map<key_type, value_type, key_compare, allocator_type> >& data, int version)
     {
-        this->save_override(boost::serialization::make_nvp(data.name(), const_cast<const std::map<key_type, value_type, predicate_type, allocator_type>&>(data.value())), version);
+        this->save_override(boost::serialization::make_nvp(data.name(), const_cast<const std::map<key_type, value_type, key_compare, allocator_type>&>(data.value())), version);
     }
 
     // Ignore these

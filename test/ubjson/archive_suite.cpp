@@ -287,4 +287,45 @@ BOOST_AUTO_TEST_CASE(test_array_bool_one)
     BOOST_REQUIRE_EQUAL(result.str().data(), "[T]");
 }
 
+BOOST_AUTO_TEST_CASE(test_array_bool_two)
+{
+    std::ostringstream result;
+    ubjson::oarchive ar(result);
+    std::vector<bool> value;
+    value.push_back(true);
+    value.push_back(false);
+    ar << boost::serialization::make_nvp("value", value);
+    BOOST_REQUIRE_EQUAL(result.str().data(), "[TF]");
+}
+
+BOOST_AUTO_TEST_CASE(test_object_bool_empty)
+{
+    std::ostringstream result;
+    ubjson::oarchive ar(result);
+    std::map<std::string, bool> value;
+    ar << boost::serialization::make_nvp("value", value);
+    BOOST_REQUIRE_EQUAL(result.str().data(), "{}");
+}
+
+BOOST_AUTO_TEST_CASE(test_object_bool_one)
+{
+    std::ostringstream result;
+    ubjson::oarchive ar(result);
+    std::map<std::string, bool> value;
+    value["A"] = true;
+    ar << boost::serialization::make_nvp("value", value);
+    BOOST_REQUIRE_EQUAL(result.str().data(), "{sB" "\x01" "AT}");
+}
+
+BOOST_AUTO_TEST_CASE(test_object_bool_two)
+{
+    std::ostringstream result;
+    ubjson::oarchive ar(result);
+    std::map<std::string, bool> value;
+    value["A"] = true;
+    value["B"] = false;
+    ar << boost::serialization::make_nvp("value", value);
+    BOOST_REQUIRE_EQUAL(result.str().data(), "{sB" "\x01" "ATsB" "\x01" "BF}");
+}
+
 BOOST_AUTO_TEST_SUITE_END()
