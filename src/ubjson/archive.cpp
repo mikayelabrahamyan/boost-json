@@ -103,5 +103,15 @@ void oarchive::save_override(const boost::serialization::nvp<const protoc::float
     output.put(data.value());
 }
 
+void oarchive::save_override(const boost::serialization::nvp<std::string>& data, int)
+{
+    output.put(data.value());
+}
+
+void oarchive::save_override(const boost::serialization::nvp<const std::string>& data, int)
+{
+    output.put(data.value());
+}
+
 }
 }

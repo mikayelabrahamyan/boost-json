@@ -54,10 +54,8 @@ public:
     void save_override(const boost::serialization::nvp<const protoc::float32_t>&, int);
     void save_override(const boost::serialization::nvp<protoc::float64_t>&, int);
     void save_override(const boost::serialization::nvp<const protoc::float64_t>&, int);
-#if 0
     void save_override(const boost::serialization::nvp<std::string>&, int);
     void save_override(const boost::serialization::nvp<const std::string>&, int);
-#endif
 
   // Ignore these
   void save_override(const boost::archive::version_type, int) {}

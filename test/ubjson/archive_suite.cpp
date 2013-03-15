@@ -224,4 +224,44 @@ BOOST_AUTO_TEST_CASE(test_const_float64_one)
     BOOST_REQUIRE_EQUAL(result.str().data(), "D\x3F\xF0\x00\x00\x00\x00\x00\x00");
 }
 
+//-----------------------------------------------------------------------------
+// String
+//-----------------------------------------------------------------------------
+
+BOOST_AUTO_TEST_CASE(test_string_empty)
+{
+    std::ostringstream result;
+    ubjson::oarchive ar(result);
+    std::string value("");
+    ar << boost::serialization::make_nvp("value", value);
+    BOOST_REQUIRE_EQUAL(result.str().data(), "s" "B\x00");
+}
+
+BOOST_AUTO_TEST_CASE(test_const_string_empty)
+{
+    std::ostringstream result;
+    ubjson::oarchive ar(result);
+    const std::string value("");
+    ar << boost::serialization::make_nvp("value", value);
+    BOOST_REQUIRE_EQUAL(result.str().data(), "s" "B\x00");
+}
+
+BOOST_AUTO_TEST_CASE(test_string_a)
+{
+    std::ostringstream result;
+    ubjson::oarchive ar(result);
+    std::string value("a");
+    ar << boost::serialization::make_nvp("value", value);
+    BOOST_REQUIRE_EQUAL(result.str().data(), "s" "B\x01" "a");
+}
+
+BOOST_AUTO_TEST_CASE(test_string_alpha)
+{
+    std::ostringstream result;
+    ubjson::oarchive ar(result);
+    std::string value("alpha");
+    ar << boost::serialization::make_nvp("value", value);
+    BOOST_REQUIRE_EQUAL(result.str().data(), "s" "B\x05" "alpha");
+}
+
 BOOST_AUTO_TEST_SUITE_END()
