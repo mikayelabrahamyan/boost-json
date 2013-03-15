@@ -1,6 +1,3 @@
-#ifndef PROTOC_UBJSON_ARCHIVE_HPP
-#define PROTOC_UBJSON_ARCHIVE_HPP
-
 ///////////////////////////////////////////////////////////////////////////////
 //
 // http://protoc.sourceforge.net/
@@ -18,7 +15,43 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
+#include <sstream>
+#include <protoc/exceptions.hpp>
 #include <protoc/ubjson/iarchive.hpp>
-#include <protoc/ubjson/oarchive.hpp>
 
-#endif /* PROTOC_UBJSON_ARCHIVE_HPP */
+namespace protoc
+{
+namespace ubjson
+{
+
+iarchive::iarchive(const std::string& buffer)
+    : buffer(buffer),
+      input(buffer.data(), buffer.data() + buffer.size())
+{
+}
+
+iarchive::~iarchive()
+{
+}
+
+void iarchive::load_override(boost::serialization::nvp<bool> data, int)
+{
+    ubjson::token type = input.next();
+    if (type == token_true)
+    {
+        data.value() = true;
+    }
+    else if (type == token_false)
+    {
+        data.value() = false;
+    }
+    else
+    {
+        std::ostringstream error;
+        error << type;
+        throw unexpected_token(error.str());
+    }
+}
+
+}
+}

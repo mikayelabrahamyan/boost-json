@@ -15,7 +15,8 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-#include <protoc/ubjson/archive.hpp>
+#include <sstream>
+#include <protoc/ubjson/oarchive.hpp>
 
 namespace protoc
 {

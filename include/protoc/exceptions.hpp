@@ -1,5 +1,5 @@
-#ifndef PROTOC_UBJSON_ARCHIVE_HPP
-#define PROTOC_UBJSON_ARCHIVE_HPP
+#ifndef PROTOC_EXCEPTIONS_HPP
+#define PROTOC_EXCEPTIONS_HPP
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -18,7 +18,22 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-#include <protoc/ubjson/iarchive.hpp>
-#include <protoc/ubjson/oarchive.hpp>
+#include <stdexcept>
 
-#endif /* PROTOC_UBJSON_ARCHIVE_HPP */
+namespace protoc
+{
+
+class unexpected_token : public std::runtime_error
+{
+public:
+    explicit unexpected_token(const std::string& message)
+        : std::runtime_error(message)
+    {}
+
+    ~unexpected_token() throw()
+    {}
+};
+
+}
+
+#endif // PROTOC_EXCEPTIONS_HPP
