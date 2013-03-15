@@ -181,4 +181,26 @@ BOOST_AUTO_TEST_CASE(test_double_one_float)
     BOOST_REQUIRE_EQUAL(value, 1.0);
 }
 
+//-----------------------------------------------------------------------------
+// String
+//-----------------------------------------------------------------------------
+
+BOOST_AUTO_TEST_CASE(test_string_empty)
+{
+    const char input[] = "s" "B\x00";
+    ubjson::iarchive in(input, input + sizeof(input));
+    std::string value("replace");
+    in >> boost::serialization::make_nvp("value", value);
+    BOOST_REQUIRE_EQUAL(value, "");
+}
+
+BOOST_AUTO_TEST_CASE(test_string_alpha)
+{
+    const char input[] = "s" "B\x05" "alpha";
+    ubjson::iarchive in(input, input + sizeof(input));
+    std::string value("replace");
+    in >> boost::serialization::make_nvp("value", value);
+    BOOST_REQUIRE_EQUAL(value, "alpha");
+}
+
 BOOST_AUTO_TEST_SUITE_END()
