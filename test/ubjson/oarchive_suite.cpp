@@ -19,11 +19,11 @@
 
 #include <sstream>
 #include <protoc/exceptions.hpp>
-#include <protoc/ubjson/archive.hpp>
+#include <protoc/ubjson/oarchive.hpp>
 
 using namespace protoc;
 
-BOOST_AUTO_TEST_SUITE(ubjson_archive_suite)
+BOOST_AUTO_TEST_SUITE(ubjson_oarchive_suite)
 
 //-----------------------------------------------------------------------------
 // Basic types
@@ -70,33 +70,6 @@ BOOST_AUTO_TEST_CASE(test_const_true)
     const bool value = true;
     ar << boost::serialization::make_nvp("value", value);
     BOOST_REQUIRE_EQUAL(result.str().data(), "T");
-}
-
-BOOST_AUTO_TEST_CASE(test_input_false)
-{
-    const char input[] = "F";
-    ubjson::iarchive in(input);
-    bool value = true;
-    in >> boost::serialization::make_nvp("value", value);
-    BOOST_REQUIRE_EQUAL(value, false);
-}
-
-BOOST_AUTO_TEST_CASE(test_input_true)
-{
-    const char input[] = "T";
-    ubjson::iarchive in(input);
-    bool value = false;
-    in >> boost::serialization::make_nvp("value", value);
-    BOOST_REQUIRE_EQUAL(value, true);
-}
-
-BOOST_AUTO_TEST_CASE(test_input_false_junk)
-{
-    const char input[] = "Z";
-    ubjson::iarchive in(input);
-    bool value = true;
-    BOOST_REQUIRE_THROW(in >> boost::serialization::make_nvp("value", value),
-                        unexpected_token);
 }
 
 //-----------------------------------------------------------------------------

@@ -70,9 +70,10 @@ add_executable(protoctest
   test/msgpack/encoder_suite.cpp
   test/transenc/decoder_suite.cpp
   test/transenc/encoder_suite.cpp
-  test/ubjson/archive_suite.cpp
   test/ubjson/decoder_suite.cpp
   test/ubjson/encoder_suite.cpp
+  test/ubjson/iarchive_suite.cpp
+  test/ubjson/oarchive_suite.cpp
 )
 
 add_dependencies(protoctest protoc)

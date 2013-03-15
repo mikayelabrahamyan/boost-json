@@ -24,9 +24,8 @@ namespace protoc
 namespace ubjson
 {
 
-iarchive::iarchive(const std::string& buffer)
-    : buffer(buffer),
-      input(buffer.data(), buffer.data() + buffer.size())
+iarchive::iarchive(const char *begin, const char * end)
+    : input(begin, end)
 {
 }
 
@@ -44,6 +43,90 @@ void iarchive::load_override(boost::serialization::nvp<bool> data, int)
     else if (type == token_false)
     {
         data.value() = false;
+    }
+    else
+    {
+        std::ostringstream error;
+        error << type;
+        throw unexpected_token(error.str());
+    }
+}
+
+void iarchive::load_override(boost::serialization::nvp<protoc::int8_t> data, int)
+{
+    ubjson::token type = input.next();
+    if (type == token_int8)
+    {
+        data.value() = input.get_int8();
+    }
+    else
+    {
+        std::ostringstream error;
+        error << type;
+        throw unexpected_token(error.str());
+    }
+}
+
+void iarchive::load_override(boost::serialization::nvp<protoc::int16_t> data, int)
+{
+    ubjson::token type = input.next();
+    if (type == token_int16)
+    {
+        data.value() = input.get_int16();
+    }
+    else if (type == token_int8)
+    {
+        data.value() = input.get_int8();
+    }
+    else
+    {
+        std::ostringstream error;
+        error << type;
+        throw unexpected_token(error.str());
+    }
+}
+
+void iarchive::load_override(boost::serialization::nvp<protoc::int32_t> data, int)
+{
+    ubjson::token type = input.next();
+    if (type == token_int32)
+    {
+        data.value() = input.get_int32();
+    }
+    else if (type == token_int16)
+    {
+        data.value() = input.get_int16();
+    }
+    else if (type == token_int8)
+    {
+        data.value() = input.get_int8();
+    }
+    else
+    {
+        std::ostringstream error;
+        error << type;
+        throw unexpected_token(error.str());
+    }
+}
+
+void iarchive::load_override(boost::serialization::nvp<protoc::int64_t> data, int)
+{
+    ubjson::token type = input.next();
+    if (type == token_int64)
+    {
+        data.value() = input.get_int64();
+    }
+    else if (type == token_int32)
+    {
+        data.value() = input.get_int32();
+    }
+    else if (type == token_int16)
+    {
+        data.value() = input.get_int16();
+    }
+    else if (type == token_int8)
+    {
+        data.value() = input.get_int8();
     }
     else
     {
