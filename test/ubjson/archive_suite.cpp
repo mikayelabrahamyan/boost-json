@@ -264,4 +264,27 @@ BOOST_AUTO_TEST_CASE(test_string_alpha)
     BOOST_REQUIRE_EQUAL(result.str().data(), "s" "B\x05" "alpha");
 }
 
+//-----------------------------------------------------------------------------
+// Container
+//-----------------------------------------------------------------------------
+
+BOOST_AUTO_TEST_CASE(test_array_bool_empty)
+{
+    std::ostringstream result;
+    ubjson::oarchive ar(result);
+    std::vector<bool> value;
+    ar << boost::serialization::make_nvp("value", value);
+    BOOST_REQUIRE_EQUAL(result.str().data(), "[]");
+}
+
+BOOST_AUTO_TEST_CASE(test_array_bool_one)
+{
+    std::ostringstream result;
+    ubjson::oarchive ar(result);
+    std::vector<bool> value;
+    value.push_back(true);
+    ar << boost::serialization::make_nvp("value", value);
+    BOOST_REQUIRE_EQUAL(result.str().data(), "[T]");
+}
+
 BOOST_AUTO_TEST_SUITE_END()

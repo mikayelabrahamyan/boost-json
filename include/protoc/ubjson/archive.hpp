@@ -18,9 +18,14 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
+#include <string>
 #include <vector>
+#include <map>
 #include <ostream>
+#include <boost/serialization/nvp.hpp>
+#include <boost/serialization/vector.hpp>
 #include <boost/archive/detail/common_oarchive.hpp>
+#include <boost/archive/detail/register_archive.hpp>
 #include <protoc/types.hpp>
 #include <protoc/output_stream.hpp>
 #include <protoc/ubjson/encoder.hpp>
@@ -38,6 +43,21 @@ class oarchive : public boost::archive::detail::common_oarchive<oarchive>
 public:
     oarchive(std::ostream& stream);
     ~oarchive();
+
+    template<typename value_type>
+    void save(const value_type& data)
+    {
+    }
+
+#if 0 // FIXME: Structs
+    template<typename T>
+    void save_override(const boost::serialization::nvp<value_type>& data, long)
+    {
+        this->This()->save_start(data.name());
+        boost::archive::save(*this->This(), const_cast<const value_type&>(data.value()));
+        this->This()->save_end(data.name());
+    }
+#endif
 
     // The const variants are needed when used in containers
     void save_override(const boost::serialization::nvp<bool>&, int);
@@ -57,17 +77,57 @@ public:
     void save_override(const boost::serialization::nvp<std::string>&, int);
     void save_override(const boost::serialization::nvp<const std::string>&, int);
 
-  // Ignore these
-  void save_override(const boost::archive::version_type, int) {}
-  void save_override(const boost::archive::object_id_type, int) {}
-  void save_override(const boost::archive::object_reference_type, int) {}
-  void save_override(const boost::archive::class_id_type, int) {}
-  void save_override(const boost::archive::class_id_optional_type, int) {}
-  void save_override(const boost::archive::class_id_reference_type, int) {}
-  void save_override(const boost::archive::tracking_type, int) {}
-  void save_override(const boost::archive::class_name_type&, int) {}
+    template<typename value_type, typename allocator_type>
+    void save_override(const boost::serialization::nvp< const std::vector<value_type, allocator_type> >& data, int)
+    {
+        output.put_array_begin();
+        for (typename std::vector<value_type, allocator_type>::const_iterator it = data.value().begin();
+             it != data.value().end();
+             ++it)
+        {
+            value_type value = *it;
+            *this << boost::serialization::make_nvp(data.name(), value);
+        }
+        output.put_array_end();
+    }
 
-  void save_binary(void *, std::size_t) {}
+    template<typename value_type, typename allocator_type>
+    void save_override(const boost::serialization::nvp< std::vector<value_type, allocator_type> >& data, int version)
+    {
+        this->save_override(boost::serialization::make_nvp(data.name(), const_cast<const std::vector<value_type, allocator_type>&>(data.value())), version);
+    }
+
+    template<typename key_type, typename value_type, typename predicate_type, typename allocator_type>
+    void save_override(const boost::serialization::nvp< const std::map<key_type, value_type, predicate_type, allocator_type> >& data, int)
+    {
+        output.put_object_begin();
+        for (typename std::map<key_type, value_type>::const_iterator it = data.value().begin();
+             it != data.value().end();
+             ++it)
+        {
+            *this << boost::serialization::make_nvp(data.name()/*FIXME*/, it->first);
+            *this << boost::serialization::make_nvp(data.name()/*FIXME*/, it->second);
+        }
+        output.put_object_end();
+    }
+
+    template<typename key_type, typename value_type, typename predicate_type, typename allocator_type>
+    void save_override(const boost::serialization::nvp< std::map<key_type, value_type, predicate_type, allocator_type> >& data, int version)
+    {
+        this->save_override(boost::serialization::make_nvp(data.name(), const_cast<const std::map<key_type, value_type, predicate_type, allocator_type>&>(data.value())), version);
+    }
+
+    // Ignore these
+    void save_override(const boost::archive::version_type, int) {}
+    void save_override(const boost::archive::object_id_type, int) {}
+    void save_override(const boost::archive::object_reference_type, int) {}
+    void save_override(const boost::archive::class_id_type, int) {}
+    void save_override(const boost::archive::class_id_optional_type, int) {}
+    void save_override(const boost::archive::class_id_reference_type, int) {}
+    void save_override(const boost::archive::tracking_type, int) {}
+    void save_override(const boost::archive::class_name_type&, int) {}
+
+    void save_binary(void *, std::size_t) {}
 
 private:
     protoc::output_stream buffer;
@@ -76,5 +136,7 @@ private:
 
 }
 }
+
+BOOST_SERIALIZATION_REGISTER_ARCHIVE(protoc::ubjson::oarchive);
 
 #endif /* PROTOC_UBJSON_ARCHIVE_HPP */
