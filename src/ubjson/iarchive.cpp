@@ -35,15 +35,17 @@ iarchive::~iarchive()
 
 void iarchive::load_override(boost::serialization::nvp<bool> data, int)
 {
-    const ubjson::token type = input.next();
+    const token type = input.type();
     switch (type)
     {
     case token_true:
         data.value() = true;
+        input.next();
         break;
 
     case token_false:
         data.value() = false;
+        input.next();
         break;
 
     default:
@@ -55,11 +57,12 @@ void iarchive::load_override(boost::serialization::nvp<bool> data, int)
 
 void iarchive::load_override(boost::serialization::nvp<protoc::int8_t> data, int)
 {
-    const ubjson::token type = input.next();
+    const token type = input.type();
     switch (type)
     {
     case token_int8:
         data.value() = input.get_int8();
+        input.next();
         break;
 
     default:
@@ -71,15 +74,17 @@ void iarchive::load_override(boost::serialization::nvp<protoc::int8_t> data, int
 
 void iarchive::load_override(boost::serialization::nvp<protoc::int16_t> data, int)
 {
-    const ubjson::token type = input.next();
+    const token type = input.type();
     switch (type)
     {
     case token_int16:
         data.value() = input.get_int16();
+        input.next();
         break;
 
     case token_int8:
         data.value() = input.get_int8();
+        input.next();
         break;
 
     default:
@@ -91,19 +96,22 @@ void iarchive::load_override(boost::serialization::nvp<protoc::int16_t> data, in
 
 void iarchive::load_override(boost::serialization::nvp<protoc::int32_t> data, int)
 {
-    const ubjson::token type = input.next();
+    const token type = input.type();
     switch (type)
     {
     case token_int32:
         data.value() = input.get_int32();
+        input.next();
         break;
 
     case token_int16:
         data.value() = input.get_int16();
+        input.next();
         break;
 
     case token_int8:
         data.value() = input.get_int8();
+        input.next();
         break;
 
     default:
@@ -115,23 +123,27 @@ void iarchive::load_override(boost::serialization::nvp<protoc::int32_t> data, in
 
 void iarchive::load_override(boost::serialization::nvp<protoc::int64_t> data, int)
 {
-    const ubjson::token type = input.next();
+    const token type = input.type();
     switch (type)
     {
     case token_int64:
         data.value() = input.get_int64();
+        input.next();
         break;
 
     case token_int32:
         data.value() = input.get_int32();
+        input.next();
         break;
 
     case token_int16:
         data.value() = input.get_int16();
+        input.next();
         break;
 
     case token_int8:
         data.value() = input.get_int8();
+        input.next();
         break;
 
     default:
@@ -143,11 +155,12 @@ void iarchive::load_override(boost::serialization::nvp<protoc::int64_t> data, in
 
 void iarchive::load_override(boost::serialization::nvp<protoc::float32_t> data, int)
 {
-    const ubjson::token type = input.next();
+    const token type = input.type();
     switch (type)
     {
     case token_float32:
         data.value() = input.get_float32();
+        input.next();
         break;
 
     default:
@@ -159,15 +172,17 @@ void iarchive::load_override(boost::serialization::nvp<protoc::float32_t> data, 
 
 void iarchive::load_override(boost::serialization::nvp<protoc::float64_t> data, int)
 {
-    const ubjson::token type = input.next();
+    const token type = input.type();
     switch (type)
     {
     case token_float64:
         data.value() = input.get_float64();
+        input.next();
         break;
 
     case token_float32:
         data.value() = input.get_float32();
+        input.next();
         break;
 
     default:
@@ -179,11 +194,12 @@ void iarchive::load_override(boost::serialization::nvp<protoc::float64_t> data, 
 
 void iarchive::load_override(boost::serialization::nvp<std::string> data, int)
 {
-    const ubjson::token type = input.next();
+    const token type = input.type();
     switch (type)
     {
     case token_string:
         data.value() = input.get_string();
+        input.next();
         break;
 
     default:

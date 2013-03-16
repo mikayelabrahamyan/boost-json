@@ -19,10 +19,14 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 #include <string>
+#include <vector>
+#include <stack>
+#include <sstream>
 #include <boost/serialization/nvp.hpp>
 #include <boost/archive/detail/common_iarchive.hpp>
 #include <boost/archive/detail/register_archive.hpp>
 #include <protoc/types.hpp>
+#include <protoc/exceptions.hpp>
 #include <protoc/ubjson/decoder.hpp>
 
 namespace protoc
@@ -33,6 +37,13 @@ namespace ubjson
 class iarchive : public boost::archive::detail::common_iarchive<iarchive>
 {
     friend class boost::archive::load_access;
+
+    struct scope
+    {
+        scope(token group) : group(group) {}
+
+        token group;
+    };
 
 public:
     iarchive(const char *begin, const char *end);
@@ -47,6 +58,51 @@ public:
     void load_override(boost::serialization::nvp<protoc::float64_t>, int);
     void load_override(boost::serialization::nvp<std::string>, int);
 
+    template<typename value_type, typename allocator_type>
+    void load_override(const boost::serialization::nvp< std::vector<value_type, allocator_type> > data, int)
+    {
+        token type = input.type();
+        if (type == token_array_begin)
+        {
+            scope_stack.push(scope(type));
+            input.next();
+            while (true)
+            {
+                type = input.type();
+                if (type == token_array_end)
+                {
+                    if (scope_stack.top().group == token_array_begin)
+                    {
+                        scope_stack.pop();
+                    }
+                    else
+                    {
+                        std::ostringstream error;
+                        error << type;
+                        throw unexpected_token(error.str());
+                    }
+                    break;
+                }
+                else if ((type == token_eof) || (type == token_error))
+                {
+                    goto error;
+                }
+                else
+                {
+                    value_type item;
+                    *this >> boost::serialization::make_nvp(data.name(), item);
+                    data.value().push_back(item);
+                }
+            }
+        }
+        else
+        {
+        error:
+            std::ostringstream error;
+            error << type;
+            throw unexpected_token(error.str());
+        }
+    }
     // Ignore these
     void load_override(boost::archive::version_type, int) {}
     void load_override(boost::archive::object_id_type, int) {}
@@ -61,6 +117,7 @@ public:
 
 private:
     decoder input;
+    std::stack<scope> scope_stack;
 };
 
 }

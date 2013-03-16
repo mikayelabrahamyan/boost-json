@@ -28,13 +28,19 @@ decoder::decoder(const char *begin,
     : input(begin, end)
 {
     current.type = token_eof;
+    next();
 }
 
-token decoder::next()
+token decoder::type() const
+{
+    return current.type;
+}
+
+void decoder::next()
 {
     if (current.type == token_error)
     {
-        return current.type;
+        return;
     }
  again:
     if (input.empty())
@@ -117,7 +123,6 @@ token decoder::next()
             break;
         }
     }
-    return current.type;
 }
 
 protoc::int8_t decoder::get_int8() const
