@@ -255,4 +255,43 @@ BOOST_AUTO_TEST_CASE(test_array_missing_end)
                         unexpected_token);
 }
 
+BOOST_AUTO_TEST_CASE(test_object_bool_empty)
+{
+    const char input[] = "{}";
+    ubjson::iarchive in(input, input + sizeof(input));
+    std::map<std::string, bool> value;
+    in >> boost::serialization::make_nvp("value", value);
+    BOOST_REQUIRE_EQUAL(value.size(), 0);
+}
+
+BOOST_AUTO_TEST_CASE(test_object_bool_one)
+{
+    const char input[] = "{sB\x01" "A" "T}";
+    ubjson::iarchive in(input, input + sizeof(input));
+    std::map<std::string, bool> value;
+    in >> boost::serialization::make_nvp("value", value);
+    BOOST_REQUIRE_EQUAL(value.size(), 1);
+    BOOST_REQUIRE_EQUAL(value["A"], true);
+}
+
+BOOST_AUTO_TEST_CASE(test_object_bool_two)
+{
+    const char input[] = "{sB\x01" "A" "T" "sB\x01" "B" "F}";
+    ubjson::iarchive in(input, input + sizeof(input));
+    std::map<std::string, bool> value;
+    in >> boost::serialization::make_nvp("value", value);
+    BOOST_REQUIRE_EQUAL(value.size(), 2);
+    BOOST_REQUIRE_EQUAL(value["A"], true);
+    BOOST_REQUIRE_EQUAL(value["B"], false);
+}
+
+BOOST_AUTO_TEST_CASE(test_object_missing_end)
+{
+    const char input[] = "{sB\x01" "A" "T";
+    ubjson::iarchive in(input, input + sizeof(input));
+    std::vector<bool> value;
+    BOOST_REQUIRE_THROW(in >> boost::serialization::make_nvp("value", value),
+                        unexpected_token);
+}
+
 BOOST_AUTO_TEST_SUITE_END()

@@ -20,6 +20,7 @@
 
 #include <string>
 #include <vector>
+#include <map>
 #include <stack>
 #include <sstream>
 #include <boost/serialization/nvp.hpp>
@@ -77,9 +78,7 @@ public:
                     }
                     else
                     {
-                        std::ostringstream error;
-                        error << type;
-                        throw unexpected_token(error.str());
+                        goto error;
                     }
                     break;
                 }
@@ -103,6 +102,53 @@ public:
             throw unexpected_token(error.str());
         }
     }
+
+    template<typename key_type, typename mapped_type, typename key_compare, typename allocator_type>
+    void load_override(const boost::serialization::nvp< std::map<key_type, mapped_type, key_compare, allocator_type> > data, int)
+    {
+        token type = input.type();
+        if (type == token_object_begin)
+        {
+            scope_stack.push(scope(type));
+            input.next();
+            while (true)
+            {
+                type = input.type();
+                if (type == token_object_end)
+                {
+                    if (scope_stack.top().group == token_object_begin)
+                    {
+                        scope_stack.pop();
+                    }
+                    else
+                    {
+                        goto error;
+                    }
+                    break;
+                }
+                else if ((type == token_eof) || (type == token_error))
+                {
+                    goto error;
+                }
+                else
+                {
+                    key_type key;
+                    *this >> boost::serialization::make_nvp(data.name()/*FIXME*/, key);
+                    mapped_type value;
+                    *this >> boost::serialization::make_nvp(data.name()/*FIXME*/, value);
+                    data.value()[key] = value;
+                }
+            }
+        }
+        else
+        {
+        error:
+            std::ostringstream error;
+            error << type;
+            throw unexpected_token(error.str());
+        }
+    }
+
     // Ignore these
     void load_override(boost::archive::version_type, int) {}
     void load_override(boost::archive::object_id_type, int) {}
