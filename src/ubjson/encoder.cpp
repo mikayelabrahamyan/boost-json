@@ -115,7 +115,7 @@ std::size_t encoder::put(protoc::int64_t value)
     return size;
 }
 
-std::size_t encoder::put(float value)
+std::size_t encoder::put(protoc::float32_t value)
 {
     const int fpclass = boost::math::fpclassify(value);
     if ((fpclass == FP_INFINITE) || (fpclass == FP_NAN))
@@ -125,7 +125,7 @@ std::size_t encoder::put(float value)
     }
 
     const output::value_type type('d');
-    const std::size_t size = sizeof(type) + sizeof(float);
+    const std::size_t size = sizeof(type) + sizeof(protoc::float32_t);
 
     if (!buffer.grow(size))
     {
@@ -144,7 +144,7 @@ std::size_t encoder::put(float value)
     return size;
 }
 
-std::size_t encoder::put(double value)
+std::size_t encoder::put(protoc::float64_t value)
 {
     const int fpclass = boost::math::fpclassify(value);
     if ((fpclass == FP_INFINITE) || (fpclass == FP_NAN))
@@ -155,7 +155,7 @@ std::size_t encoder::put(double value)
 
 
     const output::value_type type('D');
-    const std::size_t size = sizeof(type) + sizeof(double);
+    const std::size_t size = sizeof(type) + sizeof(protoc::float64_t);
 
     if (!buffer.grow(size))
     {
