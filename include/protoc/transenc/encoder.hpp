@@ -38,10 +38,6 @@ public:
     std::size_t put(protoc::int16_t);
     std::size_t put(protoc::int32_t);
     std::size_t put(protoc::int64_t);
-    std::size_t put(protoc::uint8_t);
-    std::size_t put(protoc::uint16_t);
-    std::size_t put(protoc::uint32_t);
-    std::size_t put(protoc::uint64_t);
     std::size_t put(protoc::float32_t);
     std::size_t put(protoc::float64_t);
     std::size_t put(const char *);

@@ -145,5 +145,53 @@ std::size_t encoder::put(protoc::int64_t value)
     return size;
 }
 
+std::size_t encoder::put(protoc::float32_t value)
+{
+    const output::value_type type('\xC2');
+    const std::size_t size = sizeof(type) + sizeof(protoc::float32_t);
+
+    if (!buffer.grow(size))
+    {
+        return 0;
+    }
+
+    buffer.write(type);
+    // IEEE 754 single precision
+    const protoc::int32_t ix = 0x00010203;
+    protoc::int8_t *value_buffer = (protoc::int8_t *)&value;
+    buffer.write(static_cast<output::value_type>(value_buffer[((protoc::int8_t *)&ix)[0]]));
+    buffer.write(static_cast<output::value_type>(value_buffer[((protoc::int8_t *)&ix)[1]]));
+    buffer.write(static_cast<output::value_type>(value_buffer[((protoc::int8_t *)&ix)[2]]));
+    buffer.write(static_cast<output::value_type>(value_buffer[((protoc::int8_t *)&ix)[3]]));
+
+    return size;
+}
+
+std::size_t encoder::put(protoc::float64_t value)
+{
+    const output::value_type type('\xD2');
+    const std::size_t size = sizeof(type) + sizeof(protoc::float64_t);
+
+    if (!buffer.grow(size))
+    {
+        return 0;
+    }
+
+    buffer.write(type);
+    // IEEE 754 double precision
+    const protoc::int64_t ix = 0x0001020304050607;
+    protoc::int8_t *value_buffer = (protoc::int8_t *)&value;
+    buffer.write(static_cast<output::value_type>(value_buffer[((protoc::int8_t *)&ix)[0]]));
+    buffer.write(static_cast<output::value_type>(value_buffer[((protoc::int8_t *)&ix)[1]]));
+    buffer.write(static_cast<output::value_type>(value_buffer[((protoc::int8_t *)&ix)[2]]));
+    buffer.write(static_cast<output::value_type>(value_buffer[((protoc::int8_t *)&ix)[3]]));
+    buffer.write(static_cast<output::value_type>(value_buffer[((protoc::int8_t *)&ix)[4]]));
+    buffer.write(static_cast<output::value_type>(value_buffer[((protoc::int8_t *)&ix)[5]]));
+    buffer.write(static_cast<output::value_type>(value_buffer[((protoc::int8_t *)&ix)[6]]));
+    buffer.write(static_cast<output::value_type>(value_buffer[((protoc::int8_t *)&ix)[7]]));
+
+    return size;
+}
+
 }
 }

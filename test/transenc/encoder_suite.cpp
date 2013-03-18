@@ -409,4 +409,360 @@ BOOST_AUTO_TEST_CASE(test_int64_buffer_eight)
     BOOST_REQUIRE_EQUAL(buffer.size(), 0);
 }
 
+//-----------------------------------------------------------------------------
+// Floating-point
+//-----------------------------------------------------------------------------
+
+BOOST_AUTO_TEST_CASE(test_float_zero)
+{
+    output_array<5> buffer;
+    transenc::encoder encoder(buffer);
+    BOOST_REQUIRE_EQUAL(encoder.put(0.0f), 5);
+    BOOST_REQUIRE_EQUAL(buffer.size(), 5);
+    BOOST_REQUIRE_EQUAL(buffer[0], '\xC2');
+    BOOST_REQUIRE_EQUAL(buffer[1], '\x00');
+    BOOST_REQUIRE_EQUAL(buffer[2], '\x00');
+    BOOST_REQUIRE_EQUAL(buffer[3], '\x00');
+    BOOST_REQUIRE_EQUAL(buffer[4], '\x00');
+}
+
+BOOST_AUTO_TEST_CASE(test_float_one)
+{
+    output_array<5> buffer;
+    transenc::encoder encoder(buffer);
+    BOOST_REQUIRE_EQUAL(encoder.put(1.0f), 5);
+    BOOST_REQUIRE_EQUAL(buffer.size(), 5);
+    BOOST_REQUIRE_EQUAL(buffer[0], '\xC2');
+    BOOST_REQUIRE_EQUAL(buffer[1], '\x3F');
+    BOOST_REQUIRE_EQUAL(buffer[2], '\x80');
+    BOOST_REQUIRE_EQUAL(buffer[3], '\x00');
+    BOOST_REQUIRE_EQUAL(buffer[4], '\x00');
+}
+
+BOOST_AUTO_TEST_CASE(test_float_minus_one)
+{
+    output_array<5> buffer;
+    transenc::encoder encoder(buffer);
+    BOOST_REQUIRE_EQUAL(encoder.put(-1.0f), 5);
+    BOOST_REQUIRE_EQUAL(buffer.size(), 5);
+    BOOST_REQUIRE_EQUAL(buffer[0], '\xC2');
+    BOOST_REQUIRE_EQUAL(buffer[1], '\xBF');
+    BOOST_REQUIRE_EQUAL(buffer[2], '\x80');
+    BOOST_REQUIRE_EQUAL(buffer[3], '\x00');
+    BOOST_REQUIRE_EQUAL(buffer[4], '\x00');
+}
+
+BOOST_AUTO_TEST_CASE(test_float_two)
+{
+    output_array<5> buffer;
+    transenc::encoder encoder(buffer);
+    BOOST_REQUIRE_EQUAL(encoder.put(2.0f), 5);
+    BOOST_REQUIRE_EQUAL(buffer.size(), 5);
+    BOOST_REQUIRE_EQUAL(buffer[0], '\xC2');
+    BOOST_REQUIRE_EQUAL(buffer[1], '\x40');
+    BOOST_REQUIRE_EQUAL(buffer[2], '\x00');
+    BOOST_REQUIRE_EQUAL(buffer[3], '\x00');
+    BOOST_REQUIRE_EQUAL(buffer[4], '\x00');
+}
+
+BOOST_AUTO_TEST_CASE(test_float_minus_two)
+{
+    output_array<5> buffer;
+    transenc::encoder encoder(buffer);
+    BOOST_REQUIRE_EQUAL(encoder.put(-2.0f), 5);
+    BOOST_REQUIRE_EQUAL(buffer.size(), 5);
+    BOOST_REQUIRE_EQUAL(buffer[0], '\xC2');
+    BOOST_REQUIRE_EQUAL(buffer[1], '\xC0');
+    BOOST_REQUIRE_EQUAL(buffer[2], '\x00');
+    BOOST_REQUIRE_EQUAL(buffer[3], '\x00');
+    BOOST_REQUIRE_EQUAL(buffer[4], '\x00');
+}
+
+BOOST_AUTO_TEST_CASE(test_float_infinity)
+{
+    output_array<5> buffer;
+    transenc::encoder encoder(buffer);
+    BOOST_REQUIRE_EQUAL(encoder.put(std::numeric_limits<protoc::float32_t>::infinity()), 5);
+    BOOST_REQUIRE_EQUAL(buffer.size(), 5);
+    BOOST_REQUIRE_EQUAL(buffer[0], '\xC2');
+    BOOST_REQUIRE_EQUAL(buffer[1], '\x7F');
+    BOOST_REQUIRE_EQUAL(buffer[2], '\x80');
+    BOOST_REQUIRE_EQUAL(buffer[3], '\x00');
+    BOOST_REQUIRE_EQUAL(buffer[4], '\x00');
+}
+
+BOOST_AUTO_TEST_CASE(test_float_minus_infinity)
+{
+    output_array<5> buffer;
+    transenc::encoder encoder(buffer);
+    BOOST_REQUIRE_EQUAL(encoder.put(-std::numeric_limits<protoc::float32_t>::infinity()), 5);
+    BOOST_REQUIRE_EQUAL(buffer.size(), 5);
+    BOOST_REQUIRE_EQUAL(buffer[0], '\xC2');
+    BOOST_REQUIRE_EQUAL(buffer[1], '\xFF');
+    BOOST_REQUIRE_EQUAL(buffer[2], '\x80');
+    BOOST_REQUIRE_EQUAL(buffer[3], '\x00');
+    BOOST_REQUIRE_EQUAL(buffer[4], '\x00');
+}
+
+BOOST_AUTO_TEST_CASE(test_float_nan)
+{
+    output_array<5> buffer;
+    transenc::encoder encoder(buffer);
+    BOOST_REQUIRE_EQUAL(encoder.put(std::numeric_limits<protoc::float32_t>::quiet_NaN()), 5);
+    BOOST_REQUIRE_EQUAL(buffer.size(), 5);
+    BOOST_REQUIRE_EQUAL(buffer[0], '\xC2');
+    BOOST_REQUIRE_EQUAL(buffer[1], '\x7F');
+    BOOST_REQUIRE_EQUAL(buffer[2], '\xC0');
+    BOOST_REQUIRE_EQUAL(buffer[3], '\x00');
+    BOOST_REQUIRE_EQUAL(buffer[4], '\x00');
+}
+
+BOOST_AUTO_TEST_CASE(test_float_buffer_empty)
+{
+    output_array<0> buffer;
+    transenc::encoder encoder(buffer);
+    BOOST_REQUIRE_EQUAL(encoder.put(0.0f), 0);
+    BOOST_REQUIRE_EQUAL(buffer.size(), 0);
+}
+
+BOOST_AUTO_TEST_CASE(test_float_buffer_one)
+{
+    output_array<1> buffer;
+    transenc::encoder encoder(buffer);
+    BOOST_REQUIRE_EQUAL(encoder.put(0.0f), 0);
+    BOOST_REQUIRE_EQUAL(buffer.size(), 0);
+}
+
+BOOST_AUTO_TEST_CASE(test_float_buffer_two)
+{
+    output_array<2> buffer;
+    transenc::encoder encoder(buffer);
+    BOOST_REQUIRE_EQUAL(encoder.put(0.0f), 0);
+    BOOST_REQUIRE_EQUAL(buffer.size(), 0);
+}
+
+BOOST_AUTO_TEST_CASE(test_float_buffer_three)
+{
+    output_array<3> buffer;
+    transenc::encoder encoder(buffer);
+    BOOST_REQUIRE_EQUAL(encoder.put(0.0f), 0);
+    BOOST_REQUIRE_EQUAL(buffer.size(), 0);
+}
+
+BOOST_AUTO_TEST_CASE(test_float_buffer_four)
+{
+    output_array<4> buffer;
+    transenc::encoder encoder(buffer);
+    BOOST_REQUIRE_EQUAL(encoder.put(0.0f), 0);
+    BOOST_REQUIRE_EQUAL(buffer.size(), 0);
+}
+
+BOOST_AUTO_TEST_CASE(test_double_zero)
+{
+    output_array<9> buffer;
+    transenc::encoder encoder(buffer);
+    BOOST_REQUIRE_EQUAL(encoder.put(0.0), 9);
+    BOOST_REQUIRE_EQUAL(buffer.size(), 9);
+    BOOST_REQUIRE_EQUAL(buffer[0], '\xD2');
+    BOOST_REQUIRE_EQUAL(buffer[1], '\x00');
+    BOOST_REQUIRE_EQUAL(buffer[2], '\x00');
+    BOOST_REQUIRE_EQUAL(buffer[3], '\x00');
+    BOOST_REQUIRE_EQUAL(buffer[4], '\x00');
+    BOOST_REQUIRE_EQUAL(buffer[5], '\x00');
+    BOOST_REQUIRE_EQUAL(buffer[6], '\x00');
+    BOOST_REQUIRE_EQUAL(buffer[7], '\x00');
+    BOOST_REQUIRE_EQUAL(buffer[8], '\x00');
+}
+
+BOOST_AUTO_TEST_CASE(test_double_one)
+{
+    output_array<9> buffer;
+    transenc::encoder encoder(buffer);
+    BOOST_REQUIRE_EQUAL(encoder.put(1.0), 9);
+    BOOST_REQUIRE_EQUAL(buffer.size(), 9);
+    BOOST_REQUIRE_EQUAL(buffer[0], '\xD2');
+    BOOST_REQUIRE_EQUAL(buffer[1], '\x3F');
+    BOOST_REQUIRE_EQUAL(buffer[2], '\xF0');
+    BOOST_REQUIRE_EQUAL(buffer[3], '\x00');
+    BOOST_REQUIRE_EQUAL(buffer[4], '\x00');
+    BOOST_REQUIRE_EQUAL(buffer[5], '\x00');
+    BOOST_REQUIRE_EQUAL(buffer[6], '\x00');
+    BOOST_REQUIRE_EQUAL(buffer[7], '\x00');
+    BOOST_REQUIRE_EQUAL(buffer[8], '\x00');
+}
+
+BOOST_AUTO_TEST_CASE(test_double_minus_one)
+{
+    output_array<9> buffer;
+    transenc::encoder encoder(buffer);
+    BOOST_REQUIRE_EQUAL(encoder.put(-1.0), 9);
+    BOOST_REQUIRE_EQUAL(buffer.size(), 9);
+    BOOST_REQUIRE_EQUAL(buffer[0], '\xD2');
+    BOOST_REQUIRE_EQUAL(buffer[1], '\xBF');
+    BOOST_REQUIRE_EQUAL(buffer[2], '\xF0');
+    BOOST_REQUIRE_EQUAL(buffer[3], '\x00');
+    BOOST_REQUIRE_EQUAL(buffer[4], '\x00');
+    BOOST_REQUIRE_EQUAL(buffer[5], '\x00');
+    BOOST_REQUIRE_EQUAL(buffer[6], '\x00');
+    BOOST_REQUIRE_EQUAL(buffer[7], '\x00');
+    BOOST_REQUIRE_EQUAL(buffer[8], '\x00');
+}
+
+BOOST_AUTO_TEST_CASE(test_double_two)
+{
+    output_array<9> buffer;
+    transenc::encoder encoder(buffer);
+    BOOST_REQUIRE_EQUAL(encoder.put(2.0), 9);
+    BOOST_REQUIRE_EQUAL(buffer.size(), 9);
+    BOOST_REQUIRE_EQUAL(buffer[0], '\xD2');
+    BOOST_REQUIRE_EQUAL(buffer[1], '\x40');
+    BOOST_REQUIRE_EQUAL(buffer[2], '\x00');
+    BOOST_REQUIRE_EQUAL(buffer[3], '\x00');
+    BOOST_REQUIRE_EQUAL(buffer[4], '\x00');
+    BOOST_REQUIRE_EQUAL(buffer[5], '\x00');
+    BOOST_REQUIRE_EQUAL(buffer[6], '\x00');
+    BOOST_REQUIRE_EQUAL(buffer[7], '\x00');
+    BOOST_REQUIRE_EQUAL(buffer[8], '\x00');
+}
+
+BOOST_AUTO_TEST_CASE(test_double_minus_two)
+{
+    output_array<9> buffer;
+    transenc::encoder encoder(buffer);
+    BOOST_REQUIRE_EQUAL(encoder.put(-2.0), 9);
+    BOOST_REQUIRE_EQUAL(buffer.size(), 9);
+    BOOST_REQUIRE_EQUAL(buffer[0], '\xD2');
+    BOOST_REQUIRE_EQUAL(buffer[1], '\xC0');
+    BOOST_REQUIRE_EQUAL(buffer[2], '\x00');
+    BOOST_REQUIRE_EQUAL(buffer[3], '\x00');
+    BOOST_REQUIRE_EQUAL(buffer[4], '\x00');
+    BOOST_REQUIRE_EQUAL(buffer[5], '\x00');
+    BOOST_REQUIRE_EQUAL(buffer[6], '\x00');
+    BOOST_REQUIRE_EQUAL(buffer[7], '\x00');
+    BOOST_REQUIRE_EQUAL(buffer[8], '\x00');
+}
+
+BOOST_AUTO_TEST_CASE(test_double_infinity)
+{
+    output_array<9> buffer;
+    transenc::encoder encoder(buffer);
+    BOOST_REQUIRE_EQUAL(encoder.put(std::numeric_limits<protoc::float64_t>::infinity()), 9);
+    BOOST_REQUIRE_EQUAL(buffer.size(), 9);
+    BOOST_REQUIRE_EQUAL(buffer[0], '\xD2');
+    BOOST_REQUIRE_EQUAL(buffer[1], '\x7F');
+    BOOST_REQUIRE_EQUAL(buffer[2], '\xF0');
+    BOOST_REQUIRE_EQUAL(buffer[3], '\x00');
+    BOOST_REQUIRE_EQUAL(buffer[4], '\x00');
+    BOOST_REQUIRE_EQUAL(buffer[5], '\x00');
+    BOOST_REQUIRE_EQUAL(buffer[6], '\x00');
+    BOOST_REQUIRE_EQUAL(buffer[7], '\x00');
+    BOOST_REQUIRE_EQUAL(buffer[8], '\x00');
+}
+
+BOOST_AUTO_TEST_CASE(test_double_minus_infinity)
+{
+    output_array<9> buffer;
+    transenc::encoder encoder(buffer);
+    BOOST_REQUIRE_EQUAL(encoder.put(-std::numeric_limits<protoc::float64_t>::infinity()), 9);
+    BOOST_REQUIRE_EQUAL(buffer.size(), 9);
+    BOOST_REQUIRE_EQUAL(buffer[0], '\xD2');
+    BOOST_REQUIRE_EQUAL(buffer[1], '\xFF');
+    BOOST_REQUIRE_EQUAL(buffer[2], '\xF0');
+    BOOST_REQUIRE_EQUAL(buffer[3], '\x00');
+    BOOST_REQUIRE_EQUAL(buffer[4], '\x00');
+    BOOST_REQUIRE_EQUAL(buffer[5], '\x00');
+    BOOST_REQUIRE_EQUAL(buffer[6], '\x00');
+    BOOST_REQUIRE_EQUAL(buffer[7], '\x00');
+    BOOST_REQUIRE_EQUAL(buffer[8], '\x00');
+}
+
+BOOST_AUTO_TEST_CASE(test_double_nan)
+{
+    output_array<9> buffer;
+    transenc::encoder encoder(buffer);
+    BOOST_REQUIRE_EQUAL(encoder.put(std::numeric_limits<protoc::float64_t>::quiet_NaN()), 9);
+    BOOST_REQUIRE_EQUAL(buffer.size(), 9);
+    BOOST_REQUIRE_EQUAL(buffer[0], '\xD2');
+    BOOST_REQUIRE_EQUAL(buffer[1], '\x7F');
+    BOOST_REQUIRE_EQUAL(buffer[2], '\xF8');
+    BOOST_REQUIRE_EQUAL(buffer[3], '\x00');
+    BOOST_REQUIRE_EQUAL(buffer[4], '\x00');
+    BOOST_REQUIRE_EQUAL(buffer[5], '\x00');
+    BOOST_REQUIRE_EQUAL(buffer[6], '\x00');
+    BOOST_REQUIRE_EQUAL(buffer[7], '\x00');
+    BOOST_REQUIRE_EQUAL(buffer[8], '\x00');
+}
+
+BOOST_AUTO_TEST_CASE(test_double_buffer_empty)
+{
+    output_array<0> buffer;
+    transenc::encoder encoder(buffer);
+    BOOST_REQUIRE_EQUAL(encoder.put(0.0), 0);
+    BOOST_REQUIRE_EQUAL(buffer.size(), 0);
+}
+
+BOOST_AUTO_TEST_CASE(test_double_buffer_one)
+{
+    output_array<1> buffer;
+    transenc::encoder encoder(buffer);
+    BOOST_REQUIRE_EQUAL(encoder.put(0.0), 0);
+    BOOST_REQUIRE_EQUAL(buffer.size(), 0);
+}
+
+BOOST_AUTO_TEST_CASE(test_double_buffer_two)
+{
+    output_array<2> buffer;
+    transenc::encoder encoder(buffer);
+    BOOST_REQUIRE_EQUAL(encoder.put(0.0), 0);
+    BOOST_REQUIRE_EQUAL(buffer.size(), 0);
+}
+
+BOOST_AUTO_TEST_CASE(test_double_buffer_three)
+{
+    output_array<3> buffer;
+    transenc::encoder encoder(buffer);
+    BOOST_REQUIRE_EQUAL(encoder.put(0.0), 0);
+    BOOST_REQUIRE_EQUAL(buffer.size(), 0);
+}
+
+BOOST_AUTO_TEST_CASE(test_double_buffer_four)
+{
+    output_array<4> buffer;
+    transenc::encoder encoder(buffer);
+    BOOST_REQUIRE_EQUAL(encoder.put(0.0), 0);
+    BOOST_REQUIRE_EQUAL(buffer.size(), 0);
+}
+
+BOOST_AUTO_TEST_CASE(test_double_buffer_five)
+{
+    output_array<5> buffer;
+    transenc::encoder encoder(buffer);
+    BOOST_REQUIRE_EQUAL(encoder.put(0.0), 0);
+    BOOST_REQUIRE_EQUAL(buffer.size(), 0);
+}
+
+BOOST_AUTO_TEST_CASE(test_double_buffer_six)
+{
+    output_array<6> buffer;
+    transenc::encoder encoder(buffer);
+    BOOST_REQUIRE_EQUAL(encoder.put(0.0), 0);
+    BOOST_REQUIRE_EQUAL(buffer.size(), 0);
+}
+
+BOOST_AUTO_TEST_CASE(test_double_buffer_seven)
+{
+    output_array<7> buffer;
+    transenc::encoder encoder(buffer);
+    BOOST_REQUIRE_EQUAL(encoder.put(0.0), 0);
+    BOOST_REQUIRE_EQUAL(buffer.size(), 0);
+}
+
+BOOST_AUTO_TEST_CASE(test_double_buffer_eight)
+{
+    output_array<8> buffer;
+    transenc::encoder encoder(buffer);
+    BOOST_REQUIRE_EQUAL(encoder.put(0.0), 0);
+    BOOST_REQUIRE_EQUAL(buffer.size(), 0);
+}
+
 BOOST_AUTO_TEST_SUITE_END()
