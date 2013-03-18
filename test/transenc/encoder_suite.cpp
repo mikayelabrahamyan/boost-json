@@ -766,6 +766,97 @@ BOOST_AUTO_TEST_CASE(test_double_buffer_eight)
 }
 
 //-----------------------------------------------------------------------------
+// Binary
+//-----------------------------------------------------------------------------
+
+BOOST_AUTO_TEST_CASE(test_binary_empty)
+{
+    output_array<2> buffer;
+    transenc::encoder encoder(buffer);
+    std::vector<protoc::int8_t> data;
+    BOOST_REQUIRE_EQUAL(encoder.put(data), buffer.capacity());
+    BOOST_REQUIRE_EQUAL(buffer.size(), 2);
+    BOOST_REQUIRE_EQUAL(buffer[0], '\xA8');
+    BOOST_REQUIRE_EQUAL(buffer[1], '\x00');
+}
+
+BOOST_AUTO_TEST_CASE(test_binary_empty_missing_one)
+{
+    output_array<1> buffer;
+    transenc::encoder encoder(buffer);
+    std::vector<protoc::int8_t> data;
+    BOOST_REQUIRE_EQUAL(encoder.put(data), 0);
+    BOOST_REQUIRE_EQUAL(buffer.size(), 0);
+}
+
+BOOST_AUTO_TEST_CASE(test_binary_empty_missing_two)
+{
+    output_array<0> buffer;
+    transenc::encoder encoder(buffer);
+    std::vector<protoc::int8_t> data;
+    BOOST_REQUIRE_EQUAL(encoder.put(data), 0);
+    BOOST_REQUIRE_EQUAL(buffer.size(), 0);
+}
+
+BOOST_AUTO_TEST_CASE(test_binary_one)
+{
+    output_array<2+1> buffer;
+    transenc::encoder encoder(buffer);
+    std::vector<protoc::int8_t> data;
+    data.push_back('\x12');
+    BOOST_REQUIRE_EQUAL(encoder.put(data), buffer.capacity());
+    BOOST_REQUIRE_EQUAL(buffer.size(), 3);
+    BOOST_REQUIRE_EQUAL(buffer[0], '\xA8');
+    BOOST_REQUIRE_EQUAL(buffer[1], '\x01');
+    BOOST_REQUIRE_EQUAL(buffer[2], '\x12');
+}
+
+BOOST_AUTO_TEST_CASE(test_binary_two)
+{
+    output_array<2+2> buffer;
+    transenc::encoder encoder(buffer);
+    std::vector<protoc::int8_t> data;
+    data.push_back('\x12');
+    data.push_back('\x34');
+    BOOST_REQUIRE_EQUAL(encoder.put(data), buffer.capacity());
+    BOOST_REQUIRE_EQUAL(buffer.size(), 4);
+    BOOST_REQUIRE_EQUAL(buffer[0], '\xA8');
+    BOOST_REQUIRE_EQUAL(buffer[1], '\x02');
+    BOOST_REQUIRE_EQUAL(buffer[2], '\x12');
+    BOOST_REQUIRE_EQUAL(buffer[3], '\x34');
+}
+
+BOOST_AUTO_TEST_CASE(test_binary_missing_one)
+{
+    output_array<2> buffer;
+    transenc::encoder encoder(buffer);
+    std::vector<protoc::int8_t> data;
+    data.push_back('\x12');
+    BOOST_REQUIRE_EQUAL(encoder.put(data), 0);
+    BOOST_REQUIRE_EQUAL(buffer.size(), 0);
+}
+
+BOOST_AUTO_TEST_CASE(test_binary_missing_two)
+{
+    output_array<1> buffer;
+    transenc::encoder encoder(buffer);
+    std::vector<protoc::int8_t> data;
+    data.push_back('\x12');
+    BOOST_REQUIRE_EQUAL(encoder.put(data), 0);
+    BOOST_REQUIRE_EQUAL(buffer.size(), 0);
+}
+
+BOOST_AUTO_TEST_CASE(test_binary_missing_three)
+{
+    output_array<0> buffer;
+    transenc::encoder encoder(buffer);
+    std::vector<protoc::int8_t> data;
+    data.push_back('\x12');
+    BOOST_REQUIRE_EQUAL(encoder.put(data), 0);
+    BOOST_REQUIRE_EQUAL(buffer.size(), 0);
+}
+
+//-----------------------------------------------------------------------------
 // String
 //-----------------------------------------------------------------------------
 
@@ -773,7 +864,7 @@ BOOST_AUTO_TEST_CASE(test_string_empty)
 {
     output_array<2> buffer;
     transenc::encoder encoder(buffer);
-    BOOST_REQUIRE_EQUAL(encoder.put(""), 2);
+    BOOST_REQUIRE_EQUAL(encoder.put(""), buffer.capacity());
     BOOST_REQUIRE_EQUAL(buffer.size(), 2);
     BOOST_REQUIRE_EQUAL(buffer[0], '\xA9');
     BOOST_REQUIRE_EQUAL(buffer[1], '\x00');

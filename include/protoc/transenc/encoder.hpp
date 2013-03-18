@@ -19,6 +19,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 #include <string>
+#include <vector>
 #include <protoc/types.hpp>
 #include <protoc/output.hpp>
 
@@ -42,6 +43,7 @@ public:
     std::size_t put(protoc::float64_t);
     std::size_t put(const char *);
     std::size_t put(const std::string&);
+    std::size_t put(const std::vector<protoc::int8_t>&);
 
 private:
     std::size_t write(protoc::int8_t);
