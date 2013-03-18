@@ -51,7 +51,7 @@ private:
     token next_int64();
     token next_float32();
     token next_float64();
-    token next_tlv();
+    token next_array();
     token next_string();
 
     token next_unknown();

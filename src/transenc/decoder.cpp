@@ -50,7 +50,7 @@ token decoder::next()
         current.range = input_range(input.begin(), input.begin() + 1);
         ++input;
     }
-    else if ((value & 0xF0) == 0xF0)
+    else if ((value & 0xE0) == 0xE0)
     {
         // Small negative integer
         current.type = token_int8;
@@ -78,35 +78,59 @@ token decoder::next()
             ++input;
             break;
 
-        case '\x90':
+        case '\xA0':
             current.type = next_int8();
             break;
 
-        case '\xA0':
-            current.type = next_int16();
+        case '\xA8':
+            current.type = next_array();
+            break;
+
+        case '\xA9':
+            current.type = next_string();
             break;
 
         case '\xB0':
-            current.type = next_int32();
+            current.type = next_int16();
             break;
 
-        case '\xB2':
-            current.type = next_float32();
+        case '\xB8':
+            current.type = next_array();
+            break;
+
+        case '\xB9':
+            current.type = next_string();
             break;
 
         case '\xC0':
-            current.type = next_int64();
+            current.type = next_int32();
             break;
 
         case '\xC2':
+            current.type = next_float32();
+            break;
+
+        case '\xC8':
+            current.type = next_array();
+            break;
+
+        case '\xC9':
+            current.type = next_string();
+            break;
+
+        case '\xD0':
+            current.type = next_int64();
+            break;
+
+        case '\xD2':
             current.type = next_float64();
             break;
 
-        case '\xE0':
-            current.type = next_tlv();
+        case '\xD8':
+            current.type = next_array();
             break;
 
-        case '\xE3':
+        case '\xD9':
             current.type = next_string();
             break;
 
@@ -227,26 +251,29 @@ std::string decoder::get_string() const
 token decoder::next_unknown()
 {
     // Determine field length
-    const input_range::value_type value = *input & 0xF0;
+    const input_range::value_type value = *input & 0xF8;
     switch (value)
     {
-    case '\x90':
+    case '\xA0':
         return next_unknown(1);
 
-    case '\xA0':
+    case '\xB0':
         return next_unknown(2);
 
-    case '\xB0':
+    case '\xC0':
         return next_unknown(4);
 
-    case '\xC0':
+    case '\xD0':
         return next_unknown(8);
 
-    case '\xD0':
-        return next_unknown(16);
-
-    case '\xE0':
-        return next_tlv();
+    case '\xA8':
+    case '\xB8':
+    case '\xC8':
+    case '\xD8':
+        {
+            token type = next_array();
+            return (type == token_array) ? token_null : type;
+        }
 
     default:
         ++input;
@@ -354,13 +381,16 @@ token decoder::next_float64()
 
 token decoder::next_string()
 {
-    token type = next_tlv();
+    token type = next_array();
     return (type == token_array) ? token_string : type;
 }
 
-token decoder::next_tlv()
+token decoder::next_array()
 {
-    ++input; // Skip token
+    const input_range::value_type value = *input & 0xF8;
+
+    // FIXME: This is a bit of a hack (the token will be skipped by next_int8() etc.)
+    // ++input; // Skip token
 
     if (input.empty())
     {
@@ -368,57 +398,49 @@ token decoder::next_tlv()
     }
 
     protoc::int64_t length;
-    input_range::value_type value = *input;
-    if ((value & 0x80) == 0x00)
-    {
-        length = static_cast<protoc::int64_t>(value);
-        ++input;
-    }
-    else
-    {
-        assert(value & 0x80);
 
-        switch (value)
+    assert(value & 0x08);
+
+    switch (value)
+    {
+    case '\xA8':
+        current.type = next_int8(); // FIXME
+        if (current.type == token_eof)
         {
-        case '\x90':
-            current.type = next_int8();
-            if (current.type == token_eof)
-            {
-                return token_eof;
-            }
-            length = static_cast<protoc::int64_t>(get_int8());
-            break;
-
-        case '\xA0':
-            current.type = next_int16();
-            if (current.type == token_eof)
-            {
-                return token_eof;
-            }
-            length = static_cast<protoc::int64_t>(get_int16());
-            break;
-
-        case '\xB0':
-            current.type = next_int32();
-            if (current.type == token_eof)
-            {
-                return token_eof;
-            }
-            length = static_cast<protoc::int64_t>(get_int32());
-            break;
-
-        case '\xC0':
-            current.type = next_int64();
-            if (current.type == token_eof)
-            {
-                return token_eof;
-            }
-            length = get_int64();
-            break;
-
-        default:
-            return token_error;
+            return token_eof;
         }
+        length = static_cast<protoc::int64_t>(get_int8());
+        break;
+
+    case '\xB8':
+        current.type = next_int16();
+        if (current.type == token_eof)
+        {
+            return token_eof;
+        }
+        length = static_cast<protoc::int64_t>(get_int16());
+        break;
+
+    case '\xC8':
+        current.type = next_int32();
+        if (current.type == token_eof)
+        {
+            return token_eof;
+        }
+        length = static_cast<protoc::int64_t>(get_int32());
+        break;
+
+    case '\xD8':
+        current.type = next_int64();
+        if (current.type == token_eof)
+        {
+            return token_eof;
+        }
+        length = get_int64();
+        break;
+
+    default:
+        return token_error;
     }
 
     if (length < 0)
