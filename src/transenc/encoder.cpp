@@ -30,31 +30,12 @@ encoder::encoder(output& buffer)
 
 std::size_t encoder::put()
 {
-    const output::value_type type('\x82');
-    const std::size_t size = sizeof(type);
-
-    if (!buffer.grow(size))
-    {
-        return 0;
-    }
-
-    buffer.write(type);
-
-    return size;
+    return put_token('\x82');
 }
 
 std::size_t encoder::put(bool value)
 {
-    const std::size_t size = sizeof(output::value_type);
-
-    if (!buffer.grow(size))
-    {
-        return 0;
-    }
-
-    buffer.write((value) ? '\x81' : '\x80');
-
-    return size;
+    return put_token((value) ? '\x81' : '\x80');
 }
 
 std::size_t encoder::put(protoc::int8_t value)
@@ -288,6 +269,40 @@ std::size_t encoder::put(const std::vector<protoc::int8_t>& value)
     }
 
     return sizeof(output::value_type) + size + length;
+}
+
+std::size_t encoder::put_tuple_begin()
+{
+    return put_token('\x90');
+}
+
+std::size_t encoder::put_tuple_end()
+{
+    return put_token('\x91');
+}
+
+std::size_t encoder::put_array_begin()
+{
+    return put_token('\x92');
+}
+
+std::size_t encoder::put_array_end()
+{
+    return put_token('\x93');
+}
+
+std::size_t encoder::put_token(output::value_type value)
+{
+    const std::size_t size = sizeof(value);
+
+    if (!buffer.grow(size))
+    {
+        return 0;
+    }
+
+    buffer.write(value);
+
+    return size;
 }
 
 std::size_t encoder::write(protoc::int8_t value)

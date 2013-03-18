@@ -575,91 +575,91 @@ BOOST_AUTO_TEST_CASE(test_float64_missing_eight)
 // Binary data
 //-----------------------------------------------------------------------------
 
-BOOST_AUTO_TEST_CASE(test_array_int8_empty)
+BOOST_AUTO_TEST_CASE(test_binary_int8_empty)
 {
     const char input[] = "\xA8" "\x00";
     transenc::decoder decoder(input, input + sizeof(input) - 1);
-    BOOST_REQUIRE_EQUAL(decoder.next(), transenc::token_array);
-    BOOST_REQUIRE_EQUAL(decoder.get_array(), "");
+    BOOST_REQUIRE_EQUAL(decoder.next(), transenc::token_binary);
+    BOOST_REQUIRE_EQUAL(decoder.get_binary(), "");
     BOOST_REQUIRE_EQUAL(decoder.next(), transenc::token_eof);
 }
 
-BOOST_AUTO_TEST_CASE(test_array_int16_empty)
+BOOST_AUTO_TEST_CASE(test_binary_int16_empty)
 {
     const char input[] = "\xB8" "\x00\x00";
     transenc::decoder decoder(input, input + sizeof(input) - 1);
-    BOOST_REQUIRE_EQUAL(decoder.next(), transenc::token_array);
-    BOOST_REQUIRE_EQUAL(decoder.get_array(), "");
+    BOOST_REQUIRE_EQUAL(decoder.next(), transenc::token_binary);
+    BOOST_REQUIRE_EQUAL(decoder.get_binary(), "");
     BOOST_REQUIRE_EQUAL(decoder.next(), transenc::token_eof);
 }
 
-BOOST_AUTO_TEST_CASE(test_array_int32_empty)
+BOOST_AUTO_TEST_CASE(test_binary_int32_empty)
 {
     const char input[] = "\xC8" "\x00\x00\x00\x00";
     transenc::decoder decoder(input, input + sizeof(input) - 1);
-    BOOST_REQUIRE_EQUAL(decoder.next(), transenc::token_array);
-    BOOST_REQUIRE_EQUAL(decoder.get_array(), "");
+    BOOST_REQUIRE_EQUAL(decoder.next(), transenc::token_binary);
+    BOOST_REQUIRE_EQUAL(decoder.get_binary(), "");
     BOOST_REQUIRE_EQUAL(decoder.next(), transenc::token_eof);
 }
 
-BOOST_AUTO_TEST_CASE(test_array_int64_empty)
+BOOST_AUTO_TEST_CASE(test_binary_int64_empty)
 {
     const char input[] = "\xD8" "\x00\x00\x00\x00\x00\x00\x00\x00";
     transenc::decoder decoder(input, input + sizeof(input) - 1);
-    BOOST_REQUIRE_EQUAL(decoder.next(), transenc::token_array);
-    BOOST_REQUIRE_EQUAL(decoder.get_array(), "");
+    BOOST_REQUIRE_EQUAL(decoder.next(), transenc::token_binary);
+    BOOST_REQUIRE_EQUAL(decoder.get_binary(), "");
     BOOST_REQUIRE_EQUAL(decoder.next(), transenc::token_eof);
 }
 
-BOOST_AUTO_TEST_CASE(test_array_int8_one)
+BOOST_AUTO_TEST_CASE(test_binary_int8_one)
 {
     const char input[] = "\xA8" "\x01" "\x12";
     transenc::decoder decoder(input, input + sizeof(input) - 1);
-    BOOST_REQUIRE_EQUAL(decoder.next(), transenc::token_array);
-    BOOST_REQUIRE_EQUAL(decoder.get_array(), "\x12");
+    BOOST_REQUIRE_EQUAL(decoder.next(), transenc::token_binary);
+    BOOST_REQUIRE_EQUAL(decoder.get_binary(), "\x12");
     BOOST_REQUIRE_EQUAL(decoder.next(), transenc::token_eof);
 }
 
-BOOST_AUTO_TEST_CASE(test_array_int16_one)
+BOOST_AUTO_TEST_CASE(test_binary_int16_one)
 {
     const char input[] = "\xB8" "\x00\x01" "\x12";
     transenc::decoder decoder(input, input + sizeof(input) - 1);
-    BOOST_REQUIRE_EQUAL(decoder.next(), transenc::token_array);
-    BOOST_REQUIRE_EQUAL(decoder.get_array(), "\x12");
+    BOOST_REQUIRE_EQUAL(decoder.next(), transenc::token_binary);
+    BOOST_REQUIRE_EQUAL(decoder.get_binary(), "\x12");
     BOOST_REQUIRE_EQUAL(decoder.next(), transenc::token_eof);
 }
 
-BOOST_AUTO_TEST_CASE(test_array_int8_two)
+BOOST_AUTO_TEST_CASE(test_binary_int8_two)
 {
     const char input[] = "\xA8" "\x02" "\x12\x34";
     transenc::decoder decoder(input, input + sizeof(input) - 1);
-    BOOST_REQUIRE_EQUAL(decoder.next(), transenc::token_array);
-    BOOST_REQUIRE_EQUAL(decoder.get_array(), "\x12\x34");
+    BOOST_REQUIRE_EQUAL(decoder.next(), transenc::token_binary);
+    BOOST_REQUIRE_EQUAL(decoder.get_binary(), "\x12\x34");
     BOOST_REQUIRE_EQUAL(decoder.next(), transenc::token_eof);
 }
 
-BOOST_AUTO_TEST_CASE(test_array_int8_missing_length)
+BOOST_AUTO_TEST_CASE(test_binary_int8_missing_length)
 {
     const char input[] = "\xA8";
     transenc::decoder decoder(input, input + sizeof(input) - 1);
     BOOST_REQUIRE_EQUAL(decoder.next(), transenc::token_eof);
 }
 
-BOOST_AUTO_TEST_CASE(test_array_int8_missing_content)
+BOOST_AUTO_TEST_CASE(test_binary_int8_missing_content)
 {
     const char input[] = "\xA8" "\x01";
     transenc::decoder decoder(input, input + sizeof(input) - 1);
     BOOST_REQUIRE_EQUAL(decoder.next(), transenc::token_eof);
 }
 
-BOOST_AUTO_TEST_CASE(test_array_int8_invalid_length)
+BOOST_AUTO_TEST_CASE(test_binary_int8_invalid_length)
 {
     const char input[] = "\xA8" "\xFF" "\x12";
     transenc::decoder decoder(input, input + sizeof(input) - 1);
     BOOST_REQUIRE_EQUAL(decoder.next(), transenc::token_error);
 }
 
-BOOST_AUTO_TEST_CASE(test_array_int8_invalid_length_2)
+BOOST_AUTO_TEST_CASE(test_binary_int8_invalid_length_2)
 {
     const char input[] = "\xA8" "\xE0" "\x12";
     transenc::decoder decoder(input, input + sizeof(input) - 1);

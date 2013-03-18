@@ -951,4 +951,76 @@ BOOST_AUTO_TEST_CASE(test_string_medium_a)
     BOOST_REQUIRE_EQUAL(buffer[3+0x7F], 'a');
 }
 
+//-----------------------------------------------------------------------------
+// Container
+//-----------------------------------------------------------------------------
+
+BOOST_AUTO_TEST_CASE(test_array_begin)
+{
+    output_array<1> buffer;
+    transenc::encoder encoder(buffer);
+    BOOST_REQUIRE_EQUAL(encoder.put_array_begin(), 1);
+    BOOST_REQUIRE_EQUAL(buffer.size(), 1);
+    BOOST_REQUIRE_EQUAL(buffer[0], '\x92');
+}
+
+BOOST_AUTO_TEST_CASE(test_array_begin_empty)
+{
+    output_array<0> buffer;
+    transenc::encoder encoder(buffer);
+    BOOST_REQUIRE_EQUAL(encoder.put_array_begin(), 0);
+    BOOST_REQUIRE_EQUAL(buffer.size(), 0);
+}
+
+BOOST_AUTO_TEST_CASE(test_array_end)
+{
+    output_array<1> buffer;
+    transenc::encoder encoder(buffer);
+    BOOST_REQUIRE_EQUAL(encoder.put_array_end(), 1);
+    BOOST_REQUIRE_EQUAL(buffer.size(), 1);
+    BOOST_REQUIRE_EQUAL(buffer[0], '\x93');
+}
+
+BOOST_AUTO_TEST_CASE(test_array_end_empty)
+{
+    output_array<0> buffer;
+    transenc::encoder encoder(buffer);
+    BOOST_REQUIRE_EQUAL(encoder.put_array_end(), 0);
+    BOOST_REQUIRE_EQUAL(buffer.size(), 0);
+}
+
+BOOST_AUTO_TEST_CASE(test_tuple_begin)
+{
+    output_array<1> buffer;
+    transenc::encoder encoder(buffer);
+    BOOST_REQUIRE_EQUAL(encoder.put_tuple_begin(), 1);
+    BOOST_REQUIRE_EQUAL(buffer.size(), 1);
+    BOOST_REQUIRE_EQUAL(buffer[0], '\x90');
+}
+
+BOOST_AUTO_TEST_CASE(test_tuple_begin_empty)
+{
+    output_array<0> buffer;
+    transenc::encoder encoder(buffer);
+    BOOST_REQUIRE_EQUAL(encoder.put_tuple_begin(), 0);
+    BOOST_REQUIRE_EQUAL(buffer.size(), 0);
+}
+
+BOOST_AUTO_TEST_CASE(test_tuple_end)
+{
+    output_array<1> buffer;
+    transenc::encoder encoder(buffer);
+    BOOST_REQUIRE_EQUAL(encoder.put_tuple_end(), 1);
+    BOOST_REQUIRE_EQUAL(buffer.size(), 1);
+    BOOST_REQUIRE_EQUAL(buffer[0], '\x91');
+}
+
+BOOST_AUTO_TEST_CASE(test_tuple_end_empty)
+{
+    output_array<0> buffer;
+    transenc::encoder encoder(buffer);
+    BOOST_REQUIRE_EQUAL(encoder.put_tuple_end(), 0);
+    BOOST_REQUIRE_EQUAL(buffer.size(), 0);
+}
+
 BOOST_AUTO_TEST_SUITE_END()

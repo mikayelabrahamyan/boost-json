@@ -42,7 +42,12 @@ enum token
     token_float64,
 
     token_string,
-    token_array
+    token_binary,
+
+    token_tuple_begin,
+    token_tuple_end,
+    token_array_begin,
+    token_array_end
 };
 
 }

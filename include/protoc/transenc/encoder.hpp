@@ -45,7 +45,14 @@ public:
     std::size_t put(const std::string&);
     std::size_t put(const std::vector<protoc::int8_t>&);
 
+    std::size_t put_tuple_begin();
+    std::size_t put_tuple_end();
+    std::size_t put_array_begin();
+    std::size_t put_array_end();
+
 private:
+    std::size_t put_token(output::value_type);
+
     std::size_t write(protoc::int8_t);
     std::size_t write(protoc::int16_t);
     std::size_t write(protoc::int32_t);

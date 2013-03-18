@@ -83,7 +83,7 @@ token decoder::next()
             break;
 
         case '\xA8':
-            current.type = next_array();
+            current.type = next_binary();
             break;
 
         case '\xA9':
@@ -95,7 +95,7 @@ token decoder::next()
             break;
 
         case '\xB8':
-            current.type = next_array();
+            current.type = next_binary();
             break;
 
         case '\xB9':
@@ -111,7 +111,7 @@ token decoder::next()
             break;
 
         case '\xC8':
-            current.type = next_array();
+            current.type = next_binary();
             break;
 
         case '\xC9':
@@ -127,7 +127,7 @@ token decoder::next()
             break;
 
         case '\xD8':
-            current.type = next_array();
+            current.type = next_binary();
             break;
 
         case '\xD9':
@@ -233,9 +233,9 @@ protoc::float64_t decoder::get_float64() const
     return result;
 }
 
-std::string decoder::get_array() const
+std::string decoder::get_binary() const
 {
-    assert(current.type == token_array);
+    assert(current.type == token_binary);
 
     return std::string(current.range.begin(), current.range.size());
 }
@@ -271,8 +271,8 @@ token decoder::next_unknown()
     case '\xC8':
     case '\xD8':
         {
-            token type = next_array();
-            return (type == token_array) ? token_null : type;
+            token type = next_binary();
+            return (type == token_binary) ? token_null : type;
         }
 
     default:
@@ -381,11 +381,11 @@ token decoder::next_float64()
 
 token decoder::next_string()
 {
-    token type = next_array();
-    return (type == token_array) ? token_string : type;
+    token type = next_binary();
+    return (type == token_binary) ? token_string : type;
 }
 
-token decoder::next_array()
+token decoder::next_binary()
 {
     const input_range::value_type value = *input & 0xF8;
 
@@ -454,7 +454,7 @@ token decoder::next_array()
 
     current.range = input_range(input.begin(), input.begin() + length);
     input += length;
-    return token_array;
+    return token_binary;
 }
 
 token decoder::next_unknown(std::size_t size)
