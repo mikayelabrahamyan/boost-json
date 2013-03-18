@@ -44,6 +44,12 @@ public:
     std::size_t put(const std::string&);
 
 private:
+    std::size_t write(protoc::int8_t);
+    std::size_t write(protoc::int16_t);
+    std::size_t write(protoc::int32_t);
+    std::size_t write(protoc::int64_t);
+
+private:
     output& buffer;
 };
 

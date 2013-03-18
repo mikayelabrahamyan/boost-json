@@ -15,6 +15,7 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
+#include <limits>
 #include <protoc/transenc/encoder.hpp>
 
 namespace protoc
@@ -67,7 +68,7 @@ std::size_t encoder::put(protoc::int8_t value)
             return 0;
         }
 
-        buffer.write(value);
+        write(value);
         return size;
     }
     else
@@ -81,7 +82,7 @@ std::size_t encoder::put(protoc::int8_t value)
         }
 
         buffer.write(type);
-        buffer.write(static_cast<output::value_type>(value));
+        write(value);
         return size;
     }
 }
@@ -97,8 +98,7 @@ std::size_t encoder::put(protoc::int16_t value)
     }
 
     buffer.write(type);
-    buffer.write(static_cast<output::value_type>((value >> 8) & 0xFF));
-    buffer.write(static_cast<output::value_type>(value & 0xFF));
+    write(value);
 
     return size;
 }
@@ -114,10 +114,7 @@ std::size_t encoder::put(protoc::int32_t value)
     }
 
     buffer.write(type);
-    buffer.write(static_cast<output::value_type>((value >> 24) & 0xFF));
-    buffer.write(static_cast<output::value_type>((value >> 16) & 0xFF));
-    buffer.write(static_cast<output::value_type>((value >> 8) & 0xFF));
-    buffer.write(static_cast<output::value_type>(value & 0xFF));
+    write(value);
 
     return size;
 }
@@ -133,14 +130,7 @@ std::size_t encoder::put(protoc::int64_t value)
     }
 
     buffer.write(type);
-    buffer.write(static_cast<output::value_type>((value >> 54) & 0xFF));
-    buffer.write(static_cast<output::value_type>((value >> 48) & 0xFF));
-    buffer.write(static_cast<output::value_type>((value >> 40) & 0xFF));
-    buffer.write(static_cast<output::value_type>((value >> 32) & 0xFF));
-    buffer.write(static_cast<output::value_type>((value >> 24) & 0xFF));
-    buffer.write(static_cast<output::value_type>((value >> 16) & 0xFF));
-    buffer.write(static_cast<output::value_type>((value >> 8) & 0xFF));
-    buffer.write(static_cast<output::value_type>(value & 0xFF));
+    write(value);
 
     return size;
 }
@@ -191,6 +181,97 @@ std::size_t encoder::put(protoc::float64_t value)
     buffer.write(static_cast<output::value_type>(value_buffer[((protoc::int8_t *)&ix)[7]]));
 
     return size;
+}
+
+std::size_t encoder::put(const char *value)
+{
+    return put(std::string(value));
+}
+
+std::size_t encoder::put(const std::string& value)
+{
+    const std::string::size_type length = value.size();
+
+    std::size_t size = 0;
+
+    if (length < static_cast<std::string::size_type>(std::numeric_limits<protoc::int8_t>::max()))
+    {
+        if (!buffer.grow(sizeof(output::value_type) + sizeof(protoc::int8_t) + length))
+        {
+            return 0;
+        }
+        buffer.write('\xA9');
+        size = write(static_cast<int8_t>(length));
+    }
+    else if (length < static_cast<std::string::size_type>(std::numeric_limits<protoc::int16_t>::max()))
+    {
+        if (!buffer.grow(sizeof(output::value_type) + sizeof(protoc::int16_t) + length))
+        {
+            return 0;
+        }
+        buffer.write('\xB9');
+        size = write(static_cast<int16_t>(length));
+    }
+    else if (length < static_cast<std::string::size_type>(std::numeric_limits<protoc::int32_t>::max()))
+    {
+        if (!buffer.grow(sizeof(output::value_type) + sizeof(protoc::int32_t) + length))
+        {
+            return 0;
+        }
+        buffer.write('\xC9');
+        size = write(static_cast<int32_t>(length));
+    }
+    else
+    {
+        if (!buffer.grow(sizeof(output::value_type) + sizeof(protoc::int64_t) + length))
+        {
+            return 0;
+        }
+        buffer.write('\xD9');
+        size = write(static_cast<int64_t>(length));
+    }
+
+    for (std::string::const_iterator it = value.begin(); it != value.end(); ++it)
+    {
+        buffer.write(*it);
+    }
+
+    return sizeof(output::value_type) + size + length;
+}
+
+std::size_t encoder::write(protoc::int8_t value)
+{
+    buffer.write(static_cast<output::value_type>(value));
+    return sizeof(protoc::int8_t);
+}
+
+std::size_t encoder::write(protoc::int16_t value)
+{
+    buffer.write(static_cast<output::value_type>((value >> 8) & 0xFF));
+    buffer.write(static_cast<output::value_type>(value & 0xFF));
+    return sizeof(protoc::int16_t);
+}
+
+std::size_t encoder::write(protoc::int32_t value)
+{
+    buffer.write(static_cast<output::value_type>((value >> 24) & 0xFF));
+    buffer.write(static_cast<output::value_type>((value >> 16) & 0xFF));
+    buffer.write(static_cast<output::value_type>((value >> 8) & 0xFF));
+    buffer.write(static_cast<output::value_type>(value & 0xFF));
+    return sizeof(protoc::int32_t);
+}
+
+std::size_t encoder::write(protoc::int64_t value)
+{
+    buffer.write(static_cast<output::value_type>((value >> 54) & 0xFF));
+    buffer.write(static_cast<output::value_type>((value >> 48) & 0xFF));
+    buffer.write(static_cast<output::value_type>((value >> 40) & 0xFF));
+    buffer.write(static_cast<output::value_type>((value >> 32) & 0xFF));
+    buffer.write(static_cast<output::value_type>((value >> 24) & 0xFF));
+    buffer.write(static_cast<output::value_type>((value >> 16) & 0xFF));
+    buffer.write(static_cast<output::value_type>((value >> 8) & 0xFF));
+    buffer.write(static_cast<output::value_type>(value & 0xFF));
+    return sizeof(protoc::int64_t);
 }
 
 }
