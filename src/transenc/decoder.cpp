@@ -28,18 +28,24 @@ decoder::decoder(const char *begin,
     : input(begin, end)
 {
     current.type = token_eof;
+    next();
 }
 
-token decoder::next()
+token decoder::type() const
+{
+    return current.type;
+}
+
+void decoder::next()
 {
     if (current.type == token_error)
     {
-        return current.type;
+        return;
     }
     if (input.empty())
     {
         current.type = token_eof;
-        return current.type;
+        return;
     }
 
     const input_range::value_type value = *input;
@@ -75,6 +81,26 @@ token decoder::next()
 
         case '\x82':
             current.type = token_null;
+            ++input;
+            break;
+
+        case '\x90':
+            current.type = token_tuple_begin;
+            ++input;
+            break;
+
+        case '\x91':
+            current.type = token_tuple_end;
+            ++input;
+            break;
+
+        case '\x92':
+            current.type = token_array_begin;
+            ++input;
+            break;
+
+        case '\x93':
+            current.type = token_array_end;
             ++input;
             break;
 
@@ -139,7 +165,6 @@ token decoder::next()
             break;
         }
     }
-    return current.type;
 }
 
 protoc::int8_t decoder::get_int8() const

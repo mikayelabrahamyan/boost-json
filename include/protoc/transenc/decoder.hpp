@@ -33,7 +33,8 @@ class decoder
 public:
     decoder(const char *begin, const char *end);
 
-    token next();
+    token type() const;
+    void next();
 
     protoc::int8_t get_int8() const;
     protoc::int16_t get_int16() const;
