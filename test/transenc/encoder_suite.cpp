@@ -121,23 +121,23 @@ BOOST_AUTO_TEST_CASE(test_int8_minus_one)
     BOOST_REQUIRE_EQUAL(buffer[0], '\xFF');
 }
 
-BOOST_AUTO_TEST_CASE(test_int8_minus_16)
+BOOST_AUTO_TEST_CASE(test_int8_minus_32)
 {
     output_array<1> buffer;
     transenc::encoder encoder(buffer);
-    BOOST_REQUIRE_EQUAL(encoder.put(protoc::int8_t(-16)), 1);
+    BOOST_REQUIRE_EQUAL(encoder.put(protoc::int8_t(-32)), 1);
     BOOST_REQUIRE_EQUAL(buffer.size(), 1);
-    BOOST_REQUIRE_EQUAL(buffer[0], '\xF0');
+    BOOST_REQUIRE_EQUAL(buffer[0], '\xE0');
 }
 
-BOOST_AUTO_TEST_CASE(test_int8_minus_17)
+BOOST_AUTO_TEST_CASE(test_int8_minus_33)
 {
     output_array<2> buffer;
     transenc::encoder encoder(buffer);
-    BOOST_REQUIRE_EQUAL(encoder.put(protoc::int8_t(-17)), 2);
+    BOOST_REQUIRE_EQUAL(encoder.put(protoc::int8_t(-33)), 2);
     BOOST_REQUIRE_EQUAL(buffer.size(), 2);
-    BOOST_REQUIRE_EQUAL(buffer[0], '\x90');
-    BOOST_REQUIRE_EQUAL(buffer[1], '\xEF');
+    BOOST_REQUIRE_EQUAL(buffer[0], '\xA0');
+    BOOST_REQUIRE_EQUAL(buffer[1], '\xDF');
 }
 
 BOOST_AUTO_TEST_CASE(test_int8_minus_128)
@@ -146,7 +146,7 @@ BOOST_AUTO_TEST_CASE(test_int8_minus_128)
     transenc::encoder encoder(buffer);
     BOOST_REQUIRE_EQUAL(encoder.put(protoc::int8_t(-128)), 2);
     BOOST_REQUIRE_EQUAL(buffer.size(), 2);
-    BOOST_REQUIRE_EQUAL(buffer[0], '\x90');
+    BOOST_REQUIRE_EQUAL(buffer[0], '\xA0');
     BOOST_REQUIRE_EQUAL(buffer[1], '\x80');
 }
 
@@ -156,7 +156,7 @@ BOOST_AUTO_TEST_CASE(test_int16_zero)
     transenc::encoder encoder(buffer);
     BOOST_REQUIRE_EQUAL(encoder.put(protoc::int16_t(0)), 3);
     BOOST_REQUIRE_EQUAL(buffer.size(), 3);
-    BOOST_REQUIRE_EQUAL(buffer[0], '\xA0');
+    BOOST_REQUIRE_EQUAL(buffer[0], '\xB0');
     BOOST_REQUIRE_EQUAL(buffer[1], '\x00');
     BOOST_REQUIRE_EQUAL(buffer[2], '\x00');
 }
@@ -167,7 +167,7 @@ BOOST_AUTO_TEST_CASE(test_int16_one)
     transenc::encoder encoder(buffer);
     BOOST_REQUIRE_EQUAL(encoder.put(protoc::int16_t(1)), 3);
     BOOST_REQUIRE_EQUAL(buffer.size(), 3);
-    BOOST_REQUIRE_EQUAL(buffer[0], '\xA0');
+    BOOST_REQUIRE_EQUAL(buffer[0], '\xB0');
     BOOST_REQUIRE_EQUAL(buffer[1], '\x00');
     BOOST_REQUIRE_EQUAL(buffer[2], '\x01');
 }
@@ -178,7 +178,7 @@ BOOST_AUTO_TEST_CASE(test_int16_minus_one)
     transenc::encoder encoder(buffer);
     BOOST_REQUIRE_EQUAL(encoder.put(protoc::int16_t(-1)), 3);
     BOOST_REQUIRE_EQUAL(buffer.size(), 3);
-    BOOST_REQUIRE_EQUAL(buffer[0], '\xA0');
+    BOOST_REQUIRE_EQUAL(buffer[0], '\xB0');
     BOOST_REQUIRE_EQUAL(buffer[1], '\xFF');
     BOOST_REQUIRE_EQUAL(buffer[2], '\xFF');
 }
@@ -213,7 +213,7 @@ BOOST_AUTO_TEST_CASE(test_int32_zero)
     transenc::encoder encoder(buffer);
     BOOST_REQUIRE_EQUAL(encoder.put(protoc::int32_t(0)), 5);
     BOOST_REQUIRE_EQUAL(buffer.size(), 5);
-    BOOST_REQUIRE_EQUAL(buffer[0], '\xB0');
+    BOOST_REQUIRE_EQUAL(buffer[0], '\xC0');
     BOOST_REQUIRE_EQUAL(buffer[1], '\x00');
     BOOST_REQUIRE_EQUAL(buffer[2], '\x00');
     BOOST_REQUIRE_EQUAL(buffer[3], '\x00');
@@ -226,7 +226,7 @@ BOOST_AUTO_TEST_CASE(test_int32_one)
     transenc::encoder encoder(buffer);
     BOOST_REQUIRE_EQUAL(encoder.put(protoc::int32_t(1)), 5);
     BOOST_REQUIRE_EQUAL(buffer.size(), 5);
-    BOOST_REQUIRE_EQUAL(buffer[0], '\xB0');
+    BOOST_REQUIRE_EQUAL(buffer[0], '\xC0');
     BOOST_REQUIRE_EQUAL(buffer[1], '\x00');
     BOOST_REQUIRE_EQUAL(buffer[2], '\x00');
     BOOST_REQUIRE_EQUAL(buffer[3], '\x00');
@@ -239,7 +239,7 @@ BOOST_AUTO_TEST_CASE(test_int32_minus_one)
     transenc::encoder encoder(buffer);
     BOOST_REQUIRE_EQUAL(encoder.put(protoc::int32_t(-1)), 5);
     BOOST_REQUIRE_EQUAL(buffer.size(), 5);
-    BOOST_REQUIRE_EQUAL(buffer[0], '\xB0');
+    BOOST_REQUIRE_EQUAL(buffer[0], '\xC0');
     BOOST_REQUIRE_EQUAL(buffer[1], '\xFF');
     BOOST_REQUIRE_EQUAL(buffer[2], '\xFF');
     BOOST_REQUIRE_EQUAL(buffer[3], '\xFF');
@@ -292,7 +292,7 @@ BOOST_AUTO_TEST_CASE(test_int64_zero)
     transenc::encoder encoder(buffer);
     BOOST_REQUIRE_EQUAL(encoder.put(protoc::int64_t(0)), 9);
     BOOST_REQUIRE_EQUAL(buffer.size(), 9);
-    BOOST_REQUIRE_EQUAL(buffer[0], '\xC0');
+    BOOST_REQUIRE_EQUAL(buffer[0], '\xD0');
     BOOST_REQUIRE_EQUAL(buffer[1], '\x00');
     BOOST_REQUIRE_EQUAL(buffer[2], '\x00');
     BOOST_REQUIRE_EQUAL(buffer[3], '\x00');
@@ -309,7 +309,7 @@ BOOST_AUTO_TEST_CASE(test_int64_one)
     transenc::encoder encoder(buffer);
     BOOST_REQUIRE_EQUAL(encoder.put(protoc::int64_t(1)), 9);
     BOOST_REQUIRE_EQUAL(buffer.size(), 9);
-    BOOST_REQUIRE_EQUAL(buffer[0], '\xC0');
+    BOOST_REQUIRE_EQUAL(buffer[0], '\xD0');
     BOOST_REQUIRE_EQUAL(buffer[1], '\x00');
     BOOST_REQUIRE_EQUAL(buffer[2], '\x00');
     BOOST_REQUIRE_EQUAL(buffer[3], '\x00');
@@ -326,7 +326,7 @@ BOOST_AUTO_TEST_CASE(test_int64_minus_one)
     transenc::encoder encoder(buffer);
     BOOST_REQUIRE_EQUAL(encoder.put(protoc::int64_t(-1)), 9);
     BOOST_REQUIRE_EQUAL(buffer.size(), 9);
-    BOOST_REQUIRE_EQUAL(buffer[0], '\xC0');
+    BOOST_REQUIRE_EQUAL(buffer[0], '\xD0');
     BOOST_REQUIRE_EQUAL(buffer[1], '\xFF');
     BOOST_REQUIRE_EQUAL(buffer[2], '\xFF');
     BOOST_REQUIRE_EQUAL(buffer[3], '\xFF');

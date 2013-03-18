@@ -58,7 +58,7 @@ std::size_t encoder::put(bool value)
 
 std::size_t encoder::put(protoc::int8_t value)
 {
-    if (value >= -16)
+    if (value >= -32)
     {
         const std::size_t size = sizeof(output::value_type);
 
@@ -72,7 +72,7 @@ std::size_t encoder::put(protoc::int8_t value)
     }
     else
     {
-        const output::value_type type('\x90');
+        const output::value_type type('\xA0');
         const std::size_t size = sizeof(type) + sizeof(protoc::int8_t);
 
         if (!buffer.grow(size))
@@ -88,7 +88,7 @@ std::size_t encoder::put(protoc::int8_t value)
 
 std::size_t encoder::put(protoc::int16_t value)
 {
-    const output::value_type type('\xA0');
+    const output::value_type type('\xB0');
     const std::size_t size = sizeof(type) + sizeof(protoc::int16_t);
 
     if (!buffer.grow(size))
@@ -105,7 +105,7 @@ std::size_t encoder::put(protoc::int16_t value)
 
 std::size_t encoder::put(protoc::int32_t value)
 {
-    const output::value_type type('\xB0');
+    const output::value_type type('\xC0');
     const std::size_t size = sizeof(type) + sizeof(protoc::int32_t);
 
     if (!buffer.grow(size))
@@ -124,7 +124,7 @@ std::size_t encoder::put(protoc::int32_t value)
 
 std::size_t encoder::put(protoc::int64_t value)
 {
-    const output::value_type type('\xC0');
+    const output::value_type type('\xD0');
     const std::size_t size = sizeof(type) + sizeof(protoc::int64_t);
 
     if (!buffer.grow(size))
