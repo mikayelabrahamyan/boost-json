@@ -209,7 +209,7 @@ BOOST_AUTO_TEST_CASE(test_string_alpha)
 
 BOOST_AUTO_TEST_CASE(test_vector_bool_empty)
 {
-    const char input[] = "\x92\x93";
+    const char input[] = "\x91\x99";
     transenc::iarchive in(input, input + sizeof(input));
     std::vector<bool> value;
     in >> boost::serialization::make_nvp("value", value);
@@ -218,7 +218,7 @@ BOOST_AUTO_TEST_CASE(test_vector_bool_empty)
 
 BOOST_AUTO_TEST_CASE(test_vector_bool_one)
 {
-    const char input[] = "\x92\x81\x93";
+    const char input[] = "\x91\x81\x99";
     transenc::iarchive in(input, input + sizeof(input));
     std::vector<bool> value;
     in >> boost::serialization::make_nvp("value", value);
@@ -228,7 +228,7 @@ BOOST_AUTO_TEST_CASE(test_vector_bool_one)
 
 BOOST_AUTO_TEST_CASE(test_vector_bool_two)
 {
-    const char input[] = "\x92\x81\x80\x93";
+    const char input[] = "\x91\x81\x80\x99";
     transenc::iarchive in(input, input + sizeof(input));
     std::vector<bool> value;
     in >> boost::serialization::make_nvp("value", value);
@@ -239,7 +239,7 @@ BOOST_AUTO_TEST_CASE(test_vector_bool_two)
 
 BOOST_AUTO_TEST_CASE(test_vector_mixed)
 {
-    const char input[] = "\x92\x81\x00\x93"; // [ true, 0 ]
+    const char input[] = "\x91\x81\x00\x99"; // [ true, 0 ]
     transenc::iarchive in(input, input + sizeof(input));
     std::vector<bool> value;
     BOOST_REQUIRE_THROW(in >> boost::serialization::make_nvp("value", value),
@@ -248,7 +248,7 @@ BOOST_AUTO_TEST_CASE(test_vector_mixed)
 
 BOOST_AUTO_TEST_CASE(test_vector_missing_end)
 {
-    const char input[] = "\x92\x81";
+    const char input[] = "\x91\x81";
     transenc::iarchive in(input, input + sizeof(input));
     std::vector<bool> value;
     BOOST_REQUIRE_THROW(in >> boost::serialization::make_nvp("value", value),
@@ -257,7 +257,7 @@ BOOST_AUTO_TEST_CASE(test_vector_missing_end)
 
 BOOST_AUTO_TEST_CASE(test_map_bool_empty)
 {
-    const char input[] = "\x92\x93";
+    const char input[] = "\x91\x99";
     transenc::iarchive in(input, input + sizeof(input));
     std::map<std::string, bool> value;
     in >> boost::serialization::make_nvp("value", value);
@@ -266,7 +266,7 @@ BOOST_AUTO_TEST_CASE(test_map_bool_empty)
 
 BOOST_AUTO_TEST_CASE(test_map_bool_one)
 {
-    const char input[] = "\x92\x90\xA9\x01" "A" "\x81\x91\x93";
+    const char input[] = "\x91\x90\xA9\x01" "A" "\x81\x98\x99";
     transenc::iarchive in(input, input + sizeof(input));
     std::map<std::string, bool> value;
     in >> boost::serialization::make_nvp("value", value);
@@ -276,7 +276,7 @@ BOOST_AUTO_TEST_CASE(test_map_bool_one)
 
 BOOST_AUTO_TEST_CASE(test_map_bool_two)
 {
-    const char input[] = "\x92\x90" "\xA9\x01" "A" "\x81" "\x91\x90" "\xA9\x01" "B" "\x80" "\x91\x93";
+    const char input[] = "\x91\x90" "\xA9\x01" "A" "\x81" "\x98\x90" "\xA9\x01" "B" "\x80" "\x98\x99";
     transenc::iarchive in(input, input + sizeof(input));
     std::map<std::string, bool> value;
     in >> boost::serialization::make_nvp("value", value);
@@ -287,7 +287,7 @@ BOOST_AUTO_TEST_CASE(test_map_bool_two)
 
 BOOST_AUTO_TEST_CASE(test_map_missing_end)
 {
-    const char input[] = "\x92\x90" "\xA9\x01" "A" "\x81" "\x91";
+    const char input[] = "\x91\x90" "\xA9\x01" "A" "\x81" "\x98";
     transenc::iarchive in(input, input + sizeof(input));
     std::map<std::string, bool> value;
     BOOST_REQUIRE_THROW(in >> boost::serialization::make_nvp("value", value),
@@ -296,7 +296,7 @@ BOOST_AUTO_TEST_CASE(test_map_missing_end)
 
 BOOST_AUTO_TEST_CASE(test_map_missing_pair_end)
 {
-    const char input[] = "\x92\x90" "\xA9\x01" "A" "\x81";
+    const char input[] = "\x91\x90" "\xA9\x01" "A" "\x81";
     transenc::iarchive in(input, input + sizeof(input));
     std::map<std::string, bool> value;
     BOOST_REQUIRE_THROW(in >> boost::serialization::make_nvp("value", value),

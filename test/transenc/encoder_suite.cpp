@@ -961,7 +961,7 @@ BOOST_AUTO_TEST_CASE(test_array_begin)
     transenc::encoder encoder(buffer);
     BOOST_REQUIRE_EQUAL(encoder.put_array_begin(), 1);
     BOOST_REQUIRE_EQUAL(buffer.size(), 1);
-    BOOST_REQUIRE_EQUAL(buffer[0], '\x92');
+    BOOST_REQUIRE_EQUAL(buffer[0], '\x91');
 }
 
 BOOST_AUTO_TEST_CASE(test_array_begin_empty)
@@ -978,7 +978,7 @@ BOOST_AUTO_TEST_CASE(test_array_end)
     transenc::encoder encoder(buffer);
     BOOST_REQUIRE_EQUAL(encoder.put_array_end(), 1);
     BOOST_REQUIRE_EQUAL(buffer.size(), 1);
-    BOOST_REQUIRE_EQUAL(buffer[0], '\x93');
+    BOOST_REQUIRE_EQUAL(buffer[0], '\x99');
 }
 
 BOOST_AUTO_TEST_CASE(test_array_end_empty)
@@ -1012,7 +1012,7 @@ BOOST_AUTO_TEST_CASE(test_tuple_end)
     transenc::encoder encoder(buffer);
     BOOST_REQUIRE_EQUAL(encoder.put_tuple_end(), 1);
     BOOST_REQUIRE_EQUAL(buffer.size(), 1);
-    BOOST_REQUIRE_EQUAL(buffer[0], '\x91');
+    BOOST_REQUIRE_EQUAL(buffer[0], '\x98');
 }
 
 BOOST_AUTO_TEST_CASE(test_tuple_end_empty)

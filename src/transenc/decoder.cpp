@@ -90,16 +90,16 @@ void decoder::next()
             break;
 
         case '\x91':
-            current.type = token_tuple_end;
-            ++input;
-            break;
-
-        case '\x92':
             current.type = token_array_begin;
             ++input;
             break;
 
-        case '\x93':
+        case '\x98':
+            current.type = token_tuple_end;
+            ++input;
+            break;
+
+        case '\x99':
             current.type = token_array_end;
             ++input;
             break;

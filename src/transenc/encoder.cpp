@@ -278,17 +278,17 @@ std::size_t encoder::put_tuple_begin()
 
 std::size_t encoder::put_tuple_end()
 {
-    return put_token('\x91');
+    return put_token('\x98');
 }
 
 std::size_t encoder::put_array_begin()
 {
-    return put_token('\x92');
+    return put_token('\x91');
 }
 
 std::size_t encoder::put_array_end()
 {
-    return put_token('\x93');
+    return put_token('\x99');
 }
 
 std::size_t encoder::put_token(output::value_type value)
