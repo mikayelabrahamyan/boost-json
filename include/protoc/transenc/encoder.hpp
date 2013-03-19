@@ -54,8 +54,11 @@ private:
     std::size_t put_token(output::value_type);
 
     std::size_t write(protoc::int8_t);
+    std::size_t write(protoc::uint8_t);
     std::size_t write(protoc::int16_t);
+    std::size_t write(protoc::uint16_t);
     std::size_t write(protoc::int32_t);
+    std::size_t write(protoc::uint32_t);
     std::size_t write(protoc::int64_t);
 
 private:
