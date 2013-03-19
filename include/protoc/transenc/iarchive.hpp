@@ -59,13 +59,37 @@ public:
     void load_override(boost::serialization::nvp<protoc::float64_t>, int);
     void load_override(boost::serialization::nvp<std::string>, int);
 
+    template<typename first_type, typename second_type>
+    void load_override(const boost::serialization::nvp< std::pair<first_type, second_type> >& data, int)
+    {
+        token type = input.type();
+        if (type == token_tuple_begin)
+        {
+            input.next();
+            *this >> boost::serialization::make_nvp("first", data.value().first);
+            *this >> boost::serialization::make_nvp("second", data.value().second);
+            type = input.type();
+            if (type != token_tuple_end)
+            {
+                goto error;
+            }
+        }
+        else
+        {
+        error:
+            std::ostringstream error;
+            error << type;
+            throw unexpected_token(error.str());
+        }
+    }
+
     template<typename value_type, typename allocator_type>
     void load_override(const boost::serialization::nvp< std::vector<value_type, allocator_type> > data, int)
     {
         token type = input.type();
         if (type == token_array_begin)
         {
-            scope_stack.push(scope(type));
+            scope_stack.push(scope(type)); // FIXME: Not popped in error situations
             input.next();
             while (true)
             {
@@ -113,6 +137,8 @@ public:
             input.next();
             while (true)
             {
+                assert(!scope_stack.empty());
+
                 type = input.type();
                 if (type == token_array_end)
                 {
@@ -130,37 +156,17 @@ public:
                 {
                     goto error;
                 }
-                else if (type == token_tuple_begin)
+                else
                 {
-                    scope_stack.push(scope(type));
-                    input.next();
-                    type = input.type();
-                    if ((type == token_eof) || (type == token_error))
+                    std::pair<key_type, mapped_type> value;
+                    *this >> boost::serialization::make_nvp(data.name(), value);
+                    data.value().insert(value);
+                    if (input.type() != token_tuple_end)
                     {
                         goto error;
                     }
-                    else
-                    {
-                        key_type key;
-                        *this >> boost::serialization::make_nvp(data.name()/*FIXME*/, key);
-                        mapped_type value;
-                        *this >> boost::serialization::make_nvp(data.name()/*FIXME*/, value);
-                        data.value()[key] = value;
-                        if (input.type() == token_tuple_end)
-                        {
-                            scope_stack.pop();
-                            input.next();
-                        }
-                        else
-                        {
-                            goto error;
-                        }
-                    }
                 }
-                else
-                {
-                    goto error;
-                }
+                input.next();
             }
         }
         else
