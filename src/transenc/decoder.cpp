@@ -429,7 +429,7 @@ token decoder::next_binary()
     switch (value)
     {
     case '\xA8':
-        current.type = next_int8(); // FIXME
+        current.type = next_int8(); // FIXME: size is uint8_t now
         if (current.type == token_eof)
         {
             return token_eof;
