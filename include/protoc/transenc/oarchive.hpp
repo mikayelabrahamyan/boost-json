@@ -21,6 +21,7 @@
 #include <string>
 #include <vector>
 #include <map>
+#include <utility> // std::pair
 #include <ostream>
 #include <istream>
 #include <boost/serialization/nvp.hpp>
@@ -78,7 +79,22 @@ public:
     void save_override(const boost::serialization::nvp<std::string>&, int);
     void save_override(const boost::serialization::nvp<const std::string>&, int);
 
-    template<typename value_type, typename allocator_type>
+    template<typename first_type, typename second_type>
+    void save_override(const boost::serialization::nvp< const std::pair<first_type, second_type> >& data, int)
+    {
+        output.put_tuple_begin();
+        *this << boost::serialization::make_nvp("first", data.value().first);
+        *this << boost::serialization::make_nvp("second", data.value().second);
+        output.put_tuple_end();
+    }
+
+    template<typename first_type, typename second_type>
+    void save_override(const boost::serialization::nvp< std::pair<first_type, second_type> >& data, int version)
+    {
+        this->save_override(boost::serialization::make_nvp(data.name(), const_cast<const std::pair<first_type, second_type>&>(data.value())), version);
+    }
+
+                       template<typename value_type, typename allocator_type>
     void save_override(const boost::serialization::nvp< const std::vector<value_type, allocator_type> >& data, int)
     {
         output.put_array_begin();

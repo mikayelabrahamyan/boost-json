@@ -278,6 +278,24 @@ BOOST_AUTO_TEST_CASE(test_string_alpha)
 // Container
 //-----------------------------------------------------------------------------
 
+BOOST_AUTO_TEST_CASE(test_pair)
+{
+    std::ostringstream result;
+    transenc::oarchive ar(result);
+    std::pair<std::string, bool> value("A", true);
+    ar << boost::serialization::make_nvp("value", value);
+    BOOST_REQUIRE_EQUAL(result.str().data(), "\x90" "\xA9\x01" "A" "\x81" "\x98");
+}
+
+BOOST_AUTO_TEST_CASE(test_const_pair)
+{
+    std::ostringstream result;
+    transenc::oarchive ar(result);
+    const std::pair<std::string, bool> value("A", true);
+    ar << boost::serialization::make_nvp("value", value);
+    BOOST_REQUIRE_EQUAL(result.str().data(), "\x90" "\xA9\x01" "A" "\x81" "\x98");
+}
+
 BOOST_AUTO_TEST_CASE(test_vector_bool_empty)
 {
     std::ostringstream result;
