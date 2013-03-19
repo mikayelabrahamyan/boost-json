@@ -122,10 +122,7 @@ public:
              it != data.value().end();
              ++it)
         {
-            output.put_tuple_begin();
-            *this << boost::serialization::make_nvp(data.name()/*FIXME*/, it->first);
-            *this << boost::serialization::make_nvp(data.name()/*FIXME*/, it->second);
-            output.put_tuple_end();
+            *this << boost::serialization::make_nvp(data.name(), *it);
         }
         output.put_array_end();
     }
