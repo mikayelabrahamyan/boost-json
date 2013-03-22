@@ -16,7 +16,21 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 #include <cassert>
+#include <protoc/transenc/codes.hpp>
 #include <protoc/transenc/decoder.hpp>
+
+namespace
+{
+// Code patterns (masked by 1111 10000)
+const protoc::output::value_type code_pattern8 = '\xA0';
+const protoc::output::value_type code_pattern_length8 = '\xA8';
+const protoc::output::value_type code_pattern16 = '\xB0';
+const protoc::output::value_type code_pattern_length16 = '\xB8';
+const protoc::output::value_type code_pattern32 = '\xC0';
+const protoc::output::value_type code_pattern_length32 = '\xC8';
+const protoc::output::value_type code_pattern64 = '\xD0';
+const protoc::output::value_type code_pattern_length64 = '\xD8';
+} // anonymous namespace
 
 namespace protoc
 {
@@ -69,94 +83,94 @@ void decoder::next()
 
         switch (value)
         {
-        case '\x80':
+        case code_false:
             current.type = token_false;
             ++input;
             break;
 
-        case '\x81':
+        case code_true:
             current.type = token_true;
             ++input;
             break;
 
-        case '\x82':
+        case code_null:
             current.type = token_null;
             ++input;
             break;
 
-        case '\x90':
+        case code_tuple_begin:
             current.type = token_tuple_begin;
             ++input;
             break;
 
-        case '\x91':
-            current.type = token_array_begin;
-            ++input;
-            break;
-
-        case '\x98':
+        case code_tuple_end:
             current.type = token_tuple_end;
             ++input;
             break;
 
-        case '\x99':
+        case code_array_begin:
+            current.type = token_array_begin;
+            ++input;
+            break;
+
+        case code_array_end:
             current.type = token_array_end;
             ++input;
             break;
 
-        case '\xA0':
+        case code_int8:
             current.type = next_int8();
             break;
 
-        case '\xA8':
-            current.type = next_binary();
-            break;
-
-        case '\xA9':
-            current.type = next_string();
-            break;
-
-        case '\xB0':
+        case code_int16:
             current.type = next_int16();
             break;
 
-        case '\xB8':
-            current.type = next_binary();
-            break;
-
-        case '\xB9':
-            current.type = next_string();
-            break;
-
-        case '\xC0':
+        case code_int32:
             current.type = next_int32();
             break;
 
-        case '\xC2':
-            current.type = next_float32();
-            break;
-
-        case '\xC8':
-            current.type = next_binary();
-            break;
-
-        case '\xC9':
-            current.type = next_string();
-            break;
-
-        case '\xD0':
+        case code_int64:
             current.type = next_int64();
             break;
 
-        case '\xD2':
+        case code_float32:
+            current.type = next_float32();
+            break;
+
+        case code_float64:
             current.type = next_float64();
             break;
 
-        case '\xD8':
+        case code_binary_int8:
             current.type = next_binary();
             break;
 
-        case '\xD9':
+        case code_binary_int16:
+            current.type = next_binary();
+            break;
+
+        case code_binary_int32:
+            current.type = next_binary();
+            break;
+
+        case code_binary_int64:
+            current.type = next_binary();
+            break;
+
+        case code_string_int8:
+            current.type = next_string();
+            break;
+
+        case code_string_int16:
+            current.type = next_string();
+            break;
+
+        case code_string_int32:
+            current.type = next_string();
+            break;
+
+        case code_string_int64:
             current.type = next_string();
             break;
 
@@ -279,22 +293,22 @@ token decoder::next_unknown()
     const input_range::value_type value = *input & 0xF8;
     switch (value)
     {
-    case '\xA0':
+    case code_pattern8:
         return next_unknown(1);
 
-    case '\xB0':
+    case code_pattern16:
         return next_unknown(2);
 
-    case '\xC0':
+    case code_pattern32:
         return next_unknown(4);
 
-    case '\xD0':
+    case code_pattern64:
         return next_unknown(8);
 
-    case '\xA8':
-    case '\xB8':
-    case '\xC8':
-    case '\xD8':
+    case code_pattern_length8:
+    case code_pattern_length16:
+    case code_pattern_length32:
+    case code_pattern_length64:
         {
             token type = next_binary();
             return (type == token_binary) ? token_null : type;
@@ -428,7 +442,7 @@ token decoder::next_binary()
 
     switch (value)
     {
-    case '\xA8':
+    case code_binary_int8:
         current.type = next_int8(); // FIXME: size is uint8_t now
         if (current.type == token_eof)
         {
@@ -437,7 +451,7 @@ token decoder::next_binary()
         length = static_cast<protoc::int64_t>(get_int8());
         break;
 
-    case '\xB8':
+    case code_binary_int16:
         current.type = next_int16();
         if (current.type == token_eof)
         {
@@ -446,7 +460,7 @@ token decoder::next_binary()
         length = static_cast<protoc::int64_t>(get_int16());
         break;
 
-    case '\xC8':
+    case code_binary_int32:
         current.type = next_int32();
         if (current.type == token_eof)
         {
@@ -455,7 +469,7 @@ token decoder::next_binary()
         length = static_cast<protoc::int64_t>(get_int32());
         break;
 
-    case '\xD8':
+    case code_binary_int64:
         current.type = next_int64();
         if (current.type == token_eof)
         {
@@ -496,5 +510,5 @@ token decoder::next_unknown(std::size_t size)
     return token_null;
 }
 
-}
-}
+} // namespace transenc
+} // namespace protoc
