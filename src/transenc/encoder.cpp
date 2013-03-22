@@ -18,6 +18,31 @@
 #include <limits>
 #include <protoc/transenc/encoder.hpp>
 
+namespace
+{
+const protoc::output::value_type type_false = '\x80';
+const protoc::output::value_type type_true = '\x81';
+const protoc::output::value_type type_null = '\x82';
+const protoc::output::value_type type_tuple_begin = '\x90';
+const protoc::output::value_type type_array_begin = '\x91';
+const protoc::output::value_type type_tuple_end = '\x98';
+const protoc::output::value_type type_array_end = '\x98';
+const protoc::output::value_type type_int8 = '\xA0';
+const protoc::output::value_type type_binary_int8 = '\xA8';
+const protoc::output::value_type type_string_int8 = '\xA9';
+const protoc::output::value_type type_int16 = '\xB0';
+const protoc::output::value_type type_binary_int16 = '\xB8';
+const protoc::output::value_type type_string_int16 = '\xB9';
+const protoc::output::value_type type_int32 = '\xC0';
+const protoc::output::value_type type_float32 = '\xC2';
+const protoc::output::value_type type_binary_int32 = '\xC8';
+const protoc::output::value_type type_string_int32 = '\xC9';
+const protoc::output::value_type type_int64 = '\xD0';
+const protoc::output::value_type type_float64 = '\xD2';
+const protoc::output::value_type type_binary_int64 = '\xD8';
+const protoc::output::value_type type_string_int64 = '\xD9';
+} // anonymous namespace
+
 namespace protoc
 {
 namespace transenc
@@ -30,12 +55,12 @@ encoder::encoder(output& buffer)
 
 std::size_t encoder::put()
 {
-    return put_token('\x82');
+    return put_token(type_null);
 }
 
 std::size_t encoder::put(bool value)
 {
-    return put_token((value) ? '\x81' : '\x80');
+    return put_token((value) ? type_true : type_false);
 }
 
 std::size_t encoder::put(protoc::int8_t value)
@@ -54,7 +79,7 @@ std::size_t encoder::put(protoc::int8_t value)
     }
     else
     {
-        const output::value_type type('\xA0');
+        const output::value_type type(type_int8);
         const std::size_t size = sizeof(type) + sizeof(protoc::int8_t);
 
         if (!buffer.grow(size))
@@ -70,7 +95,7 @@ std::size_t encoder::put(protoc::int8_t value)
 
 std::size_t encoder::put(protoc::int16_t value)
 {
-    const output::value_type type('\xB0');
+    const output::value_type type(type_int16);
     const std::size_t size = sizeof(type) + sizeof(protoc::int16_t);
 
     if (!buffer.grow(size))
@@ -86,7 +111,7 @@ std::size_t encoder::put(protoc::int16_t value)
 
 std::size_t encoder::put(protoc::int32_t value)
 {
-    const output::value_type type('\xC0');
+    const output::value_type type(type_int32);
     const std::size_t size = sizeof(type) + sizeof(protoc::int32_t);
 
     if (!buffer.grow(size))
@@ -102,7 +127,7 @@ std::size_t encoder::put(protoc::int32_t value)
 
 std::size_t encoder::put(protoc::int64_t value)
 {
-    const output::value_type type('\xD0');
+    const output::value_type type(type_int64);
     const std::size_t size = sizeof(type) + sizeof(protoc::int64_t);
 
     if (!buffer.grow(size))
@@ -118,7 +143,7 @@ std::size_t encoder::put(protoc::int64_t value)
 
 std::size_t encoder::put(protoc::float32_t value)
 {
-    const output::value_type type('\xC2');
+    const output::value_type type(type_float32);
     const std::size_t size = sizeof(type) + sizeof(protoc::float32_t);
 
     if (!buffer.grow(size))
@@ -140,7 +165,7 @@ std::size_t encoder::put(protoc::float32_t value)
 
 std::size_t encoder::put(protoc::float64_t value)
 {
-    const output::value_type type('\xD2');
+    const output::value_type type(type_float64);
     const std::size_t size = sizeof(type) + sizeof(protoc::float64_t);
 
     if (!buffer.grow(size))
@@ -181,7 +206,7 @@ std::size_t encoder::put(const std::string& value)
         {
             return 0;
         }
-        buffer.write('\xA9');
+        buffer.write(type_string_int8);
         size = write(static_cast<uint8_t>(length));
     }
     else if (length < static_cast<std::string::size_type>(std::numeric_limits<protoc::uint16_t>::max()))
@@ -190,7 +215,7 @@ std::size_t encoder::put(const std::string& value)
         {
             return 0;
         }
-        buffer.write('\xB9');
+        buffer.write(type_string_int16);
         size = write(static_cast<uint16_t>(length));
     }
     else if (length < static_cast<std::string::size_type>(std::numeric_limits<protoc::uint32_t>::max()))
@@ -199,7 +224,7 @@ std::size_t encoder::put(const std::string& value)
         {
             return 0;
         }
-        buffer.write('\xC9');
+        buffer.write(type_string_int32);
         size = write(static_cast<uint32_t>(length));
     }
     else if (length < static_cast<std::string::size_type>(std::numeric_limits<protoc::int64_t>::max()))
@@ -208,7 +233,7 @@ std::size_t encoder::put(const std::string& value)
         {
             return 0;
         }
-        buffer.write('\xD9');
+        buffer.write(type_string_int64);
         size = write(static_cast<int64_t>(length));
     }
     else
@@ -236,7 +261,7 @@ std::size_t encoder::put(const std::vector<protoc::int8_t>& value)
         {
             return 0;
         }
-        buffer.write('\xA8');
+        buffer.write(type_binary_int8);
         size = write(static_cast<int8_t>(length));
     }
     else if (length < static_cast<std::string::size_type>(std::numeric_limits<protoc::int16_t>::max()))
@@ -245,7 +270,7 @@ std::size_t encoder::put(const std::vector<protoc::int8_t>& value)
         {
             return 0;
         }
-        buffer.write('\xB8');
+        buffer.write(type_binary_int16);
         size = write(static_cast<int16_t>(length));
     }
     else if (length < static_cast<std::string::size_type>(std::numeric_limits<protoc::int32_t>::max()))
@@ -254,7 +279,7 @@ std::size_t encoder::put(const std::vector<protoc::int8_t>& value)
         {
             return 0;
         }
-        buffer.write('\xC8');
+        buffer.write(type_binary_int32);
         size = write(static_cast<int32_t>(length));
     }
     else
@@ -263,7 +288,7 @@ std::size_t encoder::put(const std::vector<protoc::int8_t>& value)
         {
             return 0;
         }
-        buffer.write('\xD8');
+        buffer.write(type_binary_int64);
         size = write(static_cast<int64_t>(length));
     }
 
@@ -277,22 +302,22 @@ std::size_t encoder::put(const std::vector<protoc::int8_t>& value)
 
 std::size_t encoder::put_tuple_begin()
 {
-    return put_token('\x90');
+    return put_token(type_tuple_begin);
 }
 
 std::size_t encoder::put_tuple_end()
 {
-    return put_token('\x98');
+    return put_token(type_tuple_end);
 }
 
 std::size_t encoder::put_array_begin()
 {
-    return put_token('\x91');
+    return put_token(type_array_begin);
 }
 
 std::size_t encoder::put_array_end()
 {
-    return put_token('\x99');
+    return put_token(type_array_end);
 }
 
 std::size_t encoder::put_token(output::value_type value)
@@ -366,5 +391,5 @@ std::size_t encoder::write(protoc::int64_t value)
     return sizeof(protoc::int64_t);
 }
 
-}
-}
+} // namespace transenc
+} // namespace protoc
