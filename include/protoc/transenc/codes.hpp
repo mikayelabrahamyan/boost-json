@@ -18,33 +18,31 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-#include <protoc/output.hpp>
-
 namespace protoc
 {
 namespace transenc
 {
-const protoc::output::value_type code_false = '\x80';
-const protoc::output::value_type code_true = '\x81';
-const protoc::output::value_type code_null = '\x82';
-const protoc::output::value_type code_tuple_begin = '\x90';
-const protoc::output::value_type code_array_begin = '\x91';
-const protoc::output::value_type code_tuple_end = '\x98';
-const protoc::output::value_type code_array_end = '\x99';
-const protoc::output::value_type code_int8 = '\xA0';
-const protoc::output::value_type code_binary_int8 = '\xA8';
-const protoc::output::value_type code_string_int8 = '\xA9';
-const protoc::output::value_type code_int16 = '\xB0';
-const protoc::output::value_type code_binary_int16 = '\xB8';
-const protoc::output::value_type code_string_int16 = '\xB9';
-const protoc::output::value_type code_int32 = '\xC0';
-const protoc::output::value_type code_float32 = '\xC2';
-const protoc::output::value_type code_binary_int32 = '\xC8';
-const protoc::output::value_type code_string_int32 = '\xC9';
-const protoc::output::value_type code_int64 = '\xD0';
-const protoc::output::value_type code_float64 = '\xD2';
-const protoc::output::value_type code_binary_int64 = '\xD8';
-const protoc::output::value_type code_string_int64 = '\xD9';
+const char code_false = '\x80';
+const char code_true = '\x81';
+const char code_null = '\x82';
+const char code_tuple_begin = '\x90';
+const char code_array_begin = '\x91';
+const char code_tuple_end = '\x98';
+const char code_array_end = '\x99';
+const char code_int8 = '\xA0';
+const char code_binary_int8 = '\xA8';
+const char code_string_int8 = '\xA9';
+const char code_int16 = '\xB0';
+const char code_binary_int16 = '\xB8';
+const char code_string_int16 = '\xB9';
+const char code_int32 = '\xC0';
+const char code_float32 = '\xC2';
+const char code_binary_int32 = '\xC8';
+const char code_string_int32 = '\xC9';
+const char code_int64 = '\xD0';
+const char code_float64 = '\xD2';
+const char code_binary_int64 = '\xD8';
+const char code_string_int64 = '\xD9';
 
 } // namespace transenc
 } // namespace protoc

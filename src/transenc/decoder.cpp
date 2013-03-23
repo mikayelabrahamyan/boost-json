@@ -22,14 +22,14 @@
 namespace
 {
 // Code patterns (masked by 1111 10000)
-const protoc::output::value_type code_pattern8 = '\xA0';
-const protoc::output::value_type code_pattern_length8 = '\xA8';
-const protoc::output::value_type code_pattern16 = '\xB0';
-const protoc::output::value_type code_pattern_length16 = '\xB8';
-const protoc::output::value_type code_pattern32 = '\xC0';
-const protoc::output::value_type code_pattern_length32 = '\xC8';
-const protoc::output::value_type code_pattern64 = '\xD0';
-const protoc::output::value_type code_pattern_length64 = '\xD8';
+const char code_pattern8 = '\xA0';
+const char code_pattern_length8 = '\xA8';
+const char code_pattern16 = '\xB0';
+const char code_pattern_length16 = '\xB8';
+const char code_pattern32 = '\xC0';
+const char code_pattern_length32 = '\xC8';
+const char code_pattern64 = '\xD0';
+const char code_pattern_length64 = '\xD8';
 } // anonymous namespace
 
 namespace protoc
