@@ -294,16 +294,20 @@ token decoder::next_unknown()
     switch (value)
     {
     case code_pattern8:
-        return next_unknown(1);
+        ++input; // Skip token
+        return next(token_null, sizeof(protoc::int8_t));
 
     case code_pattern16:
-        return next_unknown(2);
+        ++input; // Skip token
+        return next(token_null, sizeof(protoc::int16_t));
 
     case code_pattern32:
-        return next_unknown(4);
+        ++input; // Skip token
+        return next(token_null, sizeof(protoc::int32_t));
 
     case code_pattern64:
-        return next_unknown(8);
+        ++input; // Skip token
+        return next(token_null, sizeof(protoc::int64_t));
 
     case code_pattern_length8:
     case code_pattern_length16:
@@ -326,96 +330,42 @@ token decoder::next_int8()
 {
     ++input; // Skip token
 
-    const std::size_t size = sizeof(protoc::int8_t);
-    if (input.size() < size)
-    {
-        return token_eof;
-    }
-
-    current.range = input_range(input.begin(), input.begin() + size);
-    input += size;
-
-    return token_int8;
+    return next(token_int8, sizeof(protoc::int8_t));
 }
 
 token decoder::next_int16()
 {
     ++input; // Skip token
 
-    const std::size_t size = sizeof(protoc::int16_t);
-    if (input.size() < size)
-    {
-        return token_eof;
-    }
-
-    current.range = input_range(input.begin(), input.begin() + size);
-    input += size;
-
-    return token_int16;
+    return next(token_int16, sizeof(protoc::int16_t));
 }
 
 token decoder::next_int32()
 {
     ++input; // Skip token
 
-    const std::size_t size = sizeof(protoc::int32_t);
-    if (input.size() < size)
-    {
-        return token_eof;
-    }
-
-    current.range = input_range(input.begin(), input.begin() + size);
-    input += size;
-
-    return token_int32;
+    return next(token_int32, sizeof(protoc::int32_t));
 }
 
 token decoder::next_int64()
 {
     ++input; // Skip token
 
-    const std::size_t size = sizeof(protoc::int64_t);
-    if (input.size() < size)
-    {
-        return token_eof;
-    }
-
-    current.range = input_range(input.begin(), input.begin() + size);
-    input += size;
-
-    return token_int64;
+    return next(token_int64, sizeof(protoc::int64_t));
 }
 
 token decoder::next_float32()
 {
     ++input; // Skip token
 
-    const std::size_t size = sizeof(protoc::float32_t);
-    if (input.size() < size)
-    {
-        return token_eof;
-    }
-
-    current.range = input_range(input.begin(), input.begin() + size);
-    input += size;
-
-    return token_float32;
+    return next(token_float32, sizeof(protoc::float32_t));
 }
 
 token decoder::next_float64()
 {
     ++input; // Skip token
 
-    const std::size_t size = sizeof(protoc::float64_t);
-    if (input.size() < size)
-    {
-        return token_eof;
-    }
-
-    current.range = input_range(input.begin(), input.begin() + size);
-    input += size;
-
-    return token_float64;
+    return next(token_float64, sizeof(protoc::float64_t));
 }
 
 token decoder::next_string()
@@ -428,8 +378,7 @@ token decoder::next_binary()
 {
     const input_range::value_type value = *input & 0xF8;
 
-    // FIXME: This is a bit of a hack (the token will be skipped by next_int8() etc.)
-    // ++input; // Skip token
+    ++input; // Skip token
 
     if (input.empty())
     {
@@ -443,34 +392,35 @@ token decoder::next_binary()
     switch (value)
     {
     case code_binary_int8:
-        current.type = next_int8(); // FIXME: size is uint8_t now
+        // current.type must be set to make get_int8() work
+        current.type = next(token_int8, sizeof(protoc::int8_t));
         if (current.type == token_eof)
         {
             return token_eof;
         }
-        length = static_cast<protoc::int64_t>(get_int8());
+        length = static_cast<protoc::uint8_t>(get_int8());
         break;
 
     case code_binary_int16:
-        current.type = next_int16();
+        current.type = next(token_int16, sizeof(protoc::int16_t));
         if (current.type == token_eof)
         {
             return token_eof;
         }
-        length = static_cast<protoc::int64_t>(get_int16());
+        length = static_cast<protoc::uint16_t>(get_int16());
         break;
 
     case code_binary_int32:
-        current.type = next_int32();
+        current.type = next(token_int32, sizeof(protoc::int32_t));
         if (current.type == token_eof)
         {
             return token_eof;
         }
-        length = static_cast<protoc::int64_t>(get_int32());
+        length = static_cast<protoc::uint32_t>(get_int32());
         break;
 
     case code_binary_int64:
-        current.type = next_int64();
+        current.type = next(token_int64, sizeof(protoc::int64_t));
         if (current.type == token_eof)
         {
             return token_eof;
@@ -496,18 +446,17 @@ token decoder::next_binary()
     return token_binary;
 }
 
-token decoder::next_unknown(std::size_t size)
+token decoder::next(token type, std::size_t size)
 {
-    ++input; // Skip token
-
     if (input.size() < size)
     {
         return token_eof;
     }
 
+    current.range = input_range(input.begin(), input.begin() + size);
     input += size;
 
-    return token_null;
+    return type;
 }
 
 } // namespace transenc

@@ -56,7 +56,8 @@ private:
     token next_string();
 
     token next_unknown();
-    token next_unknown(std::size_t);
+
+    token next(token, std::size_t);
 
 private:
     input_range input;

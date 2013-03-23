@@ -17,6 +17,7 @@
 
 #include <boost/test/unit_test.hpp>
 
+#include <algorithm> // std::fill_n
 #include <protoc/transenc/decoder.hpp>
 #include <protoc/transenc/codes.hpp>
 
@@ -680,6 +681,18 @@ BOOST_AUTO_TEST_CASE(test_binary_int8_two)
     transenc::decoder decoder(input, input + sizeof(input));
     BOOST_REQUIRE_EQUAL(decoder.type(), transenc::token_binary);
     BOOST_REQUIRE_EQUAL(decoder.get_binary(), "\x12\x34");
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), transenc::token_eof);
+}
+
+BOOST_AUTO_TEST_CASE(test_binary_int8_128)
+{
+    char input[2 + 0x80] = { transenc::code_binary_int8, 0x80 };
+    std::fill_n(&input[2], sizeof(input) - 2, '\x12');
+    transenc::decoder decoder(input, input + sizeof(input));
+    BOOST_REQUIRE_EQUAL(decoder.type(), transenc::token_binary);
+    std::string binary = decoder.get_binary();
+    BOOST_REQUIRE_EQUAL(binary.size(), 0x80);
     decoder.next();
     BOOST_REQUIRE_EQUAL(decoder.type(), transenc::token_eof);
 }
