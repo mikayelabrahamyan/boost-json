@@ -204,7 +204,7 @@ BOOST_AUTO_TEST_CASE(test_string_alpha)
 }
 
 //-----------------------------------------------------------------------------
-// Container
+// Pair
 //-----------------------------------------------------------------------------
 
 BOOST_AUTO_TEST_CASE(test_pair)
@@ -270,6 +270,33 @@ BOOST_AUTO_TEST_CASE(test_pair_missing_begin)
     BOOST_REQUIRE_THROW(in >> boost::serialization::make_nvp("value", value),
                         unexpected_token);
 }
+
+//-----------------------------------------------------------------------------
+// Optional
+//-----------------------------------------------------------------------------
+
+BOOST_AUTO_TEST_CASE(test_optional)
+{
+    const char input[] = "\xA9\x01" "A";
+    transenc::iarchive in(input, input + sizeof(input));
+    boost::optional<std::string> value;
+    BOOST_REQUIRE_NO_THROW(in >> boost::serialization::make_nvp("value", value));
+    BOOST_REQUIRE(value);
+    BOOST_REQUIRE_EQUAL(*value, "A");
+}
+
+BOOST_AUTO_TEST_CASE(test_optional_null)
+{
+    const char input[] = "\x82";
+    transenc::iarchive in(input, input + sizeof(input));
+    boost::optional<std::string> value;
+    BOOST_REQUIRE_NO_THROW(in >> boost::serialization::make_nvp("value", value));
+    BOOST_REQUIRE(!value);
+}
+
+//-----------------------------------------------------------------------------
+// Container
+//-----------------------------------------------------------------------------
 
 BOOST_AUTO_TEST_CASE(test_vector_bool_empty)
 {

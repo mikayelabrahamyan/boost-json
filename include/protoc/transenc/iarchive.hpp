@@ -23,6 +23,7 @@
 #include <map>
 #include <stack>
 #include <sstream>
+#include <boost/optional.hpp>
 #include <boost/serialization/nvp.hpp>
 #include <boost/archive/detail/common_iarchive.hpp>
 #include <boost/archive/detail/register_archive.hpp>
@@ -59,6 +60,7 @@ public:
     void load_override(boost::serialization::nvp<protoc::float64_t>, int);
     void load_override(boost::serialization::nvp<std::string>, int);
 
+    // std::pair
     template<typename first_type, typename second_type>
     void load_override(const boost::serialization::nvp< std::pair<first_type, second_type> >& data, int)
     {
@@ -83,6 +85,25 @@ public:
         }
     }
 
+    // boost::optional
+
+    template<typename value_type>
+    void load_override(const boost::serialization::nvp< boost::optional<value_type> >& data, int)
+    {
+        const token type = input.type();
+        if (type == token_null)
+        {
+            data.value() = boost::optional<value_type>();
+        }
+        else
+        {
+            value_type item;
+            *this >> boost::serialization::make_nvp(data.name(), item);
+            data.value() = boost::optional<value_type>(item);
+        }
+    }
+
+    // std::vector
     template<typename value_type, typename allocator_type>
     void load_override(const boost::serialization::nvp< std::vector<value_type, allocator_type> > data, int)
     {
@@ -127,6 +148,7 @@ public:
         }
     }
 
+    // std::map
     template<typename key_type, typename mapped_type, typename key_compare, typename allocator_type>
     void load_override(const boost::serialization::nvp< std::map<key_type, mapped_type, key_compare, allocator_type> > data, int)
     {
