@@ -86,7 +86,6 @@ public:
     }
 
     // boost::optional
-
     template<typename value_type>
     void load_override(const boost::serialization::nvp< boost::optional<value_type> >& data, int)
     {
