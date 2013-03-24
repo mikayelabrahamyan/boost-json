@@ -275,7 +275,7 @@ BOOST_AUTO_TEST_CASE(test_string_alpha)
 }
 
 //-----------------------------------------------------------------------------
-// Container
+// Pair
 //-----------------------------------------------------------------------------
 
 BOOST_AUTO_TEST_CASE(test_pair)
@@ -295,6 +295,50 @@ BOOST_AUTO_TEST_CASE(test_const_pair)
     ar << boost::serialization::make_nvp("value", value);
     BOOST_REQUIRE_EQUAL(result.str().data(), "\x90" "\xA9\x01" "A" "\x81" "\x98");
 }
+
+//-----------------------------------------------------------------------------
+// Optional
+//-----------------------------------------------------------------------------
+
+BOOST_AUTO_TEST_CASE(test_optional)
+{
+    std::ostringstream result;
+    transenc::oarchive ar(result);
+    boost::optional<std::string> value("A");
+    ar << boost::serialization::make_nvp("value", value);
+    BOOST_REQUIRE_EQUAL(result.str().data(), "\xA9\x01" "A");
+}
+
+BOOST_AUTO_TEST_CASE(test_optional_null)
+{
+    std::ostringstream result;
+    transenc::oarchive ar(result);
+    boost::optional<std::string> value;
+    ar << boost::serialization::make_nvp("value", value);
+    BOOST_REQUIRE_EQUAL(result.str().data(), "\x82");
+}
+
+BOOST_AUTO_TEST_CASE(test_const_optional)
+{
+    std::ostringstream result;
+    transenc::oarchive ar(result);
+    const boost::optional<std::string> value("A");
+    ar << boost::serialization::make_nvp("value", value);
+    BOOST_REQUIRE_EQUAL(result.str().data(), "\xA9\x01" "A");
+}
+
+BOOST_AUTO_TEST_CASE(test_const_optional_null)
+{
+    std::ostringstream result;
+    transenc::oarchive ar(result);
+    const boost::optional<std::string> value;
+    ar << boost::serialization::make_nvp("value", value);
+    BOOST_REQUIRE_EQUAL(result.str().data(), "\x82");
+}
+
+//-----------------------------------------------------------------------------
+// Container
+//-----------------------------------------------------------------------------
 
 BOOST_AUTO_TEST_CASE(test_vector_bool_empty)
 {
