@@ -171,4 +171,97 @@ BOOST_AUTO_TEST_CASE(test_fail_truer)
     BOOST_REQUIRE_EQUAL(decoder.type(), json::token_error);
 }
 
+//-----------------------------------------------------------------------------
+// Container
+//-----------------------------------------------------------------------------
+
+BOOST_AUTO_TEST_CASE(test_object_begin)
+{
+    const char input[] = "{";
+    json::decoder decoder(input, input + sizeof(input) - 1);
+    BOOST_REQUIRE_EQUAL(decoder.type(), json::token_object_begin);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), json::token_eof);
+}
+
+BOOST_AUTO_TEST_CASE(test_white_object_begin)
+{
+    const char input[] = " { ";
+    json::decoder decoder(input, input + sizeof(input) - 1);
+    BOOST_REQUIRE_EQUAL(decoder.type(), json::token_object_begin);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), json::token_eof);
+}
+
+BOOST_AUTO_TEST_CASE(test_object_end)
+{
+    const char input[] = "}";
+    json::decoder decoder(input, input + sizeof(input) - 1);
+    BOOST_REQUIRE_EQUAL(decoder.type(), json::token_object_end);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), json::token_eof);
+}
+
+BOOST_AUTO_TEST_CASE(test_white_object_end)
+{
+    const char input[] = " } ";
+    json::decoder decoder(input, input + sizeof(input) - 1);
+    BOOST_REQUIRE_EQUAL(decoder.type(), json::token_object_end);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), json::token_eof);
+}
+
+BOOST_AUTO_TEST_CASE(test_array_begin)
+{
+    const char input[] = "[";
+    json::decoder decoder(input, input + sizeof(input) - 1);
+    BOOST_REQUIRE_EQUAL(decoder.type(), json::token_array_begin);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), json::token_eof);
+}
+
+BOOST_AUTO_TEST_CASE(test_white_array_begin)
+{
+    const char input[] = " [ ";
+    json::decoder decoder(input, input + sizeof(input) - 1);
+    BOOST_REQUIRE_EQUAL(decoder.type(), json::token_array_begin);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), json::token_eof);
+}
+
+BOOST_AUTO_TEST_CASE(test_array_end)
+{
+    const char input[] = "]";
+    json::decoder decoder(input, input + sizeof(input) - 1);
+    BOOST_REQUIRE_EQUAL(decoder.type(), json::token_array_end);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), json::token_eof);
+}
+
+BOOST_AUTO_TEST_CASE(test_white_array_end)
+{
+    const char input[] = " ] ";
+    json::decoder decoder(input, input + sizeof(input) - 1);
+    BOOST_REQUIRE_EQUAL(decoder.type(), json::token_array_end);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), json::token_eof);
+}
+
+BOOST_AUTO_TEST_CASE(test_array)
+{
+    const char input[] = "[true, false]";
+    json::decoder decoder(input, input + sizeof(input) - 1);
+    BOOST_REQUIRE_EQUAL(decoder.type(), json::token_array_begin);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), json::token_true);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), json::token_comma);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), json::token_false);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), json::token_array_end);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), json::token_eof);
+}
+
 BOOST_AUTO_TEST_SUITE_END()
