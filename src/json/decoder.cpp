@@ -277,6 +277,14 @@ void decoder::next()
     }
 }
 
+std::string decoder::get_string() const
+{
+    assert(current.type == token_string);
+
+    // FIXME: Validate string [ http://www.w3.org/International/questions/qa-forms-utf-8 ]
+    return std::string(current.range.begin(), current.range.size());
+}
+
 token decoder::next_f_keyword()
 {
     assert(*input == 'f');
@@ -347,7 +355,22 @@ token decoder::next_number()
 
 token decoder::next_string()
 {
-    return token_error;
+    assert(*input == '"');
+
+    ++input; // Skip '"'
+
+    input_range::const_iterator begin = input.begin();
+    while (!input.empty())
+    {
+        // FIXME: Escape
+        if (*input == '"')
+        {
+            current.range = input_range(begin, input.end() - sizeof('"'));
+            return token_string;
+        }
+        ++input;
+    }
+    return token_eof;
 }
 
 void decoder::skip_whitespaces()

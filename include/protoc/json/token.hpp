@@ -32,6 +32,8 @@ enum token
     token_true,
     token_false,
 
+    token_string,
+
     token_array_begin,
     token_array_end,
     token_object_begin,

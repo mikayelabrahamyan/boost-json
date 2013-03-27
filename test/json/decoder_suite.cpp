@@ -172,6 +172,30 @@ BOOST_AUTO_TEST_CASE(test_fail_truer)
 }
 
 //-----------------------------------------------------------------------------
+// String
+//-----------------------------------------------------------------------------
+
+BOOST_AUTO_TEST_CASE(test_string_empty)
+{
+    const char input[] = "\"\"";
+    json::decoder decoder(input, input + sizeof(input) - 1);
+    BOOST_REQUIRE_EQUAL(decoder.type(), json::token_string);
+    BOOST_REQUIRE_EQUAL(decoder.get_string(), "");
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), json::token_eof);
+}
+
+BOOST_AUTO_TEST_CASE(test_string_alpha)
+{
+    const char input[] = "\"alpha\"";
+    json::decoder decoder(input, input + sizeof(input) - 1);
+    BOOST_REQUIRE_EQUAL(decoder.type(), json::token_string);
+    BOOST_REQUIRE_EQUAL(decoder.get_string(), "alpha");
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), json::token_eof);
+}
+
+//-----------------------------------------------------------------------------
 // Container
 //-----------------------------------------------------------------------------
 
