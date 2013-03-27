@@ -172,6 +172,64 @@ BOOST_AUTO_TEST_CASE(test_fail_truer)
 }
 
 //-----------------------------------------------------------------------------
+// Integer
+//-----------------------------------------------------------------------------
+
+BOOST_AUTO_TEST_CASE(test_integer_zero)
+{
+    const char input[] = "0";
+    json::decoder decoder(input, input + sizeof(input) - 1);
+    BOOST_REQUIRE_EQUAL(decoder.type(), json::token_integer);
+    // FIXME: get_integer()
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), json::token_eof);
+}
+
+BOOST_AUTO_TEST_CASE(test_white_integer_zero)
+{
+    const char input[] = "  0  ";
+    json::decoder decoder(input, input + sizeof(input) - 1);
+    BOOST_REQUIRE_EQUAL(decoder.type(), json::token_integer);
+    // FIXME: get_integer()
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), json::token_eof);
+}
+
+BOOST_AUTO_TEST_CASE(test_integer_hundred)
+{
+    const char input[] = "100";
+    json::decoder decoder(input, input + sizeof(input) - 1);
+    BOOST_REQUIRE_EQUAL(decoder.type(), json::token_integer);
+    // FIXME: get_integer()
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), json::token_eof);
+}
+
+BOOST_AUTO_TEST_CASE(test_integer_minus_hundred)
+{
+    const char input[] = "-100";
+    json::decoder decoder(input, input + sizeof(input) - 1);
+    BOOST_REQUIRE_EQUAL(decoder.type(), json::token_integer);
+    // FIXME: get_integer()
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), json::token_eof);
+}
+
+BOOST_AUTO_TEST_CASE(test_fail_integer_minus)
+{
+    const char input[] = "-";
+    json::decoder decoder(input, input + sizeof(input) - 1);
+    BOOST_REQUIRE_EQUAL(decoder.type(), json::token_eof);
+}
+
+BOOST_AUTO_TEST_CASE(test_fail_integer_minus_a)
+{
+    const char input[] = "-a";
+    json::decoder decoder(input, input + sizeof(input) - 1);
+    BOOST_REQUIRE_EQUAL(decoder.type(), json::token_error);
+}
+
+//-----------------------------------------------------------------------------
 // String
 //-----------------------------------------------------------------------------
 

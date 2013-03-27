@@ -350,7 +350,30 @@ token decoder::next_t_keyword()
 
 token decoder::next_number()
 {
-    return token_error;
+    input_range::const_iterator begin = input.begin();
+
+    const bool is_negative = (*input == '-');
+    if (is_negative)
+    {
+        ++input; // Skip '-'
+        if (input.empty())
+        {
+            return token_eof;
+        }
+    }
+
+    input_range::const_iterator digit_begin = input.begin();
+    while (is_digit())
+    {
+        ++input;
+    }
+    if (input.begin() == digit_begin)
+    {
+        return token_error;
+    }
+    current.range = input_range(begin, input.begin());
+    // FIXME: Check for float
+    return token_integer;
 }
 
 token decoder::next_string()
