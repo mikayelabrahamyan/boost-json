@@ -357,7 +357,7 @@ token decoder::next_string()
 {
     assert(*input == '"');
 
-    ++input; // Skip '"'
+    ++input; // Skip initial '"'
 
     input_range::const_iterator begin = input.begin();
     while (!input.empty())
@@ -365,7 +365,8 @@ token decoder::next_string()
         // FIXME: Escape
         if (*input == '"')
         {
-            current.range = input_range(begin, input.end() - sizeof('"'));
+            current.range = input_range(begin, input.begin());
+            ++input; // Skip terminating '"'
             return token_string;
         }
         ++input;

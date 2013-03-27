@@ -235,6 +235,24 @@ BOOST_AUTO_TEST_CASE(test_white_object_end)
     BOOST_REQUIRE_EQUAL(decoder.type(), json::token_eof);
 }
 
+BOOST_AUTO_TEST_CASE(test_object)
+{
+    const char input[] = "{ \"key\" : false }";
+    json::decoder decoder(input, input + sizeof(input) - 1);
+    BOOST_REQUIRE_EQUAL(decoder.type(), json::token_object_begin);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), json::token_string);
+    BOOST_REQUIRE_EQUAL(decoder.get_string(), "key");
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), json::token_colon);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), json::token_false);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), json::token_object_end);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), json::token_eof);
+}
+
 BOOST_AUTO_TEST_CASE(test_array_begin)
 {
     const char input[] = "[";
