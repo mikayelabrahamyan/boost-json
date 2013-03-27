@@ -210,7 +210,7 @@ BOOST_AUTO_TEST_CASE(test_int16_zero)
 
 BOOST_AUTO_TEST_CASE(test_int16_one)
 {
-    const char input[] = { transenc::code_int16, 0x00, 0x01 };
+    const char input[] = { transenc::code_int16, 0x01, 0x00 };
     transenc::decoder decoder(input, input + sizeof(input));
     BOOST_REQUIRE_EQUAL(decoder.type(), transenc::token_int16);
     BOOST_REQUIRE_EQUAL(decoder.get_int16(), 0x0001);
@@ -268,7 +268,7 @@ BOOST_AUTO_TEST_CASE(test_int32_zero)
 
 BOOST_AUTO_TEST_CASE(test_int32_one)
 {
-    const char input[] = { transenc::code_int32, 0x00, 0x00, 0x00, 0x01 };
+    const char input[] = { transenc::code_int32, 0x01, 0x00, 0x00, 0x00 };
     transenc::decoder decoder(input, input + sizeof(input));
     BOOST_REQUIRE_EQUAL(decoder.type(), transenc::token_int32);
     BOOST_REQUIRE_EQUAL(decoder.get_int32(), 0x00000001);
@@ -288,7 +288,7 @@ BOOST_AUTO_TEST_CASE(test_int32_minus_one)
 
 BOOST_AUTO_TEST_CASE(test_int32_two)
 {
-    const char input[] = { transenc::code_int32, 0x00, 0x00, 0x00, 0x02 };
+    const char input[] = { transenc::code_int32, 0x02, 0x00, 0x00, 0x00 };
     transenc::decoder decoder(input, input + sizeof(input));
     BOOST_REQUIRE_EQUAL(decoder.type(), transenc::token_int32);
     BOOST_REQUIRE_EQUAL(decoder.get_int32(), 0x00000002);
@@ -298,7 +298,7 @@ BOOST_AUTO_TEST_CASE(test_int32_two)
 
 BOOST_AUTO_TEST_CASE(test_int32_minus_two)
 {
-    const char input[] = { transenc::code_int32, 0xFF, 0xFF, 0xFF, 0xFE };
+    const char input[] = { transenc::code_int32, 0xFE, 0xFF, 0xFF, 0xFF };
     transenc::decoder decoder(input, input + sizeof(input));
     BOOST_REQUIRE_EQUAL(decoder.type(), transenc::token_int32);
     BOOST_REQUIRE_EQUAL(decoder.get_int32(), -0x00000002);
@@ -308,7 +308,7 @@ BOOST_AUTO_TEST_CASE(test_int32_minus_two)
 
 BOOST_AUTO_TEST_CASE(test_int32_7FFFFFFF)
 {
-    const char input[] = { transenc::code_int32, 0x7F, 0xFF, 0xFF, 0xFF };
+    const char input[] = { transenc::code_int32, 0xFF, 0xFF, 0xFF, 0x7F };
     transenc::decoder decoder(input, input + sizeof(input));
     BOOST_REQUIRE_EQUAL(decoder.type(), transenc::token_int32);
     BOOST_REQUIRE_EQUAL(decoder.get_int32(), 0x7FFFFFFF);
@@ -318,7 +318,7 @@ BOOST_AUTO_TEST_CASE(test_int32_7FFFFFFF)
 
 BOOST_AUTO_TEST_CASE(test_int32_minus_7FFFFFFF)
 {
-    const char input[] = { transenc::code_int32, 0x80, 0x00, 0x00, 0x01 };
+    const char input[] = { transenc::code_int32, 0x01, 0x00, 0x00, 0x80 };
     transenc::decoder decoder(input, input + sizeof(input));
     BOOST_REQUIRE_EQUAL(decoder.type(), transenc::token_int32);
     BOOST_REQUIRE_EQUAL(decoder.get_int32(), -0x7FFFFFFF);
@@ -394,7 +394,7 @@ BOOST_AUTO_TEST_CASE(test_int64_zero)
 
 BOOST_AUTO_TEST_CASE(test_int64_one)
 {
-    const char input[] = { transenc::code_int64, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01 };
+    const char input[] = { transenc::code_int64, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
     transenc::decoder decoder(input, input + sizeof(input));
     BOOST_REQUIRE_EQUAL(decoder.type(), transenc::token_int64);
     BOOST_REQUIRE_EQUAL(decoder.get_int64(), 0x0000000000000001L);
@@ -414,7 +414,7 @@ BOOST_AUTO_TEST_CASE(test_int64_minus_one)
 
 BOOST_AUTO_TEST_CASE(test_int64_7FFFFFFFFFFFFFFF)
 {
-    const char input[] = { transenc::code_int64, 0x7F, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };
+    const char input[] = { transenc::code_int64, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0x7F };
     transenc::decoder decoder(input, input + sizeof(input));
     BOOST_REQUIRE_EQUAL(decoder.type(), transenc::token_int64);
     BOOST_REQUIRE_EQUAL(decoder.get_int64(), 0x7FFFFFFFFFFFFFFF);
@@ -438,7 +438,7 @@ BOOST_AUTO_TEST_CASE(test_float32_zero)
 
 BOOST_AUTO_TEST_CASE(test_float32_one)
 {
-    const char input[] = { transenc::code_float32, 0x3F, 0x80, 0x00, 0x00 };
+    const char input[] = { transenc::code_float32, 0x00, 0x00, 0x80, 0x3F };
     transenc::decoder decoder(input, input + sizeof(input));
     BOOST_REQUIRE_EQUAL(decoder.type(), transenc::token_float32);
     BOOST_REQUIRE_EQUAL(decoder.get_float32(), 1.0f);
@@ -448,7 +448,7 @@ BOOST_AUTO_TEST_CASE(test_float32_one)
 
 BOOST_AUTO_TEST_CASE(test_float32_minus_one)
 {
-    const char input[] = { transenc::code_float32, 0xBF, 0x80, 0x00, 0x00 };
+    const char input[] = { transenc::code_float32, 0x00, 0x00, 0x80, 0xBF };
     transenc::decoder decoder(input, input + sizeof(input));
     BOOST_REQUIRE_EQUAL(decoder.type(), transenc::token_float32);
     BOOST_REQUIRE_EQUAL(decoder.get_float32(), -1.0f);
@@ -458,7 +458,7 @@ BOOST_AUTO_TEST_CASE(test_float32_minus_one)
 
 BOOST_AUTO_TEST_CASE(test_float32_two)
 {
-    const char input[] = { transenc::code_float32, 0x40, 0x00, 0x00, 0x00 };
+    const char input[] = { transenc::code_float32, 0x00, 0x00, 0x00, 0x40 };
     transenc::decoder decoder(input, input + sizeof(input));
     BOOST_REQUIRE_EQUAL(decoder.type(), transenc::token_float32);
     BOOST_REQUIRE_EQUAL(decoder.get_float32(), 2.0f);
@@ -468,7 +468,7 @@ BOOST_AUTO_TEST_CASE(test_float32_two)
 
 BOOST_AUTO_TEST_CASE(test_float32_minus_two)
 {
-    const char input[] = { transenc::code_float32, 0xC0, 0x00, 0x00, 0x00 };
+    const char input[] = { transenc::code_float32, 0x00, 0x00, 0x00, 0xC0 };
     transenc::decoder decoder(input, input + sizeof(input));
     BOOST_REQUIRE_EQUAL(decoder.type(), transenc::token_float32);
     BOOST_REQUIRE_EQUAL(decoder.get_float32(), -2.0f);
@@ -516,7 +516,7 @@ BOOST_AUTO_TEST_CASE(test_float64_zero)
 
 BOOST_AUTO_TEST_CASE(test_float64_one)
 {
-    const char input[] = { transenc::code_float64, 0x3F, 0xF0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
+    const char input[] = { transenc::code_float64, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xF0, 0x3F };
     transenc::decoder decoder(input, input + sizeof(input));
     BOOST_REQUIRE_EQUAL(decoder.type(), transenc::token_float64);
     BOOST_REQUIRE_EQUAL(decoder.get_float64(), 1.0);
@@ -526,7 +526,7 @@ BOOST_AUTO_TEST_CASE(test_float64_one)
 
 BOOST_AUTO_TEST_CASE(test_float64_minus_one)
 {
-    const char input[] = { transenc::code_float64, 0xBF, 0xF0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
+    const char input[] = { transenc::code_float64, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xF0, 0xBF };
     transenc::decoder decoder(input, input + sizeof(input));
     BOOST_REQUIRE_EQUAL(decoder.type(), transenc::token_float64);
     BOOST_REQUIRE_EQUAL(decoder.get_float64(), -1.0);
@@ -536,7 +536,7 @@ BOOST_AUTO_TEST_CASE(test_float64_minus_one)
 
 BOOST_AUTO_TEST_CASE(test_float64_two)
 {
-    const char input[] = { transenc::code_float64, 0x40, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
+    const char input[] = { transenc::code_float64, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x40 };
     transenc::decoder decoder(input, input + sizeof(input));
     BOOST_REQUIRE_EQUAL(decoder.type(), transenc::token_float64);
     BOOST_REQUIRE_EQUAL(decoder.get_float64(), 2.0);
@@ -546,7 +546,7 @@ BOOST_AUTO_TEST_CASE(test_float64_two)
 
 BOOST_AUTO_TEST_CASE(test_float64_minus_two)
 {
-    const char input[] = { transenc::code_float64, 0xC0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
+    const char input[] = { transenc::code_float64, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xC0 };
     transenc::decoder decoder(input, input + sizeof(input));
     BOOST_REQUIRE_EQUAL(decoder.type(), transenc::token_float64);
     BOOST_REQUIRE_EQUAL(decoder.get_float64(), -2.0);
@@ -667,7 +667,7 @@ BOOST_AUTO_TEST_CASE(test_binary_int8_one)
 
 BOOST_AUTO_TEST_CASE(test_binary_int16_one)
 {
-    const char input[] = { transenc::code_binary_int16, 0x00, 0x01, 0x12 };
+    const char input[] = { transenc::code_binary_int16, 0x01, 0x00, 0x12 };
     transenc::decoder decoder(input, input + sizeof(input));
     BOOST_REQUIRE_EQUAL(decoder.type(), transenc::token_binary);
     BOOST_REQUIRE_EQUAL(decoder.get_binary(), "\x12");
@@ -713,7 +713,7 @@ BOOST_AUTO_TEST_CASE(test_binary_int8_missing_content)
 
 BOOST_AUTO_TEST_CASE(test_binary_int64_invalid_length)
 {
-    const char input[] = { transenc::code_binary_int64, 0x80, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
+    const char input[] = { transenc::code_binary_int64, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x80 };
     transenc::decoder decoder(input, input + sizeof(input));
     BOOST_REQUIRE_EQUAL(decoder.type(), transenc::token_error);
 }
@@ -771,7 +771,7 @@ BOOST_AUTO_TEST_CASE(test_string_int8_missing_length_indicator)
 
 BOOST_AUTO_TEST_CASE(test_string_int8_invalid_length)
 {
-    const char input[] = { transenc::code_string_int64, 0x80, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
+    const char input[] = { transenc::code_string_int64, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x80 };
     transenc::decoder decoder(input, input + sizeof(input));
     BOOST_REQUIRE_EQUAL(decoder.type(), transenc::token_error);
 }

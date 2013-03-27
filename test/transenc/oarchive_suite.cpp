@@ -127,7 +127,7 @@ BOOST_AUTO_TEST_CASE(test_int16_one)
     transenc::oarchive ar(result);
     protoc::int16_t value = 1;
     ar << boost::serialization::make_nvp("value", value);
-    BOOST_REQUIRE_EQUAL(result.str().data(), "\xB0\x00\x00");
+    BOOST_REQUIRE_EQUAL(result.str().data(), "\xB0\x01\x00");
 }
 
 BOOST_AUTO_TEST_CASE(test_const_int16_one)
@@ -136,7 +136,7 @@ BOOST_AUTO_TEST_CASE(test_const_int16_one)
     transenc::oarchive ar(result);
     const protoc::int16_t value = 1;
     ar << boost::serialization::make_nvp("value", value);
-    BOOST_REQUIRE_EQUAL(result.str().data(), "\xB0\x00\x00");
+    BOOST_REQUIRE_EQUAL(result.str().data(), "\xB0\x01\x00");
 }
 
 BOOST_AUTO_TEST_CASE(test_int32_one)
@@ -145,7 +145,7 @@ BOOST_AUTO_TEST_CASE(test_int32_one)
     transenc::oarchive ar(result);
     protoc::int32_t value = 1;
     ar << boost::serialization::make_nvp("value", value);
-    BOOST_REQUIRE_EQUAL(result.str().data(), "\xC0\x00\x00\x00\x00");
+    BOOST_REQUIRE_EQUAL(result.str().data(), "\xC0\x01\x00\x00\x00");
 }
 
 BOOST_AUTO_TEST_CASE(test_const_int32_one)
@@ -154,7 +154,7 @@ BOOST_AUTO_TEST_CASE(test_const_int32_one)
     transenc::oarchive ar(result);
     const protoc::int32_t value = 1;
     ar << boost::serialization::make_nvp("value", value);
-    BOOST_REQUIRE_EQUAL(result.str().data(), "\xC0\x00\x00\x00\x00");
+    BOOST_REQUIRE_EQUAL(result.str().data(), "\xC0\x01\x00\x00\x00");
 }
 
 BOOST_AUTO_TEST_CASE(test_int64_one)
@@ -163,7 +163,7 @@ BOOST_AUTO_TEST_CASE(test_int64_one)
     transenc::oarchive ar(result);
     protoc::int64_t value = 1;
     ar << boost::serialization::make_nvp("value", value);
-    BOOST_REQUIRE_EQUAL(result.str().data(), "\xD0\x00\x00\x00\x00\x00\x00\x00\x00");
+    BOOST_REQUIRE_EQUAL(result.str().data(), "\xD0\x01\x00\x00\x00\x00\x00\x00\x00");
 }
 
 BOOST_AUTO_TEST_CASE(test_const_int64_one)
@@ -172,7 +172,7 @@ BOOST_AUTO_TEST_CASE(test_const_int64_one)
     transenc::oarchive ar(result);
     const protoc::int64_t value = 1;
     ar << boost::serialization::make_nvp("value", value);
-    BOOST_REQUIRE_EQUAL(result.str().data(), "\xD0\x00\x00\x00\x00\x00\x00\x00\x00");
+    BOOST_REQUIRE_EQUAL(result.str().data(), "\xD0\x01\x00\x00\x00\x00\x00\x00\x00");
 }
 
 BOOST_AUTO_TEST_CASE(test_int_all_types)
@@ -189,9 +189,9 @@ BOOST_AUTO_TEST_CASE(test_int_all_types)
     ar << boost::serialization::make_nvp("delta", delta);
     BOOST_REQUIRE_EQUAL(result.str().data(),
                         "\x01"
-                        "\xB0\x00\x02"
-                        "\xC0\x00\x00\x00\x03"
-                        "\xD0\x00\x00\x00\x00\x00\x00\x00\x04");
+                        "\xB0\x02\x00"
+                        "\xC0\x03\x00\x00\x00"
+                        "\xD0\x04\x00\x00\x00\x00\x00\x00\x00");
 }
 
 //-----------------------------------------------------------------------------
@@ -204,7 +204,7 @@ BOOST_AUTO_TEST_CASE(test_float32_one)
     transenc::oarchive ar(result);
     protoc::float32_t value = 1.0f;
     ar << boost::serialization::make_nvp("value", value);
-    BOOST_REQUIRE_EQUAL(result.str().data(), "\xC2\x3F\x80\x00\x00");
+    BOOST_REQUIRE_EQUAL(result.str().data(), "\xC2\x00\x00\x80\x3F");
 }
 
 BOOST_AUTO_TEST_CASE(test_const_float32_one)
@@ -213,7 +213,7 @@ BOOST_AUTO_TEST_CASE(test_const_float32_one)
     transenc::oarchive ar(result);
     const protoc::float32_t value = 1.0f;
     ar << boost::serialization::make_nvp("value", value);
-    BOOST_REQUIRE_EQUAL(result.str().data(), "\xC2\x3F\x80\x00\x00");
+    BOOST_REQUIRE_EQUAL(result.str().data(), "\xC2\x00\x00\x80\x3F");
 }
 
 BOOST_AUTO_TEST_CASE(test_float64_one)
@@ -222,7 +222,7 @@ BOOST_AUTO_TEST_CASE(test_float64_one)
     transenc::oarchive ar(result);
     protoc::float64_t value = 1.0;
     ar << boost::serialization::make_nvp("value", value);
-    BOOST_REQUIRE_EQUAL(result.str().data(), "\xD2\x3F\xF0\x00\x00\x00\x00\x00\x00");
+    BOOST_REQUIRE_EQUAL(result.str().data(), "\xD2\x00\x00\x00\x00\x00\x00\xF0\x3F");
 }
 
 BOOST_AUTO_TEST_CASE(test_const_float64_one)
@@ -231,7 +231,7 @@ BOOST_AUTO_TEST_CASE(test_const_float64_one)
     transenc::oarchive ar(result);
     const protoc::float64_t value = 1.0;
     ar << boost::serialization::make_nvp("value", value);
-    BOOST_REQUIRE_EQUAL(result.str().data(), "\xD2\x3F\xF0\x00\x00\x00\x00\x00\x00");
+    BOOST_REQUIRE_EQUAL(result.str().data(), "\xD2\x00\x00\x00\x00\x00\x00\xF0\x3F");
 }
 
 //-----------------------------------------------------------------------------
@@ -424,7 +424,7 @@ BOOST_AUTO_TEST_CASE(test_struct_person)
     transenc::oarchive ar(result);
     person value("Kant", 127);
     ar << boost::serialization::make_nvp("value", value);
-    BOOST_REQUIRE_EQUAL(result.str().data(), "\x90" "\xA9\x04" "Kant" "\xB0\x00\x7F" "\x98");
+    BOOST_REQUIRE_EQUAL(result.str().data(), "\x90" "\xA9\x04" "Kant" "\xB0\x7F\x00" "\x98");
 }
 
 BOOST_AUTO_TEST_SUITE_END()

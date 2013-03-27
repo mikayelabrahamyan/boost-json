@@ -129,7 +129,7 @@ std::size_t encoder::put(protoc::float32_t value)
 
     buffer.write(type);
     // IEEE 754 single precision
-    const protoc::int32_t endian = 0x00010203;
+    const protoc::int32_t endian = 0x03020100;
     protoc::int8_t *value_buffer = (protoc::int8_t *)&value;
     buffer.write(static_cast<output::value_type>(value_buffer[((protoc::int8_t *)&endian)[0]]));
     buffer.write(static_cast<output::value_type>(value_buffer[((protoc::int8_t *)&endian)[1]]));
@@ -151,7 +151,7 @@ std::size_t encoder::put(protoc::float64_t value)
 
     buffer.write(type);
     // IEEE 754 double precision
-    const protoc::int64_t endian = 0x0001020304050607;
+    const protoc::int64_t endian = 0x0706050403020100;
     protoc::int8_t *value_buffer = (protoc::int8_t *)&value;
     buffer.write(static_cast<output::value_type>(value_buffer[((protoc::int8_t *)&endian)[0]]));
     buffer.write(static_cast<output::value_type>(value_buffer[((protoc::int8_t *)&endian)[1]]));
@@ -324,46 +324,46 @@ std::size_t encoder::write(protoc::uint8_t value)
 
 std::size_t encoder::write(protoc::int16_t value)
 {
-    buffer.write(static_cast<output::value_type>((value >> 8) & 0xFF));
     buffer.write(static_cast<output::value_type>(value & 0xFF));
+    buffer.write(static_cast<output::value_type>((value >> 8) & 0xFF));
     return sizeof(protoc::int16_t);
 }
 
 std::size_t encoder::write(protoc::uint16_t value)
 {
-    buffer.write(static_cast<output::value_type>((value >> 8) & 0xFF));
     buffer.write(static_cast<output::value_type>(value & 0xFF));
+    buffer.write(static_cast<output::value_type>((value >> 8) & 0xFF));
     return sizeof(protoc::uint16_t);
 }
 
 std::size_t encoder::write(protoc::int32_t value)
 {
-    buffer.write(static_cast<output::value_type>((value >> 24) & 0xFF));
-    buffer.write(static_cast<output::value_type>((value >> 16) & 0xFF));
-    buffer.write(static_cast<output::value_type>((value >> 8) & 0xFF));
     buffer.write(static_cast<output::value_type>(value & 0xFF));
+    buffer.write(static_cast<output::value_type>((value >> 8) & 0xFF));
+    buffer.write(static_cast<output::value_type>((value >> 16) & 0xFF));
+    buffer.write(static_cast<output::value_type>((value >> 24) & 0xFF));
     return sizeof(protoc::int32_t);
 }
 
 std::size_t encoder::write(protoc::uint32_t value)
 {
-    buffer.write(static_cast<output::value_type>((value >> 24) & 0xFF));
-    buffer.write(static_cast<output::value_type>((value >> 16) & 0xFF));
-    buffer.write(static_cast<output::value_type>((value >> 8) & 0xFF));
     buffer.write(static_cast<output::value_type>(value & 0xFF));
+    buffer.write(static_cast<output::value_type>((value >> 8) & 0xFF));
+    buffer.write(static_cast<output::value_type>((value >> 16) & 0xFF));
+    buffer.write(static_cast<output::value_type>((value >> 24) & 0xFF));
     return sizeof(protoc::uint32_t);
 }
 
 std::size_t encoder::write(protoc::int64_t value)
 {
-    buffer.write(static_cast<output::value_type>((value >> 54) & 0xFF));
-    buffer.write(static_cast<output::value_type>((value >> 48) & 0xFF));
-    buffer.write(static_cast<output::value_type>((value >> 40) & 0xFF));
-    buffer.write(static_cast<output::value_type>((value >> 32) & 0xFF));
-    buffer.write(static_cast<output::value_type>((value >> 24) & 0xFF));
-    buffer.write(static_cast<output::value_type>((value >> 16) & 0xFF));
-    buffer.write(static_cast<output::value_type>((value >> 8) & 0xFF));
     buffer.write(static_cast<output::value_type>(value & 0xFF));
+    buffer.write(static_cast<output::value_type>((value >> 8) & 0xFF));
+    buffer.write(static_cast<output::value_type>((value >> 16) & 0xFF));
+    buffer.write(static_cast<output::value_type>((value >> 24) & 0xFF));
+    buffer.write(static_cast<output::value_type>((value >> 32) & 0xFF));
+    buffer.write(static_cast<output::value_type>((value >> 40) & 0xFF));
+    buffer.write(static_cast<output::value_type>((value >> 48) & 0xFF));
+    buffer.write(static_cast<output::value_type>((value >> 54) & 0xFF));
     return sizeof(protoc::int64_t);
 }
 

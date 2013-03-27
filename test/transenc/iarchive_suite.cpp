@@ -81,7 +81,7 @@ BOOST_AUTO_TEST_CASE(test_int8_one)
 
 BOOST_AUTO_TEST_CASE(test_int16_one)
 {
-    const char input[] = { transenc::code_int16, 0x00, 0x01 };
+    const char input[] = { transenc::code_int16, 0x01, 0x00 };
     transenc::iarchive in(input, input + sizeof(input));
     protoc::int16_t value = 99;
     BOOST_REQUIRE_NO_THROW(in >> boost::serialization::make_nvp("value", value));
@@ -108,7 +108,7 @@ BOOST_AUTO_TEST_CASE(test_int16_one_int8)
 
 BOOST_AUTO_TEST_CASE(test_int32_one)
 {
-    const char input[] = { transenc::code_int32, 0x00, 0x00, 0x00, 0x01 };
+    const char input[] = { transenc::code_int32, 0x01, 0x00, 0x00, 0x00 };
     transenc::iarchive in(input, input + sizeof(input));
     protoc::int32_t value = 99;
     BOOST_REQUIRE_NO_THROW(in >> boost::serialization::make_nvp("value", value));
@@ -117,7 +117,7 @@ BOOST_AUTO_TEST_CASE(test_int32_one)
 
 BOOST_AUTO_TEST_CASE(test_int32_one_int16)
 {
-    const char input[] = { transenc::code_int16, 0x00, 0x01 };
+    const char input[] = { transenc::code_int16, 0x01, 0x00 };
     transenc::iarchive in(input, input + sizeof(input));
     protoc::int32_t value = 99;
     BOOST_REQUIRE_NO_THROW(in >> boost::serialization::make_nvp("value", value));
@@ -144,7 +144,7 @@ BOOST_AUTO_TEST_CASE(test_int32_one_int8)
 
 BOOST_AUTO_TEST_CASE(test_int64_one)
 {
-    const char input[] = { transenc::code_int64, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01 };
+    const char input[] = { transenc::code_int64, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
     transenc::iarchive in(input, input + sizeof(input));
     protoc::int64_t value = 99;
     BOOST_REQUIRE_NO_THROW(in >> boost::serialization::make_nvp("value", value));
@@ -153,7 +153,7 @@ BOOST_AUTO_TEST_CASE(test_int64_one)
 
 BOOST_AUTO_TEST_CASE(test_int64_one_int32)
 {
-    const char input[] = { transenc::code_int32, 0x00, 0x00, 0x00, 0x01 };
+    const char input[] = { transenc::code_int32, 0x01, 0x00, 0x00, 0x00 };
     transenc::iarchive in(input, input + sizeof(input));
     protoc::int64_t value = 99;
     BOOST_REQUIRE_NO_THROW(in >> boost::serialization::make_nvp("value", value));
@@ -162,7 +162,7 @@ BOOST_AUTO_TEST_CASE(test_int64_one_int32)
 
 BOOST_AUTO_TEST_CASE(test_int64_one_int16)
 {
-    const char input[] = { transenc::code_int16, 0x00, 0x01 };
+    const char input[] = { transenc::code_int16, 0x01, 0x00 };
     transenc::iarchive in(input, input + sizeof(input));
     protoc::int64_t value = 99;
     BOOST_REQUIRE_NO_THROW(in >> boost::serialization::make_nvp("value", value));
@@ -193,7 +193,7 @@ BOOST_AUTO_TEST_CASE(test_int64_one_int8)
 
 BOOST_AUTO_TEST_CASE(test_float_one)
 {
-    const char input[] = { transenc::code_float32, 0x3F, 0x80, 0x00, 0x00 };
+    const char input[] = { transenc::code_float32, 0x00, 0x00, 0x80, 0x3F };
     transenc::iarchive in(input, input + sizeof(input));
     protoc::float32_t value = 0.0f;
     BOOST_REQUIRE_NO_THROW(in >> boost::serialization::make_nvp("value", value));
@@ -202,7 +202,7 @@ BOOST_AUTO_TEST_CASE(test_float_one)
 
 BOOST_AUTO_TEST_CASE(test_double_one)
 {
-    const char input[] = { transenc::code_float64, 0x3F, 0xF0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
+    const char input[] = { transenc::code_float64, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xF0, 0x3F };
     transenc::iarchive in(input, input + sizeof(input));
     protoc::float64_t value = 0.0;
     BOOST_REQUIRE_NO_THROW(in >> boost::serialization::make_nvp("value", value));
@@ -211,7 +211,7 @@ BOOST_AUTO_TEST_CASE(test_double_one)
 
 BOOST_AUTO_TEST_CASE(test_double_one_float)
 {
-    const char input[] = { transenc::code_float32, 0x3F, 0x80, 0x00, 0x00 };
+    const char input[] = { transenc::code_float32, 0x00, 0x00, 0x80, 0x3F };
     transenc::iarchive in(input, input + sizeof(input));
     protoc::float64_t value = 0.0;
     BOOST_REQUIRE_NO_THROW(in >> boost::serialization::make_nvp("value", value));

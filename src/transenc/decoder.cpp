@@ -194,7 +194,7 @@ protoc::int16_t decoder::get_int16() const
     assert(current.type == token_int16);
     assert(current.range.size() == sizeof(protoc::int16_t));
 
-    const protoc::int16_t endian = 0x0001;
+    const protoc::int16_t endian = 0x0100;
     const input_range::const_iterator data = current.range.begin();
     protoc::int16_t result;
     ((volatile protoc::int8_t *)&result)[((protoc::int8_t *)&endian)[0]] = static_cast<protoc::int8_t>(data[0]);
@@ -207,7 +207,7 @@ protoc::int32_t decoder::get_int32() const
     assert(current.type == token_int32);
     assert(current.range.size() == sizeof(protoc::int32_t));
 
-    const protoc::int32_t endian = 0x00010203;
+    const protoc::int32_t endian = 0x03020100;
     const input_range::const_iterator data = current.range.begin();
     protoc::int32_t result;
     ((volatile protoc::int8_t *)&result)[((protoc::int8_t *)&endian)[0]] = static_cast<protoc::int8_t>(data[0]);
@@ -222,7 +222,7 @@ protoc::int64_t decoder::get_int64() const
     assert(current.type == token_int64);
     assert(current.range.size() == sizeof(protoc::int64_t));
 
-    const protoc::int64_t endian = 0x0001020304050607;
+    const protoc::int64_t endian = 0x0706050403020100;
     const input_range::const_iterator data = current.range.begin();
     protoc::int64_t result;
     ((volatile protoc::int8_t *)&result)[((protoc::int8_t *)&endian)[0]] = static_cast<protoc::int8_t>(data[0]);
@@ -242,7 +242,7 @@ protoc::float32_t decoder::get_float32() const
     assert(current.range.size() == sizeof(protoc::float32_t));
 
     // IEEE 754 single precision
-    const protoc::int32_t endian = 0x00010203;
+    const protoc::int32_t endian = 0x03020100;
     const input_range::const_iterator data = current.range.begin();
     protoc::float32_t result;
     ((volatile protoc::int8_t *)&result)[((protoc::int8_t *)&endian)[0]] = static_cast<protoc::int8_t>(data[0]);
@@ -258,7 +258,7 @@ protoc::float64_t decoder::get_float64() const
     assert(current.range.size() == sizeof(protoc::float64_t));
 
     // IEEE 754 double precision
-    const protoc::int64_t endian = 0x0001020304050607;
+    const protoc::int64_t endian = 0x0706050403020100;
     const input_range::const_iterator data = current.range.begin();
     protoc::float64_t result;
     ((volatile protoc::int8_t *)&result)[((protoc::int8_t *)&endian)[0]] = static_cast<protoc::int8_t>(data[0]);
