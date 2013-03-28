@@ -253,6 +253,216 @@ BOOST_AUTO_TEST_CASE(test_string_alpha)
     BOOST_REQUIRE_EQUAL(decoder.type(), json::token_eof);
 }
 
+BOOST_AUTO_TEST_CASE(test_string_escape_quote)
+{
+    const char input[] = "\"\\\"\"";
+    json::decoder decoder(input, input + sizeof(input) - 1);
+    BOOST_REQUIRE_EQUAL(decoder.type(), json::token_string);
+    BOOST_REQUIRE_EQUAL(decoder.get_string(), "\"");
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), json::token_eof);
+}
+
+BOOST_AUTO_TEST_CASE(test_string_escape_reverse_solidus)
+{
+    const char input[] = "\"\\\\\"";
+    json::decoder decoder(input, input + sizeof(input) - 1);
+    BOOST_REQUIRE_EQUAL(decoder.type(), json::token_string);
+    BOOST_REQUIRE_EQUAL(decoder.get_string(), "\\");
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), json::token_eof);
+}
+
+BOOST_AUTO_TEST_CASE(test_string_escape_solidus)
+{
+    const char input[] = "\"\\/\"";
+    json::decoder decoder(input, input + sizeof(input) - 1);
+    BOOST_REQUIRE_EQUAL(decoder.type(), json::token_string);
+    BOOST_REQUIRE_EQUAL(decoder.get_string(), "/");
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), json::token_eof);
+}
+
+BOOST_AUTO_TEST_CASE(test_string_escape_backspace)
+{
+    const char input[] = "\"\\b\"";
+    json::decoder decoder(input, input + sizeof(input) - 1);
+    BOOST_REQUIRE_EQUAL(decoder.type(), json::token_string);
+    BOOST_REQUIRE_EQUAL(decoder.get_string(), "\b");
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), json::token_eof);
+}
+
+BOOST_AUTO_TEST_CASE(test_string_escape_formfeed)
+{
+    const char input[] = "\"\\f\"";
+    json::decoder decoder(input, input + sizeof(input) - 1);
+    BOOST_REQUIRE_EQUAL(decoder.type(), json::token_string);
+    BOOST_REQUIRE_EQUAL(decoder.get_string(), "\f");
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), json::token_eof);
+}
+
+BOOST_AUTO_TEST_CASE(test_string_escape_newline)
+{
+    const char input[] = "\"\\n\"";
+    json::decoder decoder(input, input + sizeof(input) - 1);
+    BOOST_REQUIRE_EQUAL(decoder.type(), json::token_string);
+    BOOST_REQUIRE_EQUAL(decoder.get_string(), "\n");
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), json::token_eof);
+}
+
+BOOST_AUTO_TEST_CASE(test_string_escape_carriage_return)
+{
+    const char input[] = "\"\\r\"";
+    json::decoder decoder(input, input + sizeof(input) - 1);
+    BOOST_REQUIRE_EQUAL(decoder.type(), json::token_string);
+    BOOST_REQUIRE_EQUAL(decoder.get_string(), "\r");
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), json::token_eof);
+}
+
+BOOST_AUTO_TEST_CASE(test_string_escape_tab)
+{
+    const char input[] = "\"\\t\"";
+    json::decoder decoder(input, input + sizeof(input) - 1);
+    BOOST_REQUIRE_EQUAL(decoder.type(), json::token_string);
+    BOOST_REQUIRE_EQUAL(decoder.get_string(), "\t");
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), json::token_eof);
+}
+
+BOOST_AUTO_TEST_CASE(test_string_escape_unicode_one)
+{
+    const char input[] = "\"\\u0001\"";
+    json::decoder decoder(input, input + sizeof(input) - 1);
+    BOOST_REQUIRE_EQUAL(decoder.type(), json::token_string);
+    BOOST_REQUIRE_EQUAL(decoder.get_string(), "\x01");
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), json::token_eof);
+}
+
+BOOST_AUTO_TEST_CASE(test_string_escape_unicode_a)
+{
+    const char input[] = "\"\\u0061\"";
+    json::decoder decoder(input, input + sizeof(input) - 1);
+    BOOST_REQUIRE_EQUAL(decoder.type(), json::token_string);
+    BOOST_REQUIRE_EQUAL(decoder.get_string(), "a");
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), json::token_eof);
+}
+
+BOOST_AUTO_TEST_CASE(test_string_escape_unicode_0123)
+{
+    const char input[] = "\"\\u0123\"";
+    json::decoder decoder(input, input + sizeof(input) - 1);
+    BOOST_REQUIRE_EQUAL(decoder.type(), json::token_string);
+    BOOST_REQUIRE_EQUAL(decoder.get_string(), "\u0123");
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), json::token_eof);
+}
+
+BOOST_AUTO_TEST_CASE(test_string_escape_unicode_4567)
+{
+    const char input[] = "\"\\u4567\"";
+    json::decoder decoder(input, input + sizeof(input) - 1);
+    BOOST_REQUIRE_EQUAL(decoder.type(), json::token_string);
+    BOOST_REQUIRE_EQUAL(decoder.get_string(), "\u4567");
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), json::token_eof);
+}
+
+BOOST_AUTO_TEST_CASE(test_string_escape_unicode_89AB)
+{
+    const char input[] = "\"\\u89AB\"";
+    json::decoder decoder(input, input + sizeof(input) - 1);
+    BOOST_REQUIRE_EQUAL(decoder.type(), json::token_string);
+    BOOST_REQUIRE_EQUAL(decoder.get_string(), "\u89AB");
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), json::token_eof);
+}
+
+BOOST_AUTO_TEST_CASE(test_string_escape_unicode_CDEF)
+{
+    const char input[] = "\"\\uCDEF\"";
+    json::decoder decoder(input, input + sizeof(input) - 1);
+    BOOST_REQUIRE_EQUAL(decoder.type(), json::token_string);
+    BOOST_REQUIRE_EQUAL(decoder.get_string(), "\uCDEF");
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), json::token_eof);
+}
+
+BOOST_AUTO_TEST_CASE(test_fail_string_escape_unicode_missing_one)
+{
+    const char input[] = "\"\\u000\"";
+    json::decoder decoder(input, input + sizeof(input) - 1);
+    BOOST_REQUIRE_EQUAL(decoder.type(), json::token_error);
+}
+
+BOOST_AUTO_TEST_CASE(test_fail_string_escape_unicode_missing_two)
+{
+    const char input[] = "\"\\u00\"";
+    json::decoder decoder(input, input + sizeof(input) - 1);
+    BOOST_REQUIRE_EQUAL(decoder.type(), json::token_error);
+}
+
+BOOST_AUTO_TEST_CASE(test_fail_string_escape_unicode_missing_three)
+{
+    const char input[] = "\"\\u0\"";
+    json::decoder decoder(input, input + sizeof(input) - 1);
+    BOOST_REQUIRE_EQUAL(decoder.type(), json::token_error);
+}
+
+BOOST_AUTO_TEST_CASE(test_fail_string_escape_unicode_missing_four)
+{
+    const char input[] = "\"\\u\"";
+    json::decoder decoder(input, input + sizeof(input) - 1);
+    BOOST_REQUIRE_EQUAL(decoder.type(), json::token_error);
+}
+
+BOOST_AUTO_TEST_CASE(test_fail_string_escape_unicode_eof)
+{
+    const char input[] = "\"\\u0000";
+    json::decoder decoder(input, input + sizeof(input) - 1);
+    BOOST_REQUIRE_EQUAL(decoder.type(), json::token_eof);
+}
+
+BOOST_AUTO_TEST_CASE(test_fail_string_escape_unicode_eof_one)
+{
+    const char input[] = "\"\\u000";
+    json::decoder decoder(input, input + sizeof(input) - 1);
+    BOOST_REQUIRE_EQUAL(decoder.type(), json::token_eof);
+}
+
+BOOST_AUTO_TEST_CASE(test_fail_string_escape_unicode_eof_two)
+{
+    const char input[] = "\"\\u00";
+    json::decoder decoder(input, input + sizeof(input) - 1);
+    BOOST_REQUIRE_EQUAL(decoder.type(), json::token_eof);
+}
+
+BOOST_AUTO_TEST_CASE(test_fail_string_escape_unicode_eof_three)
+{
+    const char input[] = "\"\\u0";
+    json::decoder decoder(input, input + sizeof(input) - 1);
+    BOOST_REQUIRE_EQUAL(decoder.type(), json::token_eof);
+}
+
+BOOST_AUTO_TEST_CASE(test_fail_string_escape_unicode_eof_four)
+{
+    const char input[] = "\"\\u";
+    json::decoder decoder(input, input + sizeof(input) - 1);
+    BOOST_REQUIRE_EQUAL(decoder.type(), json::token_eof);
+}
+
+BOOST_AUTO_TEST_CASE(test_fail_string_escape)
+{
+    const char input[] = "\"\\\"";
+    json::decoder decoder(input, input + sizeof(input) - 1);
+    BOOST_REQUIRE_EQUAL(decoder.type(), json::token_eof);
+}
+
 //-----------------------------------------------------------------------------
 // Container
 //-----------------------------------------------------------------------------

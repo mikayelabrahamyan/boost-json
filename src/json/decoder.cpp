@@ -17,7 +17,10 @@
 
 #include <cassert>
 #include <cstring> // std::memcmp
+#include <sstream>
 #include <protoc/json/decoder.hpp>
+
+// http://www.ietf.org/rfc/rfc4627.txt
 
 //-----------------------------------------------------------------------------
 
@@ -32,6 +35,7 @@ const unsigned int lookup_invalid = 0x01;
 const unsigned int lookup_whitespace = 0x02;
 const unsigned int lookup_keyword = 0x04;
 const unsigned int lookup_digit = 0x08;
+const unsigned int lookup_hex = 0x10;
 
 const unsigned char lookup[256] =
 {
@@ -77,26 +81,26 @@ const unsigned char lookup[256] =
     /* 40 - 47 */
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
     /* 48 - 55 */
-    lookup_digit,
-    lookup_digit,
-    lookup_digit,
-    lookup_digit,
-    lookup_digit,
-    lookup_digit,
-    lookup_digit,
-    lookup_digit,
+    lookup_digit | lookup_hex,
+    lookup_digit | lookup_hex,
+    lookup_digit | lookup_hex,
+    lookup_digit | lookup_hex,
+    lookup_digit | lookup_hex,
+    lookup_digit | lookup_hex,
+    lookup_digit | lookup_hex,
+    lookup_digit | lookup_hex,
     /* 56 - 63 */
-    lookup_digit,
-    lookup_digit,
+    lookup_digit | lookup_hex,
+    lookup_digit | lookup_hex,
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
     /* 64 - 71 */
     0x00,
-    lookup_keyword,
-    lookup_keyword,
-    lookup_keyword,
-    lookup_keyword,
-    lookup_keyword,
-    lookup_keyword,
+    lookup_keyword | lookup_hex,
+    lookup_keyword | lookup_hex,
+    lookup_keyword | lookup_hex,
+    lookup_keyword | lookup_hex,
+    lookup_keyword | lookup_hex,
+    lookup_keyword | lookup_hex,
     lookup_keyword,
     /* 72 - 79 */
     lookup_keyword,
@@ -171,6 +175,31 @@ const unsigned char lookup[256] =
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
 };
+
+inline bool is_whitespace(const protoc::input_range::value_type& value)
+{
+    return ((lookup[static_cast<int>(value)] & lookup_whitespace) == lookup_whitespace);
+}
+
+inline bool is_digit(const protoc::input_range::value_type& value)
+{
+    return ((lookup[static_cast<int>(value)] & lookup_digit) == lookup_digit);
+}
+
+inline bool is_hex(const protoc::input_range::value_type& value)
+{
+    return ((lookup[static_cast<int>(value)] & lookup_hex) == lookup_hex);
+}
+
+inline bool is_hexdigit(const protoc::input_range::value_type& value)
+{
+    return (lookup[static_cast<int>(value)] & (lookup_digit | lookup_hex));
+}
+
+inline bool is_keyword(const protoc::input_range::value_type& value)
+{
+    return ((lookup[static_cast<int>(value)] & lookup_keyword) == lookup_keyword);
+}
 
 } // anonymous namespace
 
@@ -282,7 +311,96 @@ std::string decoder::get_string() const
     assert(current.type == token_string);
 
     // FIXME: Validate string [ http://www.w3.org/International/questions/qa-forms-utf-8 ]
-    return std::string(current.range.begin(), current.range.size());
+    std::ostringstream result;
+    for (input_range::const_iterator it = current.range.begin();
+         it != current.range.end();
+         ++it)
+    {
+        if (*it == '\\')
+        {
+            assert(current.range.size() >= 2);
+            ++it;
+            switch (*it)
+            {
+            case '"':
+            case '\\':
+            case '/':
+                result << *it;
+                break;
+
+            case 'b':
+                result << '\b';
+                break;
+
+            case 'f':
+                result << '\f';
+                break;
+
+            case 'n':
+                result << '\n';
+                break;
+
+            case 'r':
+                result << '\r';
+                break;
+
+            case 't':
+                result << '\t';
+                break;
+
+            case 'u':
+                {
+                    // Convert U+XXXX value to UTF-8
+                    assert(current.range.size() >= 5);
+                    protoc::uint32_t value = 0;
+                    for (int i = 0; i < 4; ++i)
+                    {
+                        ++it;
+                        value <<= 4;
+                        if (is_digit(*it))
+                        {
+                            value += (*it - '0');
+                        }
+                        else if (is_hex(*it))
+                        {
+                            value += (*it - 'A') + 10;
+                        }
+                    }
+                    if (value <= 0x007F)
+                    {
+                        // 0xxxxxxx
+                        const unsigned char byte1 = static_cast<unsigned char>(value & 0x7F);
+                        result << byte1;
+                    }
+                    else if (value <= 0x07FF)
+                    {
+                        // 110xxxxx 10xxxxxx
+                        const unsigned char byte1 = 0xC0 | static_cast<unsigned char>((value >> 6) & 0x1F);
+                        const unsigned char byte2 = 0x80 | static_cast<unsigned char>(value & 0x3F);
+                        result << byte1 << byte2;
+                    }
+                    else
+                    {
+                        // 1110xxxx 10xxxxxx 10xxxxxx
+                        const unsigned char byte1 = 0xE0 | static_cast<unsigned char>((value >> 12) & 0x0F);
+                        const unsigned char byte2 = 0x80 | static_cast<unsigned char>((value >> 6) & 0x3F);
+                        const unsigned char byte3 = 0x80 | static_cast<unsigned char>(value & 0x3F);
+                        result << byte1 << byte2 << byte3;
+                    }
+                }
+                break;
+
+            default:
+                assert(false);
+                break;
+            }
+        }
+        else
+        {
+            result << *it;
+        }
+    }
+    return result.str();
 }
 
 token decoder::next_f_keyword()
@@ -363,7 +481,7 @@ token decoder::next_number()
     }
 
     input_range::const_iterator digit_begin = input.begin();
-    while (is_digit())
+    while (is_digit(*input))
     {
         ++input;
     }
@@ -385,9 +503,54 @@ token decoder::next_string()
     input_range::const_iterator begin = input.begin();
     while (!input.empty())
     {
-        // FIXME: Escape
-        if (*input == '"')
+        if (*input == '\\')
         {
+            // Handle escaped character
+            ++input;
+            if (input.empty())
+                return token_eof;
+            switch (*input)
+            {
+            case '"':
+            case '\\':
+            case '/':
+            case 'b':
+            case 'f':
+            case 'n':
+            case 'r':
+            case 't':
+                break;
+
+            case 'u':
+                ++input;
+                if (input.empty())
+                    return token_eof;
+                if (!is_hexdigit(*input))
+                    return token_error;
+                ++input;
+                if (input.empty())
+                    return token_eof;
+                if (!is_hexdigit(*input))
+                    return token_error;
+                ++input;
+                if (input.empty())
+                    return token_eof;
+                if (!is_hexdigit(*input))
+                    return token_error;
+                ++input;
+                if (input.empty())
+                    return token_eof;
+                if (!is_hexdigit(*input))
+                    return token_error;
+                break;
+
+            default:
+                return token_error;
+            }
+        }
+        else if (*input == '"')
+        {
+            // Handle end of string
             current.range = input_range(begin, input.begin());
             ++input; // Skip terminating '"'
             return token_string;
@@ -399,7 +562,7 @@ token decoder::next_string()
 
 void decoder::skip_whitespaces()
 {
-    while (!input.empty() && is_whitespace())
+    while (!input.empty() && is_whitespace(*input))
     {
         ++input;
     }
@@ -411,24 +574,7 @@ bool decoder::at_keyword_end() const
     {
         return true;
     }
-    const int ix = static_cast<int>(*input);
-    if ((lookup[ix] & lookup_keyword))
-    {
-        return false;
-    }
-    return true;
-}
-
-bool decoder::is_whitespace() const
-{
-    const int ix = static_cast<int>(*input);
-    return ((lookup[ix] & lookup_whitespace) == lookup_whitespace);
-}
-
-bool decoder::is_digit() const
-{
-    const int ix = static_cast<int>(*input);
-    return ((lookup[ix] & lookup_digit) == lookup_digit);
+    return !is_keyword(*input);
 }
 
 }

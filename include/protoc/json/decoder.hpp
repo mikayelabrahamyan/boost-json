@@ -53,9 +53,6 @@ private:
     void skip_whitespaces();
     bool at_keyword_end() const;
 
-    bool is_whitespace() const;
-    bool is_digit() const;
-
 private:
     input_range input;
     struct
