@@ -75,6 +75,15 @@ BOOST_AUTO_TEST_CASE(test_false)
     output_stream buffer(result);
     json::encoder encoder(buffer);
     BOOST_REQUIRE_EQUAL(encoder.put(false), 5);
+    BOOST_REQUIRE_EQUAL(result.str().data(), "false");
+}
+
+BOOST_AUTO_TEST_CASE(test_false_false)
+{
+    std::ostringstream result;
+    output_stream buffer(result);
+    json::encoder encoder(buffer);
+    BOOST_REQUIRE_EQUAL(encoder.put(false), 5);
     BOOST_REQUIRE_EQUAL(encoder.put(false), 5);
     BOOST_REQUIRE_EQUAL(result.str().data(), "false false");
 }
