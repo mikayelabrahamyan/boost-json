@@ -33,11 +33,17 @@ BOOST_AUTO_TEST_SUITE(json_encoder_suite)
 
 BOOST_AUTO_TEST_CASE(test_null)
 {
-    std::ostringstream result;
-    output_stream buffer(result);
+    output_array<4> buffer;
     json::encoder encoder(buffer);
     BOOST_REQUIRE_EQUAL(encoder.put(), 4);
-    BOOST_REQUIRE_EQUAL(result.str().data(), "null");
+    BOOST_REQUIRE_EQUAL(std::string(buffer.begin(), buffer.size()), "null");
+}
+
+BOOST_AUTO_TEST_CASE(test_fail_null)
+{
+    output_array<3> buffer;
+    json::encoder encoder(buffer);
+    BOOST_REQUIRE_EQUAL(encoder.put(), 0);
 }
 
 BOOST_AUTO_TEST_CASE(test_null_null)
