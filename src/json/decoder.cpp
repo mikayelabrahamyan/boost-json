@@ -489,9 +489,55 @@ token decoder::next_number()
     {
         return token_error;
     }
+    token type = token_integer;
+    if (*input == '.')
+    {
+        type = token_float;
+        ++input;
+        if (input.empty())
+            return token_eof;
+        input_range::const_iterator fraction_begin = input.begin();
+        while (is_digit(*input))
+        {
+            ++input;
+        }
+        if (input.begin() == fraction_begin)
+        {
+            return token_error;
+        }
+    }
+    if ((*input == 'E') || (*input == 'e'))
+    {
+        type = token_float;
+        ++input;
+        if (input.empty())
+            return token_eof;
+        bool is_negative_exponent = false;
+        if (*input == '+')
+        {
+            ++input;
+            if (input.empty())
+                return token_eof;
+        }
+        else if (*input == '-')
+        {
+            is_negative_exponent = true;
+            ++input;
+            if (input.empty())
+                return token_eof;
+        }
+        input_range::const_iterator exponent_begin = input.begin();
+        while (is_digit(*input))
+        {
+            ++input;
+        }
+        if (input.begin() == exponent_begin)
+        {
+            return token_error;
+        }
+    }
     current.range = input_range(begin, input.begin());
-    // FIXME: Check for float
-    return token_integer;
+    return type;
 }
 
 token decoder::next_string()
