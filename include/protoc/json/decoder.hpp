@@ -37,7 +37,8 @@ public:
     void next();
 
     std::string get_string() const;
-    std::string get_number() const;
+    protoc::int64_t get_integer() const;
+    protoc::float64_t get_float() const;
 
 private:
     token next_f_keyword();

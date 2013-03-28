@@ -17,6 +17,7 @@
 
 #include <cassert>
 #include <cstring> // std::memcmp
+#include <cstdlib> // std::atoll, std::atof
 #include <sstream>
 #include <protoc/json/decoder.hpp>
 
@@ -401,6 +402,20 @@ std::string decoder::get_string() const
         }
     }
     return result.str();
+}
+
+protoc::int64_t decoder::get_integer() const
+{
+    assert(current.type == token_integer);
+
+    return std::atoll(current.range.begin());
+}
+
+protoc::float64_t decoder::get_float() const
+{
+    assert(current.type == token_float);
+
+    return std::atof(current.range.begin());
 }
 
 token decoder::next_f_keyword()

@@ -180,7 +180,7 @@ BOOST_AUTO_TEST_CASE(test_integer_zero)
     const char input[] = "0";
     json::decoder decoder(input, input + sizeof(input) - 1);
     BOOST_REQUIRE_EQUAL(decoder.type(), json::token_integer);
-    // FIXME: get_integer()
+    BOOST_REQUIRE_EQUAL(decoder.get_integer(), 0);
     decoder.next();
     BOOST_REQUIRE_EQUAL(decoder.type(), json::token_eof);
 }
@@ -190,7 +190,7 @@ BOOST_AUTO_TEST_CASE(test_white_integer_zero)
     const char input[] = "  0  ";
     json::decoder decoder(input, input + sizeof(input) - 1);
     BOOST_REQUIRE_EQUAL(decoder.type(), json::token_integer);
-    // FIXME: get_integer()
+    BOOST_REQUIRE_EQUAL(decoder.get_integer(), 0);
     decoder.next();
     BOOST_REQUIRE_EQUAL(decoder.type(), json::token_eof);
 }
@@ -200,7 +200,7 @@ BOOST_AUTO_TEST_CASE(test_integer_hundred)
     const char input[] = "100";
     json::decoder decoder(input, input + sizeof(input) - 1);
     BOOST_REQUIRE_EQUAL(decoder.type(), json::token_integer);
-    // FIXME: get_integer()
+    BOOST_REQUIRE_EQUAL(decoder.get_integer(), 100);
     decoder.next();
     BOOST_REQUIRE_EQUAL(decoder.type(), json::token_eof);
 }
@@ -210,7 +210,7 @@ BOOST_AUTO_TEST_CASE(test_integer_minus_hundred)
     const char input[] = "-100";
     json::decoder decoder(input, input + sizeof(input) - 1);
     BOOST_REQUIRE_EQUAL(decoder.type(), json::token_integer);
-    // FIXME: get_integer()
+    BOOST_REQUIRE_EQUAL(decoder.get_integer(), -100);
     decoder.next();
     BOOST_REQUIRE_EQUAL(decoder.type(), json::token_eof);
 }
@@ -238,7 +238,7 @@ BOOST_AUTO_TEST_CASE(test_float_zero)
     const char input[] = "0.0";
     json::decoder decoder(input, input + sizeof(input) - 1);
     BOOST_REQUIRE_EQUAL(decoder.type(), json::token_float);
-    // FIXME: get_float()
+    BOOST_REQUIRE_EQUAL(decoder.get_float(), 0.0);
     decoder.next();
     BOOST_REQUIRE_EQUAL(decoder.type(), json::token_eof);
 }
@@ -248,7 +248,7 @@ BOOST_AUTO_TEST_CASE(test_float_one)
     const char input[] = "1.0";
     json::decoder decoder(input, input + sizeof(input) - 1);
     BOOST_REQUIRE_EQUAL(decoder.type(), json::token_float);
-    // FIXME: get_float()
+    BOOST_REQUIRE_EQUAL(decoder.get_float(), 1.0);
     decoder.next();
     BOOST_REQUIRE_EQUAL(decoder.type(), json::token_eof);
 }
@@ -258,7 +258,7 @@ BOOST_AUTO_TEST_CASE(test_float_minus_one)
     const char input[] = "-1.0";
     json::decoder decoder(input, input + sizeof(input) - 1);
     BOOST_REQUIRE_EQUAL(decoder.type(), json::token_float);
-    // FIXME: get_float()
+    BOOST_REQUIRE_EQUAL(decoder.get_float(), -1.0);
     decoder.next();
     BOOST_REQUIRE_EQUAL(decoder.type(), json::token_eof);
 }
@@ -268,7 +268,7 @@ BOOST_AUTO_TEST_CASE(test_float_one_exp_one)
     const char input[] = "1e1";
     json::decoder decoder(input, input + sizeof(input) - 1);
     BOOST_REQUIRE_EQUAL(decoder.type(), json::token_float);
-    // FIXME: get_float()
+    BOOST_REQUIRE_EQUAL(decoder.get_float(), 1e1);
     decoder.next();
     BOOST_REQUIRE_EQUAL(decoder.type(), json::token_eof);
 }
@@ -278,7 +278,7 @@ BOOST_AUTO_TEST_CASE(test_float_one_upper_exp_one)
     const char input[] = "1E1";
     json::decoder decoder(input, input + sizeof(input) - 1);
     BOOST_REQUIRE_EQUAL(decoder.type(), json::token_float);
-    // FIXME: get_float()
+    BOOST_REQUIRE_EQUAL(decoder.get_float(), 1e1);
     decoder.next();
     BOOST_REQUIRE_EQUAL(decoder.type(), json::token_eof);
 }
@@ -288,7 +288,7 @@ BOOST_AUTO_TEST_CASE(test_float_one_dot_exp_one)
     const char input[] = "1.0e1";
     json::decoder decoder(input, input + sizeof(input) - 1);
     BOOST_REQUIRE_EQUAL(decoder.type(), json::token_float);
-    // FIXME: get_float()
+    BOOST_REQUIRE_EQUAL(decoder.get_float(), 1e1);
     decoder.next();
     BOOST_REQUIRE_EQUAL(decoder.type(), json::token_eof);
 }
@@ -298,7 +298,7 @@ BOOST_AUTO_TEST_CASE(test_float_one_exp_plus_one)
     const char input[] = "1e+1";
     json::decoder decoder(input, input + sizeof(input) - 1);
     BOOST_REQUIRE_EQUAL(decoder.type(), json::token_float);
-    // FIXME: get_float()
+    BOOST_REQUIRE_EQUAL(decoder.get_float(), 1e1);
     decoder.next();
     BOOST_REQUIRE_EQUAL(decoder.type(), json::token_eof);
 }
@@ -308,7 +308,7 @@ BOOST_AUTO_TEST_CASE(test_float_one_exp_minus_one)
     const char input[] = "1e-1";
     json::decoder decoder(input, input + sizeof(input) - 1);
     BOOST_REQUIRE_EQUAL(decoder.type(), json::token_float);
-    // FIXME: get_float()
+    BOOST_REQUIRE_EQUAL(decoder.get_float(), 1e-1);
     decoder.next();
     BOOST_REQUIRE_EQUAL(decoder.type(), json::token_eof);
 }
