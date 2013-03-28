@@ -34,11 +34,7 @@ public:
 
     std::size_t put(); // Null
     std::size_t put(bool);
-    std::size_t put(protoc::int8_t);
-    std::size_t put(protoc::int16_t);
-    std::size_t put(protoc::int32_t);
     std::size_t put(protoc::int64_t);
-    std::size_t put(protoc::float32_t);
     std::size_t put(protoc::float64_t);
     std::size_t put(const char *);
     std::size_t put(const std::string&);
