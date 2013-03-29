@@ -301,6 +301,24 @@ BOOST_AUTO_TEST_CASE(test_float_e_minus_100)
     BOOST_REQUIRE_EQUAL(result.str().data(), "1e-100");
 }
 
+BOOST_AUTO_TEST_CASE(test_float_max)
+{
+    std::ostringstream result;
+    output_stream buffer(result);
+    json::encoder encoder(buffer);
+    BOOST_REQUIRE_EQUAL(encoder.put(std::numeric_limits<protoc::float64_t>::max()), 23);
+    BOOST_REQUIRE_EQUAL(result.str().data(), "1.7976931348623157e+308");
+}
+
+BOOST_AUTO_TEST_CASE(test_float_min)
+{
+    std::ostringstream result;
+    output_stream buffer(result);
+    json::encoder encoder(buffer);
+    BOOST_REQUIRE_EQUAL(encoder.put(std::numeric_limits<protoc::float64_t>::min()), 23);
+    BOOST_REQUIRE_EQUAL(result.str().data(), "2.2250738585072014e-308");
+}
+
 BOOST_AUTO_TEST_CASE(test_float_infinity)
 {
     std::ostringstream result;
