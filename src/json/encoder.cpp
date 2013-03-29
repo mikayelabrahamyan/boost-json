@@ -17,6 +17,9 @@
 
 #include <cassert>
 #include <limits>
+#include <sstream>
+#include <boost/lexical_cast.hpp>
+#include <boost/math/special_functions/fpclassify.hpp>
 #include <protoc/json/encoder.hpp>
 
 namespace
@@ -133,6 +136,37 @@ std::size_t encoder::put(protoc::int64_t value)
     for (std::size_t i = 1; i <= count; ++i)
     {
         buffer.write(reversed[count - i]);
+    }
+
+    need_whitespace = true;
+
+    return size;
+}
+
+std::size_t encoder::put(protoc::float64_t value)
+{
+    put_whitespace();
+
+    const int fpclass = boost::math::fpclassify(value);
+    if ((fpclass == FP_INFINITE) || (fpclass == FP_NAN))
+    {
+        // Infinity and NaN must be encoded as null
+        return put();
+    }
+
+    std::string work = boost::lexical_cast<std::string>(value);
+    const std::string::size_type size = work.size();
+
+    if (!buffer.grow(size))
+    {
+        return 0;
+    }
+
+    for (std::string::const_iterator it = work.begin();
+         it != work.end();
+         ++it)
+    {
+        buffer.write(*it);
     }
 
     need_whitespace = true;
