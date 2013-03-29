@@ -45,6 +45,7 @@ public:
     std::size_t put_array_end();
 
 private:
+    std::size_t put_whitespace();
     std::size_t put_text(const char *, std::size_t);
 
 private:

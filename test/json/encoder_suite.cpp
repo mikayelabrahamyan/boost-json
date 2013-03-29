@@ -94,4 +94,144 @@ BOOST_AUTO_TEST_CASE(test_false_false)
     BOOST_REQUIRE_EQUAL(result.str().data(), "false false");
 }
 
+//-----------------------------------------------------------------------------
+// Integer
+//-----------------------------------------------------------------------------
+
+BOOST_AUTO_TEST_CASE(test_int_zero)
+{
+    std::ostringstream result;
+    output_stream buffer(result);
+    json::encoder encoder(buffer);
+    BOOST_REQUIRE_EQUAL(encoder.put(protoc::int64_t(0)), 1);
+    BOOST_REQUIRE_EQUAL(result.str().data(), "0");
+}
+
+BOOST_AUTO_TEST_CASE(test_int_zero_zero)
+{
+    std::ostringstream result;
+    output_stream buffer(result);
+    json::encoder encoder(buffer);
+    BOOST_REQUIRE_EQUAL(encoder.put(protoc::int64_t(0)), 1);
+    BOOST_REQUIRE_EQUAL(encoder.put(protoc::int64_t(0)), 1);
+    BOOST_REQUIRE_EQUAL(result.str().data(), "0 0");
+}
+
+BOOST_AUTO_TEST_CASE(test_int_one)
+{
+    std::ostringstream result;
+    output_stream buffer(result);
+    json::encoder encoder(buffer);
+    BOOST_REQUIRE_EQUAL(encoder.put(protoc::int64_t(1)), 1);
+    BOOST_REQUIRE_EQUAL(result.str().data(), "1");
+}
+
+BOOST_AUTO_TEST_CASE(test_int_minus_one)
+{
+    std::ostringstream result;
+    output_stream buffer(result);
+    json::encoder encoder(buffer);
+    BOOST_REQUIRE_EQUAL(encoder.put(protoc::int64_t(-1)), 2);
+    BOOST_REQUIRE_EQUAL(result.str().data(), "-1");
+}
+
+BOOST_AUTO_TEST_CASE(test_int_nine)
+{
+    std::ostringstream result;
+    output_stream buffer(result);
+    json::encoder encoder(buffer);
+    BOOST_REQUIRE_EQUAL(encoder.put(protoc::int64_t(9)), 1);
+    BOOST_REQUIRE_EQUAL(result.str().data(), "9");
+}
+
+BOOST_AUTO_TEST_CASE(test_int_minus_nine)
+{
+    std::ostringstream result;
+    output_stream buffer(result);
+    json::encoder encoder(buffer);
+    BOOST_REQUIRE_EQUAL(encoder.put(protoc::int64_t(-9)), 2);
+    BOOST_REQUIRE_EQUAL(result.str().data(), "-9");
+}
+
+BOOST_AUTO_TEST_CASE(test_int_ten)
+{
+    std::ostringstream result;
+    output_stream buffer(result);
+    json::encoder encoder(buffer);
+    BOOST_REQUIRE_EQUAL(encoder.put(protoc::int64_t(10)), 2);
+    BOOST_REQUIRE_EQUAL(result.str().data(), "10");
+}
+
+BOOST_AUTO_TEST_CASE(test_int_minus_ten)
+{
+    std::ostringstream result;
+    output_stream buffer(result);
+    json::encoder encoder(buffer);
+    BOOST_REQUIRE_EQUAL(encoder.put(protoc::int64_t(-10)), 3);
+    BOOST_REQUIRE_EQUAL(result.str().data(), "-10");
+}
+
+BOOST_AUTO_TEST_CASE(test_int_almost_hundred)
+{
+    std::ostringstream result;
+    output_stream buffer(result);
+    json::encoder encoder(buffer);
+    BOOST_REQUIRE_EQUAL(encoder.put(protoc::int64_t(99)), 2);
+    BOOST_REQUIRE_EQUAL(result.str().data(), "99");
+}
+
+BOOST_AUTO_TEST_CASE(test_int_hundred)
+{
+    std::ostringstream result;
+    output_stream buffer(result);
+    json::encoder encoder(buffer);
+    BOOST_REQUIRE_EQUAL(encoder.put(protoc::int64_t(100)), 3);
+    BOOST_REQUIRE_EQUAL(result.str().data(), "100");
+}
+
+BOOST_AUTO_TEST_CASE(test_int_almost_minus_hundred)
+{
+    std::ostringstream result;
+    output_stream buffer(result);
+    json::encoder encoder(buffer);
+    BOOST_REQUIRE_EQUAL(encoder.put(protoc::int64_t(-99)), 3);
+    BOOST_REQUIRE_EQUAL(result.str().data(), "-99");
+}
+
+BOOST_AUTO_TEST_CASE(test_int_minus_hundred)
+{
+    std::ostringstream result;
+    output_stream buffer(result);
+    json::encoder encoder(buffer);
+    BOOST_REQUIRE_EQUAL(encoder.put(protoc::int64_t(-100)), 4);
+    BOOST_REQUIRE_EQUAL(result.str().data(), "-100");
+}
+
+BOOST_AUTO_TEST_CASE(test_int_max)
+{
+    std::ostringstream result;
+    output_stream buffer(result);
+    json::encoder encoder(buffer);
+    BOOST_REQUIRE_EQUAL(encoder.put(protoc::int64_t(std::numeric_limits<protoc::int64_t>::max())), 19);
+    BOOST_REQUIRE_EQUAL(result.str().data(), "9223372036854775807");
+}
+
+BOOST_AUTO_TEST_CASE(test_int_almost_min)
+{
+    std::ostringstream result;
+    output_stream buffer(result);
+    json::encoder encoder(buffer);
+    BOOST_REQUIRE_EQUAL(encoder.put(protoc::int64_t(std::numeric_limits<protoc::int64_t>::min() + 1)), 20);
+    BOOST_REQUIRE_EQUAL(result.str().data(), "-9223372036854775807");
+}
+
+BOOST_AUTO_TEST_CASE(test_int_min)
+{
+    std::ostringstream result;
+    output_stream buffer(result);
+    json::encoder encoder(buffer);
+    BOOST_REQUIRE_EQUAL(encoder.put(protoc::int64_t(std::numeric_limits<protoc::int64_t>::min())), 20);
+    BOOST_REQUIRE_EQUAL(result.str().data(), "-9223372036854775808");
+}
+
 BOOST_AUTO_TEST_SUITE_END()
