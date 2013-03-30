@@ -15,6 +15,7 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
+#define BOOST_LEXICAL_CAST_ASSUME_C_LOCALE 1
 #include <boost/lexical_cast.hpp>
 #include <boost/math/special_functions/fpclassify.hpp>
 #include <protoc/json/encoder.hpp>
