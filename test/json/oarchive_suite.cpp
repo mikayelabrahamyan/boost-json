@@ -184,4 +184,129 @@ BOOST_AUTO_TEST_CASE(test_double_nan)
     BOOST_REQUIRE_EQUAL(result.str().data(), "null");
 }
 
+//-----------------------------------------------------------------------------
+// String
+//-----------------------------------------------------------------------------
+
+BOOST_AUTO_TEST_CASE(test_string_empty)
+{
+    std::ostringstream result;
+    json::oarchive ar(result);
+    std::string value("");
+    ar << boost::serialization::make_nvp("value", value);
+    BOOST_REQUIRE_EQUAL(result.str().data(), "\"\"");
+}
+
+BOOST_AUTO_TEST_CASE(test_const_string_empty)
+{
+    std::ostringstream result;
+    json::oarchive ar(result);
+    const std::string value("");
+    ar << boost::serialization::make_nvp("value", value);
+    BOOST_REQUIRE_EQUAL(result.str().data(), "\"\"");
+}
+
+BOOST_AUTO_TEST_CASE(test_string_alpha)
+{
+    std::ostringstream result;
+    json::oarchive ar(result);
+    std::string value("alpha");
+    ar << boost::serialization::make_nvp("value", value);
+    BOOST_REQUIRE_EQUAL(result.str().data(), "\"alpha\"");
+}
+
+//-----------------------------------------------------------------------------
+// Container
+//-----------------------------------------------------------------------------
+
+BOOST_AUTO_TEST_CASE(test_array_bool_empty)
+{
+    std::ostringstream result;
+    json::oarchive ar(result);
+    std::vector<bool> value;
+    ar << boost::serialization::make_nvp("value", value);
+    BOOST_REQUIRE_EQUAL(result.str().data(), "[]");
+}
+
+BOOST_AUTO_TEST_CASE(test_array_bool_one)
+{
+    std::ostringstream result;
+    json::oarchive ar(result);
+    std::vector<bool> value;
+    value.push_back(true);
+    ar << boost::serialization::make_nvp("value", value);
+    BOOST_REQUIRE_EQUAL(result.str().data(), "[true]");
+}
+
+BOOST_AUTO_TEST_CASE(test_array_bool_two)
+{
+    std::ostringstream result;
+    json::oarchive ar(result);
+    std::vector<bool> value;
+    value.push_back(true);
+    value.push_back(false);
+    ar << boost::serialization::make_nvp("value", value);
+    BOOST_REQUIRE_EQUAL(result.str().data(), "[true,false]");
+}
+
+BOOST_AUTO_TEST_CASE(test_object_bool_empty)
+{
+    std::ostringstream result;
+    json::oarchive ar(result);
+    std::map<std::string, bool> value;
+    ar << boost::serialization::make_nvp("value", value);
+    BOOST_REQUIRE_EQUAL(result.str().data(), "{}");
+}
+
+BOOST_AUTO_TEST_CASE(test_object_bool_one)
+{
+    std::ostringstream result;
+    json::oarchive ar(result);
+    std::map<std::string, bool> value;
+    value["A"] = true;
+    ar << boost::serialization::make_nvp("value", value);
+    BOOST_REQUIRE_EQUAL(result.str().data(), "{\"A\":true}");
+}
+
+BOOST_AUTO_TEST_CASE(test_object_bool_two)
+{
+    std::ostringstream result;
+    json::oarchive ar(result);
+    std::map<std::string, bool> value;
+    value["A"] = true;
+    value["B"] = false;
+    ar << boost::serialization::make_nvp("value", value);
+    BOOST_REQUIRE_EQUAL(result.str().data(), "{\"A\":true,\"B\":false}");
+}
+
+BOOST_AUTO_TEST_CASE(test_nonobject_bool_empty)
+{
+    std::ostringstream result;
+    json::oarchive ar(result);
+    std::map<int, bool> value;
+    ar << boost::serialization::make_nvp("value", value);
+    BOOST_REQUIRE_EQUAL(result.str().data(), "[]");
+}
+
+BOOST_AUTO_TEST_CASE(test_nonobject_bool_one)
+{
+    std::ostringstream result;
+    json::oarchive ar(result);
+    std::map<int, bool> value;
+    value[2] = true;
+    ar << boost::serialization::make_nvp("value", value);
+    BOOST_REQUIRE_EQUAL(result.str().data(), "[[2,true]]");
+}
+
+BOOST_AUTO_TEST_CASE(test_nonobject_bool_two)
+{
+    std::ostringstream result;
+    json::oarchive ar(result);
+    std::map<int, bool> value;
+    value[2] = true;
+    value[4] = false;
+    ar << boost::serialization::make_nvp("value", value);
+    BOOST_REQUIRE_EQUAL(result.str().data(), "[[2,true],[4,false]]");
+}
+
 BOOST_AUTO_TEST_SUITE_END()

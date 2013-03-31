@@ -69,14 +69,24 @@ public:
     void save_override(const boost::serialization::nvp<std::string>&, int);
     void save_override(const boost::serialization::nvp<const std::string>&, int);
 
+    // std::vector
     template<typename value_type, typename allocator_type>
     void save_override(const boost::serialization::nvp< const std::vector<value_type, allocator_type> >& data, int)
     {
+        bool is_first = true;
         output.put_array_begin();
         for (typename std::vector<value_type, allocator_type>::const_iterator it = data.value().begin();
              it != data.value().end();
              ++it)
         {
+            if (is_first)
+            {
+                is_first = false;
+            }
+            else
+            {
+                output.put_comma();
+            }
             value_type value = *it;
             *this << boost::serialization::make_nvp(data.name(), value);
         }
@@ -89,18 +99,32 @@ public:
         this->save_override(boost::serialization::make_nvp(data.name(), const_cast<const std::vector<value_type, allocator_type>&>(data.value())), version);
     }
 
+    // std::map
     template<typename key_type, typename mapped_type, typename key_compare, typename allocator_type>
     void save_override(const boost::serialization::nvp< const std::map<key_type, mapped_type, key_compare, allocator_type> >& data, int)
     {
-        output.put_object_begin();
+        bool is_first = true;
+        output.put_array_begin();
         for (typename std::map<key_type, mapped_type>::const_iterator it = data.value().begin();
              it != data.value().end();
              ++it)
         {
+            if (is_first)
+            {
+                is_first = false;
+            }
+            else
+            {
+                output.put_comma();
+            }
+            // FIXME: std::pair
+            output.put_array_begin();
             *this << boost::serialization::make_nvp(data.name()/*FIXME*/, it->first);
+            output.put_comma();
             *this << boost::serialization::make_nvp(data.name()/*FIXME*/, it->second);
+            output.put_array_end();
         }
-        output.put_object_end();
+        output.put_array_end();
     }
 
     template<typename key_type, typename mapped_type, typename key_compare, typename allocator_type>
@@ -108,6 +132,32 @@ public:
     {
         this->save_override(boost::serialization::make_nvp(data.name(), const_cast<const std::map<key_type, mapped_type, key_compare, allocator_type>&>(data.value())), version);
     }
+
+    // Specialization for std::map<std::string, T>
+    template<typename mapped_type, typename key_compare, typename allocator_type>
+    void save_override(const boost::serialization::nvp< const std::map<std::string, mapped_type, key_compare, allocator_type> >& data, int)
+    {
+        bool is_first = true;
+        output.put_object_begin();
+        for (typename std::map<std::string, mapped_type>::const_iterator it = data.value().begin();
+             it != data.value().end();
+             ++it)
+        {
+            if (is_first)
+            {
+                is_first = false;
+            }
+            else
+            {
+                output.put_comma();
+            }
+            *this << boost::serialization::make_nvp(data.name()/*FIXME*/, it->first);
+            output.put_colon();
+            *this << boost::serialization::make_nvp(data.name()/*FIXME*/, it->second);
+        }
+        output.put_object_end();
+    }
+
 
     // Ignore these
     void save_override(const boost::archive::version_type, int) {}
