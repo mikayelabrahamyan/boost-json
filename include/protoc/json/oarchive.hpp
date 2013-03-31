@@ -47,7 +47,10 @@ public:
     void save_override(const boost::serialization::nvp<value_type>& data, long)
     {
         this->This()->save_start(data.name());
+        output.put_array_begin();
+        // FIXME: Need scope to determine separators
         boost::archive::save(*this->This(), const_cast<const value_type&>(data.value()));
+        output.put_array_end();
         this->This()->save_end(data.name());
     }
 

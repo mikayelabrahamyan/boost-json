@@ -309,4 +309,31 @@ BOOST_AUTO_TEST_CASE(test_nonobject_bool_two)
     BOOST_REQUIRE_EQUAL(result.str().data(), "[[2,true],[4,false]]");
 }
 
+struct person
+{
+    person(const std::string& name, int age)
+        : name(name),
+          age(age)
+    {}
+
+    template<typename T>
+    void serialize(T& archive, const unsigned int)
+    {
+        archive & boost::serialization::make_nvp("name", name);
+        archive & boost::serialization::make_nvp("age", age);
+    }
+
+    std::string name;
+    protoc::int16_t age;
+};
+
+BOOST_AUTO_TEST_CASE(test_array_struct)
+{
+    std::ostringstream result;
+    json::oarchive ar(result);
+    person value("Kant", 127);
+    ar << boost::serialization::make_nvp("value", value);
+    BOOST_REQUIRE_EQUAL(result.str().data(), "[\"Kant\",127]");
+}
+
 BOOST_AUTO_TEST_SUITE_END()
