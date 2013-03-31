@@ -38,5 +38,75 @@ void oarchive::save_override(const boost::serialization::nvp<const bool>& data, 
     output.put(data.value());
 }
 
+void oarchive::save_override(const boost::serialization::nvp<protoc::int8_t>& data, int)
+{
+    output.put(static_cast<protoc::int64_t>(data.value()));
+}
+
+void oarchive::save_override(const boost::serialization::nvp<const protoc::int8_t>& data, int)
+{
+    output.put(static_cast<protoc::int64_t>(data.value()));
+}
+
+void oarchive::save_override(const boost::serialization::nvp<protoc::int16_t>& data, int)
+{
+    output.put(static_cast<protoc::int64_t>(data.value()));
+}
+
+void oarchive::save_override(const boost::serialization::nvp<const protoc::int16_t>& data, int)
+{
+    output.put(static_cast<protoc::int64_t>(data.value()));
+}
+
+void oarchive::save_override(const boost::serialization::nvp<protoc::int32_t>& data, int)
+{
+    output.put(static_cast<protoc::int64_t>(data.value()));
+}
+
+void oarchive::save_override(const boost::serialization::nvp<const protoc::int32_t>& data, int)
+{
+    output.put(static_cast<protoc::int64_t>(data.value()));
+}
+
+void oarchive::save_override(const boost::serialization::nvp<protoc::int64_t>& data, int)
+{
+    output.put(data.value());
+}
+
+void oarchive::save_override(const boost::serialization::nvp<const protoc::int64_t>& data, int)
+{
+    output.put(data.value());
+}
+
+void oarchive::save_override(const boost::serialization::nvp<protoc::float32_t>& data, int)
+{
+    output.put(static_cast<protoc::float64_t>(data.value()));
+}
+
+void oarchive::save_override(const boost::serialization::nvp<const protoc::float32_t>& data, int)
+{
+    output.put(static_cast<protoc::float64_t>(data.value()));
+}
+
+void oarchive::save_override(const boost::serialization::nvp<protoc::float64_t>& data, int)
+{
+    output.put(data.value());
+}
+
+void oarchive::save_override(const boost::serialization::nvp<const protoc::float64_t>& data, int)
+{
+    output.put(data.value());
+}
+
+void oarchive::save_override(const boost::serialization::nvp<std::string>& data, int)
+{
+    output.put(data.value());
+}
+
+void oarchive::save_override(const boost::serialization::nvp<const std::string>& data, int)
+{
+    output.put(data.value());
+}
+
 } // namespace json
 } // namespace protoc
