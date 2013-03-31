@@ -43,10 +43,13 @@ public:
     std::size_t put_object_end();
     std::size_t put_array_begin();
     std::size_t put_array_end();
+    std::size_t put_comma();
+    std::size_t put_colon();
 
 private:
     std::size_t put_whitespace();
     std::size_t put_text(const char *, std::size_t);
+    std::size_t put_value(output::value_type);
 
 private:
     output& buffer;

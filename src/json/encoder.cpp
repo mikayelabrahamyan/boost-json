@@ -117,6 +117,133 @@ std::size_t encoder::put(protoc::float64_t value)
     return size;
 }
 
+std::size_t encoder::put(const char *value)
+{
+    return put(std::string(value));
+}
+
+std::size_t encoder::put(const std::string& value)
+{
+    std::size_t size = sizeof('"') + value.size() + sizeof('"');
+
+    if (!buffer.grow(size))
+    {
+        return 0;
+    }
+
+    put_value('"');
+    for (std::string::const_iterator it = value.begin(); it != value.end(); ++it)
+    {
+        switch (*it)
+        {
+        case '"':
+        case '\\':
+        case '/':
+            if (!buffer.grow(1))
+            {
+                return 0;
+            }
+            ++size;
+            buffer.write('\\');
+            buffer.write(*it);
+            break;
+
+        case '\b':
+            if (!buffer.grow(1))
+            {
+                return 0;
+            }
+            ++size;
+            buffer.write('\\');
+            buffer.write('b');
+            break;
+
+        case '\f':
+            if (!buffer.grow(1))
+            {
+                return 0;
+            }
+            ++size;
+            buffer.write('\\');
+            buffer.write('f');
+            break;
+
+        case '\n':
+            if (!buffer.grow(1))
+            {
+                return 0;
+            }
+            ++size;
+            buffer.write('\\');
+            buffer.write('n');
+            break;
+
+        case '\r':
+            if (!buffer.grow(1))
+            {
+                return 0;
+            }
+            ++size;
+            buffer.write('\\');
+            buffer.write('r');
+            break;
+
+        case '\t':
+            if (!buffer.grow(1))
+            {
+                return 0;
+            }
+            ++size;
+            buffer.write('\\');
+            buffer.write('t');
+            break;
+
+        default:
+            buffer.write(*it);
+            break;
+        }
+    }
+    put_value('"');
+
+    return size;
+}
+
+std::size_t encoder::put_object_begin()
+{
+    need_whitespace = false;
+    return put_value('{');
+}
+
+std::size_t encoder::put_object_end()
+{
+    need_whitespace = false;
+    return put_value('}');
+}
+
+std::size_t encoder::put_array_begin()
+{
+    need_whitespace = false;
+    return put_value('[');
+}
+
+std::size_t encoder::put_array_end()
+{
+    need_whitespace = false;
+    return put_value(']');
+}
+
+std::size_t encoder::put_comma()
+{
+    need_whitespace = false;
+    return put_value(',');
+}
+
+std::size_t encoder::put_colon()
+{
+    need_whitespace = false;
+    return put_value(':');
+}
+
 std::size_t encoder::put_whitespace()
 {
     if (need_whitespace)
@@ -144,6 +271,20 @@ std::size_t encoder::put_text(const char *value, std::size_t size)
     {
         buffer.write(value[i]);
     }
+
+    return size;
+}
+
+std::size_t encoder::put_value(output::value_type value)
+{
+    const std::size_t size = sizeof(value);
+
+    if (!buffer.grow(size))
+    {
+        return 0;
+    }
+
+    buffer.write(value);
 
     return size;
 }
