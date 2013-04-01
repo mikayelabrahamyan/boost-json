@@ -48,6 +48,9 @@ set(EXTRA_LIBS -lprotoc ${EXTRA_LIBS})
 
 add_library(protoc STATIC
   src/input_range.cpp
+  src/json/decoder.cpp
+  src/json/encoder.cpp
+  src/json/oarchive.cpp
   src/msgpack/decoder.cpp
   src/output_vector.cpp
   src/msgpack/decoder.cpp
@@ -68,6 +71,9 @@ add_library(protoc STATIC
 
 add_executable(protoctest
   test/runner.cpp
+  test/json/decoder_suite.cpp
+  test/json/encoder_suite.cpp
+  test/json/oarchive_suite.cpp
   test/msgpack/decoder_suite.cpp
   test/msgpack/encoder_suite.cpp
   test/transenc/decoder_suite.cpp
