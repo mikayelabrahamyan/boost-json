@@ -16,7 +16,9 @@
 #include <string>
 #include <vector>
 #include <map>
+#include <stack>
 #include <ostream>
+#include <boost/make_shared.hpp>
 #include <boost/serialization/nvp.hpp>
 #include <boost/serialization/vector.hpp>
 #include <boost/archive/detail/common_oarchive.hpp>
@@ -46,12 +48,13 @@ public:
     template<typename value_type>
     void save_override(const boost::serialization::nvp<value_type>& data, long)
     {
+        scope.push(boost::make_shared<array_frame>(output));
+
         this->This()->save_start(data.name());
-        output.put_array_begin();
-        // FIXME: Need scope to determine separators
         boost::archive::save(*this->This(), const_cast<const value_type&>(data.value()));
-        output.put_array_end();
         this->This()->save_end(data.name());
+
+        scope.pop();
     }
 
     // The const variants are needed when used in containers
@@ -76,24 +79,17 @@ public:
     template<typename value_type, typename allocator_type>
     void save_override(const boost::serialization::nvp< const std::vector<value_type, allocator_type> >& data, int)
     {
-        bool is_first = true;
-        output.put_array_begin();
+        scope.push(boost::make_shared<array_frame>(output));
+
         for (typename std::vector<value_type, allocator_type>::const_iterator it = data.value().begin();
              it != data.value().end();
              ++it)
         {
-            if (is_first)
-            {
-                is_first = false;
-            }
-            else
-            {
-                output.put_comma();
-            }
             value_type value = *it;
             *this << boost::serialization::make_nvp(data.name(), value);
         }
-        output.put_array_end();
+
+        scope.pop();
     }
 
     template<typename value_type, typename allocator_type>
@@ -106,28 +102,21 @@ public:
     template<typename key_type, typename mapped_type, typename key_compare, typename allocator_type>
     void save_override(const boost::serialization::nvp< const std::map<key_type, mapped_type, key_compare, allocator_type> >& data, int)
     {
-        bool is_first = true;
-        output.put_array_begin();
+        scope.push(boost::make_shared<array_frame>(output));
+
         for (typename std::map<key_type, mapped_type>::const_iterator it = data.value().begin();
              it != data.value().end();
              ++it)
         {
-            if (is_first)
-            {
-                is_first = false;
-            }
-            else
-            {
-                output.put_comma();
-            }
             // FIXME: std::pair
-            output.put_array_begin();
-            *this << boost::serialization::make_nvp(data.name()/*FIXME*/, it->first);
-            output.put_comma();
-            *this << boost::serialization::make_nvp(data.name()/*FIXME*/, it->second);
-            output.put_array_end();
+            scope.top()->put_separator();
+            scope.push(boost::make_shared<array_frame>(output));
+            *this << boost::serialization::make_nvp(data.name(), it->first);
+            *this << boost::serialization::make_nvp(data.name(), it->second);
+            scope.pop();
         }
-        output.put_array_end();
+
+        scope.pop();
     }
 
     template<typename key_type, typename mapped_type, typename key_compare, typename allocator_type>
@@ -140,25 +129,17 @@ public:
     template<typename mapped_type, typename key_compare, typename allocator_type>
     void save_override(const boost::serialization::nvp< const std::map<std::string, mapped_type, key_compare, allocator_type> >& data, int)
     {
-        bool is_first = true;
-        output.put_object_begin();
+        scope.push(boost::make_shared<object_frame>(output));
+
         for (typename std::map<std::string, mapped_type>::const_iterator it = data.value().begin();
              it != data.value().end();
              ++it)
         {
-            if (is_first)
-            {
-                is_first = false;
-            }
-            else
-            {
-                output.put_comma();
-            }
-            *this << boost::serialization::make_nvp(data.name()/*FIXME*/, it->first);
-            output.put_colon();
-            *this << boost::serialization::make_nvp(data.name()/*FIXME*/, it->second);
+            *this << boost::serialization::make_nvp(data.name(), it->first);
+            *this << boost::serialization::make_nvp(data.name(), it->second);
         }
-        output.put_object_end();
+
+        scope.pop();
     }
 
 
@@ -175,8 +156,52 @@ public:
     void save_binary(void *, std::size_t) {}
 
 private:
+    class frame
+    {
+    public:
+        frame(const encoder&);
+        virtual ~frame() {}
+
+        virtual void put_separator() = 0;
+
+        template<typename T>
+        void put(const T& value)
+        {
+            put_separator();
+            output.put(value);
+        }
+
+    protected:
+        encoder& output;
+        std::size_t counter;
+    };
+
+    class top_frame : public frame
+    {
+    public:
+        top_frame(const encoder&);
+        void put_separator();
+    };
+
+    class array_frame : public frame
+    {
+    public:
+        array_frame(const encoder&);
+        ~array_frame();
+        void put_separator();
+    };
+
+    class object_frame : public frame
+    {
+    public:
+        object_frame(const encoder&);
+        ~object_frame();
+        void put_separator();
+    };
+
     protoc::output_stream buffer;
     encoder output;
+    std::stack< boost::shared_ptr<frame> > scope;
 };
 
 } // namespace json
