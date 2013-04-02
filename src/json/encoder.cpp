@@ -35,37 +35,29 @@ namespace json
 {
 
 encoder::encoder(output& buffer)
-    : buffer(buffer),
-      need_whitespace(false)
+    : buffer(buffer)
 {
 };
 
 std::size_t encoder::put()
 {
-    std::size_t size = put_text(null_text, sizeof(null_text));
-    need_whitespace = true;
-    return size;
+    return put_text(null_text, sizeof(null_text));
 }
 
 std::size_t encoder::put(bool value)
 {
-    std::size_t size;
     if (value)
     {
-        size = put_text(true_text, sizeof(true_text));
+        return put_text(true_text, sizeof(true_text));
     }
     else
     {
-        size = put_text(false_text, sizeof(false_text));
+        return put_text(false_text, sizeof(false_text));
     }
-    need_whitespace = true;
-    return size;
 }
 
 std::size_t encoder::put(protoc::int64_t value)
 {
-    put_whitespace();
-
     std::string work = boost::lexical_cast<std::string>(value);
     const std::string::size_type size = work.size();
 
@@ -81,15 +73,11 @@ std::size_t encoder::put(protoc::int64_t value)
         buffer.write(*it);
     }
 
-    need_whitespace = true;
-
     return size;
 }
 
 std::size_t encoder::put(protoc::float64_t value)
 {
-    put_whitespace();
-
     const int fpclass = boost::math::fpclassify(value);
     if ((fpclass == FP_INFINITE) || (fpclass == FP_NAN))
     {
@@ -111,8 +99,6 @@ std::size_t encoder::put(protoc::float64_t value)
     {
         buffer.write(*it);
     }
-
-    need_whitespace = true;
 
     return size;
 }
@@ -210,58 +196,36 @@ std::size_t encoder::put(const std::string& value)
 
 std::size_t encoder::put_object_begin()
 {
-    need_whitespace = false;
     return put_value('{');
 }
 
 std::size_t encoder::put_object_end()
 {
-    need_whitespace = false;
     return put_value('}');
 }
 
 std::size_t encoder::put_array_begin()
 {
-    need_whitespace = false;
     return put_value('[');
 }
 
 std::size_t encoder::put_array_end()
 {
-    need_whitespace = false;
     return put_value(']');
 }
 
 std::size_t encoder::put_comma()
 {
-    need_whitespace = false;
     return put_value(',');
 }
 
 std::size_t encoder::put_colon()
 {
-    need_whitespace = false;
     return put_value(':');
-}
-
-std::size_t encoder::put_whitespace()
-{
-    if (need_whitespace)
-    {
-        if (buffer.grow(1))
-        {
-            buffer.write(' ');
-            return 1;
-        }
-        need_whitespace = false;
-    }
-    return 0;
 }
 
 std::size_t encoder::put_text(const char *value, std::size_t size)
 {
-    put_whitespace();
-
     if (!buffer.grow(size))
     {
         return 0;
