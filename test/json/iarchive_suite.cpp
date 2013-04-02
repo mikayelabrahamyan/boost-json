@@ -61,7 +61,7 @@ BOOST_AUTO_TEST_CASE(test_fail_true)
 }
 
 //-----------------------------------------------------------------------------
-// Integers
+// Integer
 //-----------------------------------------------------------------------------
 
 BOOST_AUTO_TEST_CASE(test_integer_zero)
@@ -89,6 +89,19 @@ BOOST_AUTO_TEST_CASE(test_integer_minus_hundred)
     protoc::int64_t value = 99;
     BOOST_REQUIRE_NO_THROW(in >> boost::serialization::make_nvp("value", value));
     BOOST_REQUIRE_EQUAL(value, -100);
+}
+
+//-----------------------------------------------------------------------------
+// Float
+//-----------------------------------------------------------------------------
+
+BOOST_AUTO_TEST_CASE(test_float_half)
+{
+    const char input[] = "0.5";
+    json::iarchive in(input, input + sizeof(input) - 1);
+    protoc::float64_t value = 99;
+    BOOST_REQUIRE_NO_THROW(in >> boost::serialization::make_nvp("value", value));
+    BOOST_REQUIRE_EQUAL(value, 0.5);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
