@@ -37,6 +37,36 @@ public:
     void load_override(boost::serialization::nvp<protoc::float64_t>, int);
     void load_override(boost::serialization::nvp<std::string>, int);
 
+    // std::pair
+    template<typename first_type, typename second_type>
+    void load_override(const boost::serialization::nvp< std::pair<first_type, second_type> >& data, int)
+    {
+        token type = input.type();
+        if (type == token_array_begin)
+        {
+            input.next();
+            *this >> boost::serialization::make_nvp("first", data.value().first);
+            if (input.type() != token_comma)
+            {
+                goto error;
+            }
+            input.next();
+            *this >> boost::serialization::make_nvp("second", data.value().second);
+            type = input.type();
+            if (type != token_array_end)
+            {
+                goto error;
+            }
+        }
+        else
+        {
+        error:
+            std::ostringstream error;
+            error << type;
+            throw unexpected_token(error.str());
+        }
+    }
+
     // Ignore these
     void load_override(boost::archive::version_type, int) {}
     void load_override(boost::archive::object_id_type, int) {}

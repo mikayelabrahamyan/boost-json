@@ -153,4 +153,18 @@ BOOST_AUTO_TEST_CASE(test_string_escape_solidus)
     BOOST_REQUIRE_EQUAL(value, "/");
 }
 
+//-----------------------------------------------------------------------------
+// Pair
+//-----------------------------------------------------------------------------
+
+BOOST_AUTO_TEST_CASE(test_pair)
+{
+    const char input[] = "[\"alpha\",true]";
+    json::iarchive in(input, input + sizeof(input) - 1);
+    std::pair<std::string, bool> value("alpha", true);
+    BOOST_REQUIRE_NO_THROW(in >> boost::serialization::make_nvp("value", value));
+    BOOST_REQUIRE_EQUAL(value.first, "alpha");
+    BOOST_REQUIRE_EQUAL(value.second, true);
+}
+
 BOOST_AUTO_TEST_SUITE_END()
