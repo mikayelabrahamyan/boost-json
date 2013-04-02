@@ -238,6 +238,46 @@ BOOST_AUTO_TEST_CASE(test_const_pair)
 }
 
 //-----------------------------------------------------------------------------
+// Optional
+//-----------------------------------------------------------------------------
+
+BOOST_AUTO_TEST_CASE(test_optional)
+{
+    std::ostringstream result;
+    json::oarchive ar(result);
+    boost::optional<std::string> value("alpha");
+    ar << boost::serialization::make_nvp("value", value);
+    BOOST_REQUIRE_EQUAL(result.str().data(), "\"alpha\"");
+}
+
+BOOST_AUTO_TEST_CASE(test_optional_null)
+{
+    std::ostringstream result;
+    json::oarchive ar(result);
+    boost::optional<std::string> value;
+    ar << boost::serialization::make_nvp("value", value);
+    BOOST_REQUIRE_EQUAL(result.str().data(), "null");
+}
+
+BOOST_AUTO_TEST_CASE(test_const_optional)
+{
+    std::ostringstream result;
+    json::oarchive ar(result);
+    const boost::optional<std::string> value("alpha");
+    ar << boost::serialization::make_nvp("value", value);
+    BOOST_REQUIRE_EQUAL(result.str().data(), "\"alpha\"");
+}
+
+BOOST_AUTO_TEST_CASE(test_const_optional_null)
+{
+    std::ostringstream result;
+    json::oarchive ar(result);
+    const boost::optional<std::string> value;
+    ar << boost::serialization::make_nvp("value", value);
+    BOOST_REQUIRE_EQUAL(result.str().data(), "null");
+}
+
+//-----------------------------------------------------------------------------
 // Container
 //-----------------------------------------------------------------------------
 

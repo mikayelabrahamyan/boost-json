@@ -19,6 +19,7 @@
 #include <utility> // std::pair
 #include <stack>
 #include <ostream>
+#include <boost/optional.hpp>
 #include <boost/make_shared.hpp>
 #include <boost/serialization/nvp.hpp>
 #include <boost/serialization/vector.hpp>
@@ -90,6 +91,26 @@ public:
         this->save_override(boost::serialization::make_nvp(data.name(), const_cast<const std::pair<first_type, second_type>&>(data.value())), version);
     }
 
+    // boost::optional
+    template<typename value_type>
+    void save_override(const boost::serialization::nvp< const boost::optional<value_type> >& data, int)
+    {
+        if (data.value())
+        {
+            *this << boost::serialization::make_nvp("optional", *data.value());
+        }
+        else
+        {
+            output.put();
+        }
+    }
+
+    template<typename value_type>
+    void save_override(const boost::serialization::nvp< boost::optional<value_type> >& data, int version)
+    {
+        this->save_override(boost::serialization::make_nvp(data.name(), const_cast<const boost::optional<value_type>&>(data.value())), version);
+    }
+    
     // std::vector
     template<typename value_type, typename allocator_type>
     void save_override(const boost::serialization::nvp< const std::vector<value_type, allocator_type> >& data, int)
