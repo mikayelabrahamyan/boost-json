@@ -159,12 +159,54 @@ BOOST_AUTO_TEST_CASE(test_string_escape_solidus)
 
 BOOST_AUTO_TEST_CASE(test_pair)
 {
+    const char input[] = "[42,true]";
+    json::iarchive in(input, input + sizeof(input) - 1);
+    std::pair<protoc::int64_t, bool> value(42, true);
+    BOOST_REQUIRE_NO_THROW(in >> boost::serialization::make_nvp("value", value));
+    BOOST_REQUIRE_EQUAL(value.first, 42);
+    BOOST_REQUIRE_EQUAL(value.second, true);
+}
+
+BOOST_AUTO_TEST_CASE(test_pair_object)
+{
     const char input[] = "[\"alpha\",true]";
     json::iarchive in(input, input + sizeof(input) - 1);
     std::pair<std::string, bool> value("alpha", true);
     BOOST_REQUIRE_NO_THROW(in >> boost::serialization::make_nvp("value", value));
     BOOST_REQUIRE_EQUAL(value.first, "alpha");
     BOOST_REQUIRE_EQUAL(value.second, true);
+}
+
+//-----------------------------------------------------------------------------
+// Optional
+//-----------------------------------------------------------------------------
+
+BOOST_AUTO_TEST_CASE(test_optional)
+{
+    const char input[] = "\"alpha\"";
+    json::iarchive in(input, input + sizeof(input) - 1);
+    boost::optional<std::string> value;
+    BOOST_REQUIRE_NO_THROW(in >> boost::serialization::make_nvp("value", value));
+    BOOST_REQUIRE(value);
+    BOOST_REQUIRE_EQUAL(*value, "alpha");
+}
+
+BOOST_AUTO_TEST_CASE(test_optional_null)
+{
+    const char input[] = "null";
+    json::iarchive in(input, input + sizeof(input) - 1);
+    boost::optional<std::string> value;
+    BOOST_REQUIRE_NO_THROW(in >> boost::serialization::make_nvp("value", value));
+    BOOST_REQUIRE(!value);
+}
+
+BOOST_AUTO_TEST_CASE(test_optional_wrong_type)
+{
+    const char input[] = "true";
+    json::iarchive in(input, input + sizeof(input) - 1);
+    boost::optional<std::string> value;
+    BOOST_REQUIRE_THROW(in >> boost::serialization::make_nvp("value", value),
+                        unexpected_token);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

@@ -13,6 +13,8 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
+#include <utility> // std::pair
+#include <boost/optional.hpp>
 #include <boost/serialization/nvp.hpp>
 #include <boost/archive/detail/common_iarchive.hpp>
 #include <boost/archive/detail/register_archive.hpp>
@@ -64,6 +66,23 @@ public:
             std::ostringstream error;
             error << type;
             throw unexpected_token(error.str());
+        }
+    }
+
+    // boost::optional
+    template<typename value_type>
+    void load_override(const boost::serialization::nvp< boost::optional<value_type> >& data, int)
+    {
+        const token type = input.type();
+        if (type == token_null)
+        {
+            data.value() = boost::optional<value_type>();
+        }
+        else
+        {
+            value_type item;
+            *this >> boost::serialization::make_nvp(data.name(), item);
+            data.value() = boost::optional<value_type>(item);
         }
     }
 
