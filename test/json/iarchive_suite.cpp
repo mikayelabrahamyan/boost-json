@@ -60,4 +60,35 @@ BOOST_AUTO_TEST_CASE(test_fail_true)
                         unexpected_token);
 }
 
+//-----------------------------------------------------------------------------
+// Integers
+//-----------------------------------------------------------------------------
+
+BOOST_AUTO_TEST_CASE(test_integer_zero)
+{
+    const char input[] = "0";
+    json::iarchive in(input, input + sizeof(input) - 1);
+    protoc::int64_t value = 99;
+    BOOST_REQUIRE_NO_THROW(in >> boost::serialization::make_nvp("value", value));
+    BOOST_REQUIRE_EQUAL(value, 0);
+}
+
+BOOST_AUTO_TEST_CASE(test_integer_hundred)
+{
+    const char input[] = "100";
+    json::iarchive in(input, input + sizeof(input) - 1);
+    protoc::int64_t value = 99;
+    BOOST_REQUIRE_NO_THROW(in >> boost::serialization::make_nvp("value", value));
+    BOOST_REQUIRE_EQUAL(value, 100);
+}
+
+BOOST_AUTO_TEST_CASE(test_integer_minus_hundred)
+{
+    const char input[] = "-100";
+    json::iarchive in(input, input + sizeof(input) - 1);
+    protoc::int64_t value = 99;
+    BOOST_REQUIRE_NO_THROW(in >> boost::serialization::make_nvp("value", value));
+    BOOST_REQUIRE_EQUAL(value, -100);
+}
+
 BOOST_AUTO_TEST_SUITE_END()

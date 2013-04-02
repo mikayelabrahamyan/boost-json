@@ -33,11 +33,7 @@ public:
     ~iarchive();
 
     void load_override(boost::serialization::nvp<bool>, int);
-    void load_override(boost::serialization::nvp<protoc::int8_t>, int);
-    void load_override(boost::serialization::nvp<protoc::int16_t>, int);
-    void load_override(boost::serialization::nvp<protoc::int32_t>, int);
     void load_override(boost::serialization::nvp<protoc::int64_t>, int);
-    void load_override(boost::serialization::nvp<protoc::float32_t>, int);
     void load_override(boost::serialization::nvp<protoc::float64_t>, int);
     void load_override(boost::serialization::nvp<std::string>, int);
 
