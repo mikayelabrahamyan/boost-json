@@ -216,6 +216,28 @@ BOOST_AUTO_TEST_CASE(test_string_alpha)
 }
 
 //-----------------------------------------------------------------------------
+// Pair
+//-----------------------------------------------------------------------------
+
+BOOST_AUTO_TEST_CASE(test_pair)
+{
+    std::ostringstream result;
+    json::oarchive ar(result);
+    std::pair<std::string, bool> value("alpha", true);
+    ar << boost::serialization::make_nvp("value", value);
+    BOOST_REQUIRE_EQUAL(result.str().data(), "[\"alpha\",true]");
+}
+
+BOOST_AUTO_TEST_CASE(test_const_pair)
+{
+    std::ostringstream result;
+    json::oarchive ar(result);
+    const std::pair<std::string, bool> value("alpha", true);
+    ar << boost::serialization::make_nvp("value", value);
+    BOOST_REQUIRE_EQUAL(result.str().data(), "[\"alpha\",true]");
+}
+
+//-----------------------------------------------------------------------------
 // Container
 //-----------------------------------------------------------------------------
 

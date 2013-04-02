@@ -16,6 +16,7 @@
 #include <string>
 #include <vector>
 #include <map>
+#include <utility> // std::pair
 #include <stack>
 #include <ostream>
 #include <boost/make_shared.hpp>
@@ -50,9 +51,7 @@ public:
     {
         scope.push(boost::make_shared<array_frame>(output));
 
-        this->This()->save_start(data.name());
         boost::archive::save(*this->This(), const_cast<const value_type&>(data.value()));
-        this->This()->save_end(data.name());
 
         scope.pop();
     }
@@ -74,6 +73,22 @@ public:
     void save_override(const boost::serialization::nvp<const protoc::float64_t>&, int);
     void save_override(const boost::serialization::nvp<std::string>&, int);
     void save_override(const boost::serialization::nvp<const std::string>&, int);
+
+    // std::pair
+    template<typename first_type, typename second_type>
+    void save_override(const boost::serialization::nvp< const std::pair<first_type, second_type> >& data, int)
+    {
+        scope.push(boost::make_shared<array_frame>(output));
+        *this << boost::serialization::make_nvp("first", data.value().first);
+        *this << boost::serialization::make_nvp("second", data.value().second);
+        scope.pop();
+    }
+
+    template<typename first_type, typename second_type>
+    void save_override(const boost::serialization::nvp< std::pair<first_type, second_type> >& data, int version)
+    {
+        this->save_override(boost::serialization::make_nvp(data.name(), const_cast<const std::pair<first_type, second_type>&>(data.value())), version);
+    }
 
     // std::vector
     template<typename value_type, typename allocator_type>
@@ -108,12 +123,8 @@ public:
              it != data.value().end();
              ++it)
         {
-            // FIXME: std::pair
             scope.top()->put_separator();
-            scope.push(boost::make_shared<array_frame>(output));
-            *this << boost::serialization::make_nvp(data.name(), it->first);
-            *this << boost::serialization::make_nvp(data.name(), it->second);
-            scope.pop();
+            *this << boost::serialization::make_nvp(data.name(), *it);
         }
 
         scope.pop();
