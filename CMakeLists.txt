@@ -50,6 +50,7 @@ add_library(protoc STATIC
   src/input_range.cpp
   src/json/decoder.cpp
   src/json/encoder.cpp
+  src/json/iarchive.cpp
   src/json/oarchive.cpp
   src/msgpack/decoder.cpp
   src/output_vector.cpp
@@ -73,6 +74,7 @@ add_executable(protoctest
   test/runner.cpp
   test/json/decoder_suite.cpp
   test/json/encoder_suite.cpp
+  test/json/iarchive_suite.cpp
   test/json/oarchive_suite.cpp
   test/msgpack/decoder_suite.cpp
   test/msgpack/encoder_suite.cpp
