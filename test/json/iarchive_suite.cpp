@@ -104,4 +104,53 @@ BOOST_AUTO_TEST_CASE(test_float_half)
     BOOST_REQUIRE_EQUAL(value, 0.5);
 }
 
+//-----------------------------------------------------------------------------
+// String
+//-----------------------------------------------------------------------------
+
+BOOST_AUTO_TEST_CASE(test_string_empty)
+{
+    const char input[] = "\"\"";
+    json::iarchive in(input, input + sizeof(input) - 1);
+    std::string value("EMPTY");
+    BOOST_REQUIRE_NO_THROW(in >> boost::serialization::make_nvp("value", value));
+    BOOST_REQUIRE_EQUAL(value, "");
+}
+
+BOOST_AUTO_TEST_CASE(test_string_alpha)
+{
+    const char input[] = "\"alpha\"";
+    json::iarchive in(input, input + sizeof(input) - 1);
+    std::string value("EMPTY");
+    BOOST_REQUIRE_NO_THROW(in >> boost::serialization::make_nvp("value", value));
+    BOOST_REQUIRE_EQUAL(value, "alpha");
+}
+
+BOOST_AUTO_TEST_CASE(test_string_escape_quote)
+{
+    const char input[] = "\"\\\"\"";
+    json::iarchive in(input, input + sizeof(input) - 1);
+    std::string value("EMPTY");
+    BOOST_REQUIRE_NO_THROW(in >> boost::serialization::make_nvp("value", value));
+    BOOST_REQUIRE_EQUAL(value, "\"");
+}
+
+BOOST_AUTO_TEST_CASE(test_string_escape_reverse_solidus)
+{
+    const char input[] = "\"\\\\\"";
+    json::iarchive in(input, input + sizeof(input) - 1);
+    std::string value("EMPTY");
+    BOOST_REQUIRE_NO_THROW(in >> boost::serialization::make_nvp("value", value));
+    BOOST_REQUIRE_EQUAL(value, "\\");
+}
+
+BOOST_AUTO_TEST_CASE(test_string_escape_solidus)
+{
+    const char input[] = "\"\\/\"";
+    json::iarchive in(input, input + sizeof(input) - 1);
+    std::string value("EMPTY");
+    BOOST_REQUIRE_NO_THROW(in >> boost::serialization::make_nvp("value", value));
+    BOOST_REQUIRE_EQUAL(value, "/");
+}
+
 BOOST_AUTO_TEST_SUITE_END()

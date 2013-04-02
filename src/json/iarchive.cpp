@@ -84,5 +84,22 @@ void iarchive::load_override(boost::serialization::nvp<protoc::float64_t> data, 
     }
 }
 
+void iarchive::load_override(boost::serialization::nvp<std::string> data, int)
+{
+    const token type = input.type();
+    switch (type)
+    {
+    case token_string:
+        data.value() = input.get_string();
+        input.next();
+        break;
+
+    default:
+        std::ostringstream error;
+        error << type;
+        throw unexpected_token(error.str());
+    }
+}
+
 } // namespace json
 } // namespace protoc
