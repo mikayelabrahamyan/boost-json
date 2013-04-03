@@ -209,4 +209,65 @@ BOOST_AUTO_TEST_CASE(test_optional_wrong_type)
                         unexpected_token);
 }
 
+//-----------------------------------------------------------------------------
+// Container
+//-----------------------------------------------------------------------------
+
+BOOST_AUTO_TEST_CASE(test_vector_bool_empty)
+{
+    const char input[] = "[]";
+    json::iarchive in(input, input + sizeof(input) - 1);
+    std::vector<bool> value;
+    BOOST_REQUIRE_NO_THROW(in >> boost::serialization::make_nvp("value", value));
+    BOOST_REQUIRE_EQUAL(value.size(), 0);
+}
+
+BOOST_AUTO_TEST_CASE(test_vector_bool_one)
+{
+    const char input[] = "[true]";
+    json::iarchive in(input, input + sizeof(input) - 1);
+    std::vector<bool> value;
+    BOOST_REQUIRE_NO_THROW(in >> boost::serialization::make_nvp("value", value));
+    BOOST_REQUIRE_EQUAL(value.size(), 1);
+    BOOST_REQUIRE_EQUAL(value[0], true);
+}
+
+BOOST_AUTO_TEST_CASE(test_vector_bool_two)
+{
+    const char input[] = "[true,false]";
+    json::iarchive in(input, input + sizeof(input) - 1);
+    std::vector<bool> value;
+    BOOST_REQUIRE_NO_THROW(in >> boost::serialization::make_nvp("value", value));
+    BOOST_REQUIRE_EQUAL(value.size(), 2);
+    BOOST_REQUIRE_EQUAL(value[0], true);
+    BOOST_REQUIRE_EQUAL(value[1], false);
+}
+
+BOOST_AUTO_TEST_CASE(test_vector_mixed)
+{
+    const char input[] = "[true,0]"; // Although this is legal JSON, we cannot deserialize it into a vector<bool>
+    json::iarchive in(input, input + sizeof(input) - 1);
+    std::vector<bool> value;
+    BOOST_REQUIRE_THROW(in >> boost::serialization::make_nvp("value", value),
+                        unexpected_token);
+}
+
+BOOST_AUTO_TEST_CASE(test_vector_missing_end)
+{
+    const char input[] = "[true";
+    json::iarchive in(input, input + sizeof(input) - 1);
+    std::vector<bool> value;
+    BOOST_REQUIRE_THROW(in >> boost::serialization::make_nvp("value", value),
+                        unexpected_token);
+}
+
+BOOST_AUTO_TEST_CASE(test_vector_missing_begin)
+{
+    const char input[] = "true]";
+    json::iarchive in(input, input + sizeof(input) - 1);
+    std::vector<bool> value;
+    BOOST_REQUIRE_THROW(in >> boost::serialization::make_nvp("value", value),
+                        unexpected_token);
+}
+
 BOOST_AUTO_TEST_SUITE_END()
