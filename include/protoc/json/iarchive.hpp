@@ -14,6 +14,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 #include <vector>
+#include <map>
 #include <utility> // std::pair
 #include <stack>
 #include <boost/shared_ptr.hpp>
@@ -87,6 +88,39 @@ public:
         }
     }
 
+    // std::map
+    template<typename key_type, typename mapped_type, typename key_compare, typename allocator_type>
+    void load_override(const boost::serialization::nvp< std::map<key_type, mapped_type, key_compare, allocator_type> > data, int)
+    {
+        scope<array_frame> current(this);
+
+        while (!current.at_end())
+        {
+            std::pair<key_type, mapped_type> value;
+            *this >> boost::serialization::make_nvp(data.name(), value);
+            data.value().insert(value);
+            current.separator();
+        }
+    }
+
+    // Specialization for std::map<std::string, T>
+    template<typename mapped_type, typename key_compare, typename allocator_type>
+    void load_override(const boost::serialization::nvp< std::map<std::string, mapped_type, key_compare, allocator_type> > data, int)
+    {
+        scope<object_frame> current(this);
+
+        while (!current.at_end())
+        {
+            std::string key;
+            *this >> boost::serialization::make_nvp(data.name(), key);
+            current.separator();
+            mapped_type value;
+            *this >> boost::serialization::make_nvp(data.name(), value);
+            data.value().insert(std::make_pair(key, value));
+            current.separator();
+        }
+    }
+
     // Ignore these
     void load_override(boost::archive::version_type, int) {}
     void load_override(boost::archive::object_id_type, int) {}
@@ -123,6 +157,19 @@ private:
 
         void get_separator();
         bool at_end() const;
+    };
+
+    class object_frame : public frame
+    {
+    public:
+        object_frame(decoder&);
+        ~object_frame();
+
+        void get_separator();
+        bool at_end() const;
+
+    private:
+        std::size_t counter;
     };
 
     template<typename T> friend class scope;

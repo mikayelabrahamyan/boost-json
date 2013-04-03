@@ -55,6 +55,7 @@ iarchive::array_frame::~array_frame()
 {
     if (!at_end())
         throw_unexpected_token(input.type());
+    input.next();
 }
 
 void iarchive::array_frame::get_separator()
@@ -77,6 +78,64 @@ void iarchive::array_frame::get_separator()
 bool iarchive::array_frame::at_end() const
 {
     return (input.type() == token_array_end);
+}
+
+iarchive::object_frame::object_frame(decoder& input)
+    : frame(input),
+      counter(0)
+{
+    const token type = input.type();
+    if (type != token_object_begin)
+        throw_unexpected_token(type);
+    input.next();
+}
+
+iarchive::object_frame::~object_frame()
+{
+    if (!at_end())
+        throw_unexpected_token(input.type());
+    input.next();
+}
+
+void iarchive::object_frame::get_separator()
+{
+    const token type = input.type();
+    switch (type)
+    {
+    case token_colon:
+        if (counter % 2 == 0)
+        {
+            input.next();
+        }
+        else
+        {
+            throw_unexpected_token(type);
+        }
+        break;
+
+    case token_comma:
+        if (counter % 2 == 1)
+        {
+            input.next();
+        }
+        else
+        {
+            throw_unexpected_token(type);
+        }
+        break;
+
+    case token_object_end:
+        break;
+
+    default:
+        throw_unexpected_token(type);
+    }
+    ++counter;
+}
+
+bool iarchive::object_frame::at_end() const
+{
+    return (input.type() == token_object_end);
 }
 
 //-----------------------------------------------------------------------------

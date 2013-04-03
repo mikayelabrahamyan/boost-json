@@ -270,4 +270,64 @@ BOOST_AUTO_TEST_CASE(test_vector_missing_begin)
                         unexpected_token);
 }
 
+BOOST_AUTO_TEST_CASE(test_intmap_bool_empty)
+{
+    const char input[] = "[]";
+    json::iarchive in(input, input + sizeof(input) - 1);
+    std::map<protoc::int64_t, bool> value;
+    BOOST_REQUIRE_NO_THROW(in >> boost::serialization::make_nvp("value", value));
+    BOOST_REQUIRE_EQUAL(value.size(), 0);
+}
+
+BOOST_AUTO_TEST_CASE(test_intmap_bool_one)
+{
+    const char input[] = "[[2,true]]";
+    json::iarchive in(input, input + sizeof(input) - 1);
+    std::map<protoc::int64_t, bool> value;
+    BOOST_REQUIRE_NO_THROW(in >> boost::serialization::make_nvp("value", value));
+    BOOST_REQUIRE_EQUAL(value.size(), 1);
+    BOOST_REQUIRE_EQUAL(value[2], true);
+}
+
+BOOST_AUTO_TEST_CASE(test_intmap_bool_two)
+{
+    const char input[] = "[[2,true],[4,false]]";
+    json::iarchive in(input, input + sizeof(input) - 1);
+    std::map<protoc::int64_t, bool> value;
+    BOOST_REQUIRE_NO_THROW(in >> boost::serialization::make_nvp("value", value));
+    BOOST_REQUIRE_EQUAL(value.size(), 2);
+    BOOST_REQUIRE_EQUAL(value[2], true);
+    BOOST_REQUIRE_EQUAL(value[4], false);
+}
+
+BOOST_AUTO_TEST_CASE(test_map_bool_empty)
+{
+    const char input[] = "{}";
+    json::iarchive in(input, input + sizeof(input) - 1);
+    std::map<std::string, bool> value;
+    BOOST_REQUIRE_NO_THROW(in >> boost::serialization::make_nvp("value", value));
+    BOOST_REQUIRE_EQUAL(value.size(), 0);
+}
+
+BOOST_AUTO_TEST_CASE(test_map_bool_one)
+{
+    const char input[] = "{\"alpha\":true}";
+    json::iarchive in(input, input + sizeof(input) - 1);
+    std::map<std::string, bool> value;
+    BOOST_REQUIRE_NO_THROW(in >> boost::serialization::make_nvp("value", value));
+    BOOST_REQUIRE_EQUAL(value.size(), 1);
+    BOOST_REQUIRE_EQUAL(value["alpha"], true);
+}
+
+BOOST_AUTO_TEST_CASE(test_map_bool_two)
+{
+    const char input[] = "{\"alpha\":true,\"bravo\":false}";
+    json::iarchive in(input, input + sizeof(input) - 1);
+    std::map<std::string, bool> value;
+    BOOST_REQUIRE_NO_THROW(in >> boost::serialization::make_nvp("value", value));
+    BOOST_REQUIRE_EQUAL(value.size(), 2);
+    BOOST_REQUIRE_EQUAL(value["alpha"], true);
+    BOOST_REQUIRE_EQUAL(value["bravo"], false);
+}
+
 BOOST_AUTO_TEST_SUITE_END()
