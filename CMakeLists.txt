@@ -29,8 +29,9 @@ set(CMAKE_CXX_FLAGS_DEBUG "-g -Wall")
 # Boost package
 ###############################################################################
 
-# FIXME: Probably ok to use older version than 1.47
-find_package(Boost 1.47.0 COMPONENTS unit_test_framework serialization)
+# FIXME: Probably ok to use older versions
+#        May need COMPONENT for Boost.Test and Boost.Srialization)
+find_package(Boost 1.49.0)
 if (NOT ${Boost_FOUND})
   message(FATAL_ERROR "Boost not found (or too old)")
 endif()
@@ -41,8 +42,10 @@ set(EXTRA_LIBS ${EXTRA_LIBS} ${Boost_LIBRARIES})
 # protoc package
 ###############################################################################
 
+set(PROTOC_LIB_DIR ${CMAKE_CURRENT_SOURCE_DIR}/lib)
+
 include_directories(BEFORE include)
-link_directories(BEFORE lib)
+link_directories(${PROTOC_LIB_DIR})
 set(LIBRARY_OUTPUT_PATH lib)
 set(EXTRA_LIBS -lprotoc ${EXTRA_LIBS})
 
