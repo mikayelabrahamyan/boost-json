@@ -30,8 +30,7 @@ set(CMAKE_CXX_FLAGS_DEBUG "-g -Wall")
 ###############################################################################
 
 # FIXME: Probably ok to use older versions
-#        May need COMPONENT for Boost.Test and Boost.Srialization)
-find_package(Boost 1.49.0)
+find_package(Boost 1.49.0 COMPONENTS unit_test_framework serialization)
 if (NOT ${Boost_FOUND})
   message(FATAL_ERROR "Boost not found (or too old)")
 endif()
