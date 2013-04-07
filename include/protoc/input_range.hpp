@@ -23,10 +23,11 @@
 namespace protoc
 {
 
+template<typename Value>
 class input_range
 {
 public:
-    typedef char value_type;
+    typedef Value value_type;
     typedef std::size_t size_type;
     typedef value_type* iterator;
     typedef const value_type* const_iterator;
@@ -60,6 +61,8 @@ protected:
     const_iterator last;
 };
 
-}
+} // namespace protoc
+
+#include <protoc/details/input_range.ipp>
 
 #endif /* PROTOC_INPUT_RANGE_HPP */

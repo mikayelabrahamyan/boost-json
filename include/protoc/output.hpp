@@ -24,10 +24,11 @@ namespace protoc
 {
 
 // Interface for encoder output
+template<typename Value>
 class output
 {
 public:
-    typedef char value_type;
+    typedef Value value_type;
     typedef std::size_t size_type;
 
     virtual ~output() {}

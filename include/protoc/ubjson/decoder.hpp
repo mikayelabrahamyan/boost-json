@@ -30,6 +30,8 @@ namespace ubjson
 
 class decoder
 {
+    typedef protoc::input_range<char> input_range;
+
 public:
     decoder(const char *begin, const char *end);
 

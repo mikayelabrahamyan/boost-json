@@ -129,7 +129,7 @@ public:
     void save_binary(void *, std::size_t) {}
 
 private:
-    protoc::output_stream buffer;
+    protoc::output_stream<char> buffer;
     encoder output;
 };
 

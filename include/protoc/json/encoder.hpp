@@ -30,6 +30,8 @@ namespace json
 class encoder
 {
 public:
+    typedef protoc::output<char> output;
+
     encoder(output&);
 
     std::size_t put(); // Null

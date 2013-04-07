@@ -25,11 +25,15 @@
 namespace protoc
 {
 
-class output_vector : public output
+template<typename Value>
+class output_vector : public output<Value>
 {
 public:
-    typedef std::vector<value_type>::iterator iterator;
-    typedef std::vector<value_type>::const_iterator const_iterator;
+    typedef typename output<Value>::value_type value_type;
+    typedef typename output<Value>::size_type size_type;
+
+    typedef typename std::vector<value_type>::iterator iterator;
+    typedef typename std::vector<value_type>::const_iterator const_iterator;
     typedef value_type& reference;
     typedef const value_type& const_reference;
 
@@ -51,6 +55,8 @@ private:
     std::vector<value_type> buffer;
 };
 
-}
+} // namespace protoc
+
+#include <protoc/details/output_vector.ipp>
 
 #endif /* PROTOC_OUTPUT_VECTOR_HPP */

@@ -24,10 +24,12 @@
 namespace protoc
 {
 
-template<std::size_t N>
-class output_array : public output
+template<typename Value, std::size_t N>
+class output_array : public output<Value>
 {
 public:
+    typedef typename output<Value>::value_type value_type;
+    typedef typename output<Value>::size_type size_type;
     typedef value_type* iterator;
     typedef const value_type* const_iterator;
     typedef value_type& reference;

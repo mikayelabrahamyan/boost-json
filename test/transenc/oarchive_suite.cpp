@@ -427,4 +427,17 @@ BOOST_AUTO_TEST_CASE(test_struct_person)
     BOOST_REQUIRE_EQUAL(result.str().data(), "\x90" "\xA9\x04" "Kant" "\xB0\x7F\x00" "\x98");
 }
 
+//-----------------------------------------------------------------------------
+// Binary
+//-----------------------------------------------------------------------------
+
+BOOST_AUTO_TEST_CASE(test_binary_empty)
+{
+    std::ostringstream result;
+    transenc::oarchive ar(result);
+    std::vector<protoc::int8_t> value;
+    ar << boost::serialization::make_nvp("value", value);
+    BOOST_REQUIRE_EQUAL(result.str().data(), "\xA8\x00");
+}
+
 BOOST_AUTO_TEST_SUITE_END()

@@ -22,14 +22,14 @@
 namespace
 {
 // Code patterns (masked by 1111 10000)
-const char code_pattern8 = '\xA0';
-const char code_pattern_length8 = '\xA8';
-const char code_pattern16 = '\xB0';
-const char code_pattern_length16 = '\xB8';
-const char code_pattern32 = '\xC0';
-const char code_pattern_length32 = '\xC8';
-const char code_pattern64 = '\xD0';
-const char code_pattern_length64 = '\xD8';
+const protoc::uint8_t code_pattern8 = 0xA0;
+const protoc::uint8_t code_pattern_length8 = 0xA8;
+const protoc::uint8_t code_pattern16 = 0xB0;
+const protoc::uint8_t code_pattern_length16 = 0xB8;
+const protoc::uint8_t code_pattern32 = 0xC0;
+const protoc::uint8_t code_pattern_length32 = 0xC8;
+const protoc::uint8_t code_pattern64 = 0xD0;
+const protoc::uint8_t code_pattern_length64 = 0xD8;
 } // anonymous namespace
 
 namespace protoc
@@ -37,8 +37,8 @@ namespace protoc
 namespace transenc
 {
 
-decoder::decoder(const char *begin,
-                 const char *end)
+decoder::decoder(input_range::const_iterator begin,
+                 input_range::const_iterator end)
     : input(begin, end)
 {
     current.type = token_eof;
@@ -276,7 +276,8 @@ std::string decoder::get_binary() const
 {
     assert(current.type == token_binary);
 
-    return std::string(current.range.begin(), current.range.size());
+    return std::string(reinterpret_cast<const std::string::value_type *>(current.range.begin()),
+                       current.range.size());
 }
 
 std::string decoder::get_string() const
@@ -284,7 +285,8 @@ std::string decoder::get_string() const
     assert(current.type == token_string);
 
     // FIXME: Validate string [ http://www.w3.org/International/questions/qa-forms-utf-8 ]
-    return std::string(current.range.begin(), current.range.size());
+    return std::string(reinterpret_cast<const std::string::value_type *>(current.range.begin()),
+                       current.range.size());
 }
 
 token decoder::next_unknown()

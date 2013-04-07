@@ -177,27 +177,27 @@ const unsigned char lookup[256] =
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
 };
 
-inline bool is_whitespace(const protoc::input_range::value_type& value)
+inline bool is_whitespace(const protoc::json::decoder::value_type& value)
 {
     return ((lookup[static_cast<int>(value)] & lookup_whitespace) == lookup_whitespace);
 }
 
-inline bool is_digit(const protoc::input_range::value_type& value)
+inline bool is_digit(const protoc::json::decoder::value_type& value)
 {
     return ((lookup[static_cast<int>(value)] & lookup_digit) == lookup_digit);
 }
 
-inline bool is_hex(const protoc::input_range::value_type& value)
+inline bool is_hex(const protoc::json::decoder::value_type& value)
 {
     return ((lookup[static_cast<int>(value)] & lookup_hex) == lookup_hex);
 }
 
-inline bool is_hexdigit(const protoc::input_range::value_type& value)
+inline bool is_hexdigit(const protoc::json::decoder::value_type& value)
 {
     return (lookup[static_cast<int>(value)] & (lookup_digit | lookup_hex));
 }
 
-inline bool is_keyword(const protoc::input_range::value_type& value)
+inline bool is_keyword(const protoc::json::decoder::value_type& value)
 {
     return ((lookup[static_cast<int>(value)] & lookup_keyword) == lookup_keyword);
 }
@@ -527,7 +527,7 @@ token decoder::next_number()
         ++input;
         if (input.empty())
             return token_eof;
-        bool is_negative_exponent = false;
+
         if (*input == '+')
         {
             ++input;
@@ -536,7 +536,6 @@ token decoder::next_number()
         }
         else if (*input == '-')
         {
-            is_negative_exponent = true;
             ++input;
             if (input.empty())
                 return token_eof;

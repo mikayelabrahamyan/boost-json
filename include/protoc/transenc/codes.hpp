@@ -18,31 +18,33 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
+#include <protoc/types.hpp>
+
 namespace protoc
 {
 namespace transenc
 {
-const char code_false = '\x80';
-const char code_true = '\x81';
-const char code_null = '\x82';
-const char code_tuple_begin = '\x90';
-const char code_array_begin = '\x91';
-const char code_tuple_end = '\x98';
-const char code_array_end = '\x99';
-const char code_int8 = '\xA0';
-const char code_binary_int8 = '\xA8';
-const char code_string_int8 = '\xA9';
-const char code_int16 = '\xB0';
-const char code_binary_int16 = '\xB8';
-const char code_string_int16 = '\xB9';
-const char code_int32 = '\xC0';
-const char code_float32 = '\xC2';
-const char code_binary_int32 = '\xC8';
-const char code_string_int32 = '\xC9';
-const char code_int64 = '\xD0';
-const char code_float64 = '\xD2';
-const char code_binary_int64 = '\xD8';
-const char code_string_int64 = '\xD9';
+const protoc::uint8_t code_false = 0x80;
+const protoc::uint8_t code_true = 0x81;
+const protoc::uint8_t code_null = 0x82;
+const protoc::uint8_t code_tuple_begin = 0x90;
+const protoc::uint8_t code_array_begin = 0x91;
+const protoc::uint8_t code_tuple_end = 0x98;
+const protoc::uint8_t code_array_end = 0x99;
+const protoc::uint8_t code_int8 = 0xA0;
+const protoc::uint8_t code_binary_int8 = 0xA8;
+const protoc::uint8_t code_string_int8 = 0xA9;
+const protoc::uint8_t code_int16 = 0xB0;
+const protoc::uint8_t code_binary_int16 = 0xB8;
+const protoc::uint8_t code_string_int16 = 0xB9;
+const protoc::uint8_t code_int32 = 0xC0;
+const protoc::uint8_t code_float32 = 0xC2;
+const protoc::uint8_t code_binary_int32 = 0xC8;
+const protoc::uint8_t code_string_int32 = 0xC9;
+const protoc::uint8_t code_int64 = 0xD0;
+const protoc::uint8_t code_float64 = 0xD2;
+const protoc::uint8_t code_binary_int64 = 0xD8;
+const protoc::uint8_t code_string_int64 = 0xD9;
 
 } // namespace transenc
 } // namespace protoc

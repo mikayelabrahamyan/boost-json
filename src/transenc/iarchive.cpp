@@ -24,7 +24,8 @@ namespace protoc
 namespace transenc
 {
 
-iarchive::iarchive(const char *begin, const char * end)
+iarchive::iarchive(decoder::input_range::const_iterator begin,
+                   decoder::input_range::const_iterator end)
     : input(begin, end)
 {
 }

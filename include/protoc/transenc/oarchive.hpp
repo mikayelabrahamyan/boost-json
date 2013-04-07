@@ -131,6 +131,13 @@ public:
         output.put_array_end();
     }
 
+    // Specialization of std::vector<int8> for binary data
+    template<typename allocator_type>
+    void save_override(const boost::serialization::nvp< const std::vector<protoc::int8_t, allocator_type> >& data, int)
+    {
+        output.put(data.value());
+    }
+
     template<typename value_type, typename allocator_type>
     void save_override(const boost::serialization::nvp< std::vector<value_type, allocator_type> >& data, int version)
     {
@@ -170,7 +177,7 @@ public:
     void save_binary(void *, std::size_t) {}
 
 private:
-    protoc::output_stream buffer;
+    protoc::output_stream<protoc::uint8_t> buffer;
     encoder output;
 };
 

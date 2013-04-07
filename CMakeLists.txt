@@ -49,13 +49,11 @@ set(LIBRARY_OUTPUT_PATH lib)
 set(EXTRA_LIBS -lprotoc ${EXTRA_LIBS})
 
 add_library(protoc STATIC
-  src/input_range.cpp
   src/json/decoder.cpp
   src/json/encoder.cpp
   src/json/iarchive.cpp
   src/json/oarchive.cpp
   src/msgpack/decoder.cpp
-  src/output_vector.cpp
   src/msgpack/decoder.cpp
   src/msgpack/encoder.cpp
   src/transenc/decoder.cpp

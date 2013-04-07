@@ -31,7 +31,9 @@ namespace transenc
 class decoder
 {
 public:
-    decoder(const char *begin, const char *end);
+    typedef protoc::input_range<protoc::uint8_t> input_range;
+
+    decoder(input_range::const_iterator begin, input_range::const_iterator end);
 
     token type() const;
     void next();

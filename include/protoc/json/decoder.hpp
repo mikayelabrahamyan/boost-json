@@ -30,7 +30,11 @@ namespace json
 
 class decoder
 {
+    typedef protoc::input_range<char> input_range;
+
 public:
+    typedef input_range::value_type value_type;
+
     decoder(const char *begin, const char *end);
 
     token type() const;

@@ -32,7 +32,7 @@ BOOST_AUTO_TEST_SUITE(transenc_iarchive_suite)
 
 BOOST_AUTO_TEST_CASE(test_false)
 {
-    const char input[] = { transenc::code_false };
+    const protoc::uint8_t input[] = { transenc::code_false };
     transenc::iarchive in(input, input + sizeof(input));
     bool value = true;
     BOOST_REQUIRE_NO_THROW(in >> boost::serialization::make_nvp("value", value));
@@ -41,7 +41,7 @@ BOOST_AUTO_TEST_CASE(test_false)
 
 BOOST_AUTO_TEST_CASE(test_true)
 {
-    const char input[] = { transenc::code_true };
+    const protoc::uint8_t input[] = { transenc::code_true };
     transenc::iarchive in(input, input + sizeof(input));
     bool value = false;
     BOOST_REQUIRE_NO_THROW(in >> boost::serialization::make_nvp("value", value));
@@ -50,7 +50,7 @@ BOOST_AUTO_TEST_CASE(test_true)
 
 BOOST_AUTO_TEST_CASE(test_bool_junk)
 {
-    const char input[] = { transenc::code_null }; // Null cannot be deserialized as bool (only as optional<bool>)
+    const protoc::uint8_t input[] = { transenc::code_null }; // Null cannot be deserialized as bool (only as optional<bool>)
     transenc::iarchive in(input, input + sizeof(input));
     bool value = true;
     BOOST_REQUIRE_THROW(in >> boost::serialization::make_nvp("value", value),
@@ -63,7 +63,7 @@ BOOST_AUTO_TEST_CASE(test_bool_junk)
 
 BOOST_AUTO_TEST_CASE(test_int8_small_one)
 {
-    const char input[] = { 0x01 };
+    const protoc::uint8_t input[] = { 0x01 };
     transenc::iarchive in(input, input + sizeof(input));
     protoc::int8_t value = 99;
     BOOST_REQUIRE_NO_THROW(in >> boost::serialization::make_nvp("value", value));
@@ -72,7 +72,7 @@ BOOST_AUTO_TEST_CASE(test_int8_small_one)
 
 BOOST_AUTO_TEST_CASE(test_int8_one)
 {
-    const char input[] = { transenc::code_int8, 0x01 };
+    const protoc::uint8_t input[] = { transenc::code_int8, 0x01 };
     transenc::iarchive in(input, input + sizeof(input));
     protoc::int8_t value = 99;
     BOOST_REQUIRE_NO_THROW(in >> boost::serialization::make_nvp("value", value));
@@ -81,7 +81,7 @@ BOOST_AUTO_TEST_CASE(test_int8_one)
 
 BOOST_AUTO_TEST_CASE(test_int16_one)
 {
-    const char input[] = { transenc::code_int16, 0x01, 0x00 };
+    const protoc::uint8_t input[] = { transenc::code_int16, 0x01, 0x00 };
     transenc::iarchive in(input, input + sizeof(input));
     protoc::int16_t value = 99;
     BOOST_REQUIRE_NO_THROW(in >> boost::serialization::make_nvp("value", value));
@@ -90,7 +90,7 @@ BOOST_AUTO_TEST_CASE(test_int16_one)
 
 BOOST_AUTO_TEST_CASE(test_int16_one_int8_small)
 {
-    const char input[] = { 0x01 };
+    const protoc::uint8_t input[] = { 0x01 };
     transenc::iarchive in(input, input + sizeof(input));
     protoc::int16_t value = 99;
     BOOST_REQUIRE_NO_THROW(in >> boost::serialization::make_nvp("value", value));
@@ -99,7 +99,7 @@ BOOST_AUTO_TEST_CASE(test_int16_one_int8_small)
 
 BOOST_AUTO_TEST_CASE(test_int16_one_int8)
 {
-    const char input[] = { transenc::code_int8, 0x01 };
+    const protoc::uint8_t input[] = { transenc::code_int8, 0x01 };
     transenc::iarchive in(input, input + sizeof(input));
     protoc::int16_t value = 99;
     BOOST_REQUIRE_NO_THROW(in >> boost::serialization::make_nvp("value", value));
@@ -108,7 +108,7 @@ BOOST_AUTO_TEST_CASE(test_int16_one_int8)
 
 BOOST_AUTO_TEST_CASE(test_int32_one)
 {
-    const char input[] = { transenc::code_int32, 0x01, 0x00, 0x00, 0x00 };
+    const protoc::uint8_t input[] = { transenc::code_int32, 0x01, 0x00, 0x00, 0x00 };
     transenc::iarchive in(input, input + sizeof(input));
     protoc::int32_t value = 99;
     BOOST_REQUIRE_NO_THROW(in >> boost::serialization::make_nvp("value", value));
@@ -117,7 +117,7 @@ BOOST_AUTO_TEST_CASE(test_int32_one)
 
 BOOST_AUTO_TEST_CASE(test_int32_one_int16)
 {
-    const char input[] = { transenc::code_int16, 0x01, 0x00 };
+    const protoc::uint8_t input[] = { transenc::code_int16, 0x01, 0x00 };
     transenc::iarchive in(input, input + sizeof(input));
     protoc::int32_t value = 99;
     BOOST_REQUIRE_NO_THROW(in >> boost::serialization::make_nvp("value", value));
@@ -126,7 +126,7 @@ BOOST_AUTO_TEST_CASE(test_int32_one_int16)
 
 BOOST_AUTO_TEST_CASE(test_int32_one_int8_small)
 {
-    const char input[] = { 0x01 };
+    const protoc::uint8_t input[] = { 0x01 };
     transenc::iarchive in(input, input + sizeof(input));
     protoc::int32_t value = 99;
     BOOST_REQUIRE_NO_THROW(in >> boost::serialization::make_nvp("value", value));
@@ -135,7 +135,7 @@ BOOST_AUTO_TEST_CASE(test_int32_one_int8_small)
 
 BOOST_AUTO_TEST_CASE(test_int32_one_int8)
 {
-    const char input[] = { transenc::code_int8, 0x01 };
+    const protoc::uint8_t input[] = { transenc::code_int8, 0x01 };
     transenc::iarchive in(input, input + sizeof(input));
     protoc::int32_t value = 99;
     BOOST_REQUIRE_NO_THROW(in >> boost::serialization::make_nvp("value", value));
@@ -144,7 +144,7 @@ BOOST_AUTO_TEST_CASE(test_int32_one_int8)
 
 BOOST_AUTO_TEST_CASE(test_int64_one)
 {
-    const char input[] = { transenc::code_int64, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
+    const protoc::uint8_t input[] = { transenc::code_int64, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
     transenc::iarchive in(input, input + sizeof(input));
     protoc::int64_t value = 99;
     BOOST_REQUIRE_NO_THROW(in >> boost::serialization::make_nvp("value", value));
@@ -153,7 +153,7 @@ BOOST_AUTO_TEST_CASE(test_int64_one)
 
 BOOST_AUTO_TEST_CASE(test_int64_one_int32)
 {
-    const char input[] = { transenc::code_int32, 0x01, 0x00, 0x00, 0x00 };
+    const protoc::uint8_t input[] = { transenc::code_int32, 0x01, 0x00, 0x00, 0x00 };
     transenc::iarchive in(input, input + sizeof(input));
     protoc::int64_t value = 99;
     BOOST_REQUIRE_NO_THROW(in >> boost::serialization::make_nvp("value", value));
@@ -162,7 +162,7 @@ BOOST_AUTO_TEST_CASE(test_int64_one_int32)
 
 BOOST_AUTO_TEST_CASE(test_int64_one_int16)
 {
-    const char input[] = { transenc::code_int16, 0x01, 0x00 };
+    const protoc::uint8_t input[] = { transenc::code_int16, 0x01, 0x00 };
     transenc::iarchive in(input, input + sizeof(input));
     protoc::int64_t value = 99;
     BOOST_REQUIRE_NO_THROW(in >> boost::serialization::make_nvp("value", value));
@@ -171,7 +171,7 @@ BOOST_AUTO_TEST_CASE(test_int64_one_int16)
 
 BOOST_AUTO_TEST_CASE(test_int64_one_int8_small)
 {
-    const char input[] = { 0x01 };
+    const protoc::uint8_t input[] = { 0x01 };
     transenc::iarchive in(input, input + sizeof(input));
     protoc::int64_t value = 99;
     BOOST_REQUIRE_NO_THROW(in >> boost::serialization::make_nvp("value", value));
@@ -180,7 +180,7 @@ BOOST_AUTO_TEST_CASE(test_int64_one_int8_small)
 
 BOOST_AUTO_TEST_CASE(test_int64_one_int8)
 {
-    const char input[] = { transenc::code_int8, 0x01 };
+    const protoc::uint8_t input[] = { transenc::code_int8, 0x01 };
     transenc::iarchive in(input, input + sizeof(input));
     protoc::int64_t value = 99;
     BOOST_REQUIRE_NO_THROW(in >> boost::serialization::make_nvp("value", value));
@@ -193,7 +193,7 @@ BOOST_AUTO_TEST_CASE(test_int64_one_int8)
 
 BOOST_AUTO_TEST_CASE(test_float_one)
 {
-    const char input[] = { transenc::code_float32, 0x00, 0x00, 0x80, 0x3F };
+    const protoc::uint8_t input[] = { transenc::code_float32, 0x00, 0x00, 0x80, 0x3F };
     transenc::iarchive in(input, input + sizeof(input));
     protoc::float32_t value = 0.0f;
     BOOST_REQUIRE_NO_THROW(in >> boost::serialization::make_nvp("value", value));
@@ -202,7 +202,7 @@ BOOST_AUTO_TEST_CASE(test_float_one)
 
 BOOST_AUTO_TEST_CASE(test_double_one)
 {
-    const char input[] = { transenc::code_float64, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xF0, 0x3F };
+    const protoc::uint8_t input[] = { transenc::code_float64, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xF0, 0x3F };
     transenc::iarchive in(input, input + sizeof(input));
     protoc::float64_t value = 0.0;
     BOOST_REQUIRE_NO_THROW(in >> boost::serialization::make_nvp("value", value));
@@ -211,7 +211,7 @@ BOOST_AUTO_TEST_CASE(test_double_one)
 
 BOOST_AUTO_TEST_CASE(test_double_one_float)
 {
-    const char input[] = { transenc::code_float32, 0x00, 0x00, 0x80, 0x3F };
+    const protoc::uint8_t input[] = { transenc::code_float32, 0x00, 0x00, 0x80, 0x3F };
     transenc::iarchive in(input, input + sizeof(input));
     protoc::float64_t value = 0.0;
     BOOST_REQUIRE_NO_THROW(in >> boost::serialization::make_nvp("value", value));
@@ -224,7 +224,7 @@ BOOST_AUTO_TEST_CASE(test_double_one_float)
 
 BOOST_AUTO_TEST_CASE(test_string_empty)
 {
-    const char input[] = { transenc::code_string_int8, 0x00 };
+    const protoc::uint8_t input[] = { transenc::code_string_int8, 0x00 };
     transenc::iarchive in(input, input + sizeof(input));
     std::string value("replace");
     BOOST_REQUIRE_NO_THROW(in >> boost::serialization::make_nvp("value", value));
@@ -233,7 +233,7 @@ BOOST_AUTO_TEST_CASE(test_string_empty)
 
 BOOST_AUTO_TEST_CASE(test_string_alpha)
 {
-    const char input[] = { transenc::code_string_int8, 0x05, 'a', 'l', 'p', 'h', 'a' };
+    const protoc::uint8_t input[] = { transenc::code_string_int8, 0x05, 'a', 'l', 'p', 'h', 'a' };
     transenc::iarchive in(input, input + sizeof(input));
     std::string value("replace");
     BOOST_REQUIRE_NO_THROW(in >> boost::serialization::make_nvp("value", value));
@@ -246,7 +246,7 @@ BOOST_AUTO_TEST_CASE(test_string_alpha)
 
 BOOST_AUTO_TEST_CASE(test_pair)
 {
-    const char input[] = { transenc::code_tuple_begin, transenc::code_string_int8, 0x01, 'A', transenc::code_true, transenc::code_tuple_end };
+    const protoc::uint8_t input[] = { transenc::code_tuple_begin, transenc::code_string_int8, 0x01, 'A', transenc::code_true, transenc::code_tuple_end };
     transenc::iarchive in(input, input + sizeof(input));
     std::pair<std::string, bool> value;
     BOOST_REQUIRE_NO_THROW(in >> boost::serialization::make_nvp("value", value));
@@ -256,7 +256,7 @@ BOOST_AUTO_TEST_CASE(test_pair)
 
 BOOST_AUTO_TEST_CASE(test_pair_too_short)
 {
-    const char input[] = { transenc::code_tuple_begin, transenc::code_string_int8, 0x01, 'A', transenc::code_tuple_end };
+    const protoc::uint8_t input[] = { transenc::code_tuple_begin, transenc::code_string_int8, 0x01, 'A', transenc::code_tuple_end };
     transenc::iarchive in(input, input + sizeof(input));
     std::pair<std::string, bool> value;
     BOOST_REQUIRE_THROW(in >> boost::serialization::make_nvp("value", value),
@@ -265,7 +265,7 @@ BOOST_AUTO_TEST_CASE(test_pair_too_short)
 
 BOOST_AUTO_TEST_CASE(test_pair_too_long)
 {
-    const char input[] = { transenc::code_tuple_begin, transenc::code_string_int8, 0x01, 'A', transenc::code_true, transenc::code_false, transenc::code_tuple_end };
+    const protoc::uint8_t input[] = { transenc::code_tuple_begin, transenc::code_string_int8, 0x01, 'A', transenc::code_true, transenc::code_false, transenc::code_tuple_end };
     transenc::iarchive in(input, input + sizeof(input));
     std::pair<std::string, bool> value;
     BOOST_REQUIRE_THROW(in >> boost::serialization::make_nvp("value", value),
@@ -274,7 +274,7 @@ BOOST_AUTO_TEST_CASE(test_pair_too_long)
 
 BOOST_AUTO_TEST_CASE(test_pair_missing_end)
 {
-    const char input[] = { transenc::code_tuple_begin, transenc::code_string_int8, 0x01, 'A', transenc::code_true };
+    const protoc::uint8_t input[] = { transenc::code_tuple_begin, transenc::code_string_int8, 0x01, 'A', transenc::code_true };
     transenc::iarchive in(input, input + sizeof(input));
     std::pair<std::string, bool> value;
     BOOST_REQUIRE_THROW(in >> boost::serialization::make_nvp("value", value),
@@ -283,7 +283,7 @@ BOOST_AUTO_TEST_CASE(test_pair_missing_end)
 
 BOOST_AUTO_TEST_CASE(test_pair_missing_end_2)
 {
-    const char input[] = { transenc::code_tuple_begin, transenc::code_string_int8, 0x01, 'A' };
+    const protoc::uint8_t input[] = { transenc::code_tuple_begin, transenc::code_string_int8, 0x01, 'A' };
     transenc::iarchive in(input, input + sizeof(input));
     std::pair<std::string, bool> value;
     BOOST_REQUIRE_THROW(in >> boost::serialization::make_nvp("value", value),
@@ -292,7 +292,7 @@ BOOST_AUTO_TEST_CASE(test_pair_missing_end_2)
 
 BOOST_AUTO_TEST_CASE(test_pair_missing_end_3)
 {
-    const char input[] = { transenc::code_tuple_begin };
+    const protoc::uint8_t input[] = { transenc::code_tuple_begin };
     transenc::iarchive in(input, input + sizeof(input));
     std::pair<std::string, bool> value;
     BOOST_REQUIRE_THROW(in >> boost::serialization::make_nvp("value", value),
@@ -301,7 +301,7 @@ BOOST_AUTO_TEST_CASE(test_pair_missing_end_3)
 
 BOOST_AUTO_TEST_CASE(test_pair_missing_begin)
 {
-    const char input[] = { transenc::code_string_int8, 0x01, 'A', transenc::code_true, transenc::code_tuple_end };
+    const protoc::uint8_t input[] = { transenc::code_string_int8, 0x01, 'A', transenc::code_true, transenc::code_tuple_end };
     transenc::iarchive in(input, input + sizeof(input));
     std::pair<std::string, bool> value;
     BOOST_REQUIRE_THROW(in >> boost::serialization::make_nvp("value", value),
@@ -314,7 +314,7 @@ BOOST_AUTO_TEST_CASE(test_pair_missing_begin)
 
 BOOST_AUTO_TEST_CASE(test_optional)
 {
-    const char input[] = { transenc::code_string_int8, 0x01, 'A' };
+    const protoc::uint8_t input[] = { transenc::code_string_int8, 0x01, 'A' };
     transenc::iarchive in(input, input + sizeof(input));
     boost::optional<std::string> value;
     BOOST_REQUIRE_NO_THROW(in >> boost::serialization::make_nvp("value", value));
@@ -324,7 +324,7 @@ BOOST_AUTO_TEST_CASE(test_optional)
 
 BOOST_AUTO_TEST_CASE(test_optional_null)
 {
-    const char input[] = { transenc::code_null };
+    const protoc::uint8_t input[] = { transenc::code_null };
     transenc::iarchive in(input, input + sizeof(input));
     boost::optional<std::string> value;
     BOOST_REQUIRE_NO_THROW(in >> boost::serialization::make_nvp("value", value));
@@ -333,7 +333,7 @@ BOOST_AUTO_TEST_CASE(test_optional_null)
 
 BOOST_AUTO_TEST_CASE(test_optional_wrong_type)
 {
-    const char input[] = { transenc::code_true };
+    const protoc::uint8_t input[] = { transenc::code_true };
     transenc::iarchive in(input, input + sizeof(input));
     boost::optional<std::string> value;
     BOOST_REQUIRE_THROW(in >> boost::serialization::make_nvp("value", value),
@@ -346,7 +346,7 @@ BOOST_AUTO_TEST_CASE(test_optional_wrong_type)
 
 BOOST_AUTO_TEST_CASE(test_vector_bool_empty)
 {
-    const char input[] = { transenc::code_array_begin, transenc::code_array_end };
+    const protoc::uint8_t input[] = { transenc::code_array_begin, transenc::code_array_end };
     transenc::iarchive in(input, input + sizeof(input));
     std::vector<bool> value;
     BOOST_REQUIRE_NO_THROW(in >> boost::serialization::make_nvp("value", value));
@@ -355,7 +355,7 @@ BOOST_AUTO_TEST_CASE(test_vector_bool_empty)
 
 BOOST_AUTO_TEST_CASE(test_vector_bool_one)
 {
-    const char input[] = { transenc::code_array_begin, transenc::code_true, transenc::code_array_end };
+    const protoc::uint8_t input[] = { transenc::code_array_begin, transenc::code_true, transenc::code_array_end };
     transenc::iarchive in(input, input + sizeof(input));
     std::vector<bool> value;
     BOOST_REQUIRE_NO_THROW(in >> boost::serialization::make_nvp("value", value));
@@ -365,7 +365,7 @@ BOOST_AUTO_TEST_CASE(test_vector_bool_one)
 
 BOOST_AUTO_TEST_CASE(test_vector_bool_two)
 {
-    const char input[] = { transenc::code_array_begin, transenc::code_true, transenc::code_false, transenc::code_array_end };
+    const protoc::uint8_t input[] = { transenc::code_array_begin, transenc::code_true, transenc::code_false, transenc::code_array_end };
     transenc::iarchive in(input, input + sizeof(input));
     std::vector<bool> value;
     BOOST_REQUIRE_NO_THROW(in >> boost::serialization::make_nvp("value", value));
@@ -376,7 +376,7 @@ BOOST_AUTO_TEST_CASE(test_vector_bool_two)
 
 BOOST_AUTO_TEST_CASE(test_vector_mixed)
 {
-    const char input[] = { transenc::code_array_begin, transenc::code_true, 0x00, transenc::code_array_end };
+    const protoc::uint8_t input[] = { transenc::code_array_begin, transenc::code_true, 0x00, transenc::code_array_end };
     transenc::iarchive in(input, input + sizeof(input));
     std::vector<bool> value;
     BOOST_REQUIRE_THROW(in >> boost::serialization::make_nvp("value", value),
@@ -385,7 +385,7 @@ BOOST_AUTO_TEST_CASE(test_vector_mixed)
 
 BOOST_AUTO_TEST_CASE(test_vector_missing_end)
 {
-    const char input[] = { transenc::code_array_begin, transenc::code_true };
+    const protoc::uint8_t input[] = { transenc::code_array_begin, transenc::code_true };
     transenc::iarchive in(input, input + sizeof(input));
     std::vector<bool> value;
     BOOST_REQUIRE_THROW(in >> boost::serialization::make_nvp("value", value),
@@ -394,7 +394,7 @@ BOOST_AUTO_TEST_CASE(test_vector_missing_end)
 
 BOOST_AUTO_TEST_CASE(test_vector_missing_begin)
 {
-    const char input[] = { transenc::code_true, transenc::code_array_end };
+    const protoc::uint8_t input[] = { transenc::code_true, transenc::code_array_end };
     transenc::iarchive in(input, input + sizeof(input));
     std::vector<bool> value;
     BOOST_REQUIRE_THROW(in >> boost::serialization::make_nvp("value", value),
@@ -403,7 +403,7 @@ BOOST_AUTO_TEST_CASE(test_vector_missing_begin)
 
 BOOST_AUTO_TEST_CASE(test_map_bool_empty)
 {
-    const char input[] = { transenc::code_array_begin, transenc::code_array_end };
+    const protoc::uint8_t input[] = { transenc::code_array_begin, transenc::code_array_end };
     transenc::iarchive in(input, input + sizeof(input));
     std::map<std::string, bool> value;
     BOOST_REQUIRE_NO_THROW(in >> boost::serialization::make_nvp("value", value));
@@ -412,7 +412,7 @@ BOOST_AUTO_TEST_CASE(test_map_bool_empty)
 
 BOOST_AUTO_TEST_CASE(test_map_bool_one)
 {
-    const char input[] = { transenc::code_array_begin, transenc::code_tuple_begin, transenc::code_string_int8, 0x01, 'A', transenc::code_true, transenc::code_tuple_end, transenc::code_array_end };
+    const protoc::uint8_t input[] = { transenc::code_array_begin, transenc::code_tuple_begin, transenc::code_string_int8, 0x01, 'A', transenc::code_true, transenc::code_tuple_end, transenc::code_array_end };
     transenc::iarchive in(input, input + sizeof(input));
     std::map<std::string, bool> value;
     BOOST_REQUIRE_NO_THROW(in >> boost::serialization::make_nvp("value", value));
@@ -422,7 +422,7 @@ BOOST_AUTO_TEST_CASE(test_map_bool_one)
 
 BOOST_AUTO_TEST_CASE(test_map_bool_two)
 {
-    const char input[] = { transenc::code_array_begin, transenc::code_tuple_begin, transenc::code_string_int8, 0x01, 'A', transenc::code_true, transenc::code_tuple_end, transenc::code_tuple_begin, transenc::code_string_int8, 0x01, 'B', transenc::code_false, transenc::code_tuple_end, transenc::code_array_end };
+    const protoc::uint8_t input[] = { transenc::code_array_begin, transenc::code_tuple_begin, transenc::code_string_int8, 0x01, 'A', transenc::code_true, transenc::code_tuple_end, transenc::code_tuple_begin, transenc::code_string_int8, 0x01, 'B', transenc::code_false, transenc::code_tuple_end, transenc::code_array_end };
     transenc::iarchive in(input, input + sizeof(input));
     std::map<std::string, bool> value;
     BOOST_REQUIRE_NO_THROW(in >> boost::serialization::make_nvp("value", value));
@@ -433,7 +433,7 @@ BOOST_AUTO_TEST_CASE(test_map_bool_two)
 
 BOOST_AUTO_TEST_CASE(test_map_missing_end)
 {
-    const char input[] = { transenc::code_array_begin, transenc::code_tuple_begin, transenc::code_string_int8, 0x01, 'A', transenc::code_true, transenc::code_tuple_end };
+    const protoc::uint8_t input[] = { transenc::code_array_begin, transenc::code_tuple_begin, transenc::code_string_int8, 0x01, 'A', transenc::code_true, transenc::code_tuple_end };
     transenc::iarchive in(input, input + sizeof(input));
     std::map<std::string, bool> value;
     BOOST_REQUIRE_THROW(in >> boost::serialization::make_nvp("value", value),
@@ -442,7 +442,7 @@ BOOST_AUTO_TEST_CASE(test_map_missing_end)
 
 BOOST_AUTO_TEST_CASE(test_map_missing_pair_end)
 {
-    const char input[] = { transenc::code_array_begin, transenc::code_tuple_begin, transenc::code_string_int8, 0x01, 'A', transenc::code_true, transenc::code_array_end };
+    const protoc::uint8_t input[] = { transenc::code_array_begin, transenc::code_tuple_begin, transenc::code_string_int8, 0x01, 'A', transenc::code_true, transenc::code_array_end };
     transenc::iarchive in(input, input + sizeof(input));
     std::map<std::string, bool> value;
     BOOST_REQUIRE_THROW(in >> boost::serialization::make_nvp("value", value),
@@ -451,7 +451,7 @@ BOOST_AUTO_TEST_CASE(test_map_missing_pair_end)
 
 BOOST_AUTO_TEST_CASE(test_map_missing_pair_end_2)
 {
-    const char input[] = { transenc::code_array_begin, transenc::code_tuple_begin, transenc::code_string_int8, 0x01, 'A', transenc::code_true };
+    const protoc::uint8_t input[] = { transenc::code_array_begin, transenc::code_tuple_begin, transenc::code_string_int8, 0x01, 'A', transenc::code_true };
     transenc::iarchive in(input, input + sizeof(input));
     std::map<std::string, bool> value;
     BOOST_REQUIRE_THROW(in >> boost::serialization::make_nvp("value", value),

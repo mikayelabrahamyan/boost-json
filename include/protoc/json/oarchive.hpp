@@ -231,7 +231,7 @@ private:
         void put_separator();
     };
 
-    protoc::output_stream buffer;
+    protoc::output_stream<char> buffer;
     encoder output;
     std::stack< boost::shared_ptr<frame> > scope;
 };

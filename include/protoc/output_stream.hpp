@@ -25,9 +25,13 @@
 namespace protoc
 {
 
-class output_stream : public output
+template<typename Value>
+class output_stream : public output<Value>
 {
 public:
+    typedef typename output<Value>::value_type value_type;
+    typedef typename output<Value>::size_type size_type;
+
     typedef value_type& reference;
     typedef const value_type& const_reference;
 

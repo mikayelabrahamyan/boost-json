@@ -1,3 +1,6 @@
+#ifndef PROTOC_DETAILS_INPUT_RANGE_IPP
+#define PROTOC_DETAILS_INPUT_RANGE_IPP
+
 ///////////////////////////////////////////////////////////////////////////////
 //
 // http://protoc.sourceforge.net/
@@ -15,41 +18,46 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-#include <protoc/input_range.hpp>
-
 namespace protoc
 {
 
-input_range::input_range()
+template<typename Value>
+input_range<Value>::input_range()
     : current(0),
       last(0)
 {
 }
 
-input_range::~input_range()
+template<typename Value>
+input_range<Value>::~input_range()
 {
 }
 
-input_range::input_range(const input_range& other)
+template<typename Value>
+input_range<Value>::input_range(const input_range& other)
     : current(other.current),
       last(other.last)
 {
 }
 
-input_range::input_range(const_iterator first, const_iterator last)
+template<typename Value>
+input_range<Value>::input_range(const_iterator first,
+                                const_iterator last)
     : current(const_cast<iterator>(first)),
       last(const_cast<iterator>(last))
 {
 }
 
-input_range& input_range::operator = (const input_range& other)
+template<typename Value>
+input_range<Value>& input_range<Value>::operator = (const input_range& other)
 {
     current = other.current;
     last = other.last;
     return *this;
 }
 
-input_range& input_range::operator += (size_type delta)
+template<typename Value>
+input_range<Value>& input_range<Value>::operator += (size_type delta)
 {
     if (delta < size())
     {
@@ -62,42 +70,52 @@ input_range& input_range::operator += (size_type delta)
     return *this;
 }
 
-bool input_range::empty() const
+template<typename Value>
+bool input_range<Value>::empty() const
 {
     return (current == last);
 }
 
-const input_range::value_type& input_range::operator * () const
+template<typename Value>
+const typename input_range<Value>::value_type& input_range<Value>::operator * () const
 {
     return *current;
 }
 
-input_range input_range::operator ++ ()
+template<typename Value>
+input_range<Value> input_range<Value>::operator ++ ()
 {
     ++current;
     return *this;
 }
 
-input_range input_range::operator ++ (int)
+template<typename Value>
+input_range<Value> input_range<Value>::operator ++ (int)
 {
     input_range result(*this);
     ++current;
     return result;
 }
 
-input_range::const_iterator input_range::begin() const
+template<typename Value>
+typename input_range<Value>::const_iterator input_range<Value>::begin() const
 {
     return current;
 }
 
-input_range::const_iterator input_range::end() const
+template<typename Value>
+typename input_range<Value>::const_iterator input_range<Value>::end() const
 {
     return last;
 }
 
-input_range::size_type input_range::size() const
+template<typename Value>
+typename input_range<Value>::size_type input_range<Value>::size() const
 {
     return (last - current);
 }
 
-}
+} // namespace protoc
+
+
+#endif // PROTOC_DETAILS_INPUT_RANGE_IPP

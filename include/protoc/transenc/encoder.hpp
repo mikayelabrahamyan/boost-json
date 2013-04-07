@@ -31,6 +31,8 @@ namespace transenc
 class encoder
 {
 public:
+    typedef protoc::output<protoc::uint8_t> output;
+
     encoder(output&);
 
     std::size_t put(); // Null

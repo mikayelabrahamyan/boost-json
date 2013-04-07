@@ -23,6 +23,11 @@
 
 using namespace protoc;
 
+template<std::size_t N>
+struct test_array : public output_array<char, N>
+{
+};
+
 BOOST_AUTO_TEST_SUITE(ubjson_encoder_suite)
 
 //-----------------------------------------------------------------------------
@@ -31,7 +36,7 @@ BOOST_AUTO_TEST_SUITE(ubjson_encoder_suite)
 
 BOOST_AUTO_TEST_CASE(test_null)
 {
-    output_array<1> buffer;
+    test_array<1> buffer;
     ubjson::encoder encoder(buffer);
     BOOST_REQUIRE_EQUAL(encoder.put(), 1);
     BOOST_REQUIRE_EQUAL(buffer.size(), 1);
@@ -40,7 +45,7 @@ BOOST_AUTO_TEST_CASE(test_null)
 
 BOOST_AUTO_TEST_CASE(test_true)
 {
-    output_array<1> buffer;
+    test_array<1> buffer;
     ubjson::encoder encoder(buffer);
     BOOST_REQUIRE_EQUAL(encoder.put(true), 1);
     BOOST_REQUIRE_EQUAL(buffer.size(), 1);
@@ -49,7 +54,7 @@ BOOST_AUTO_TEST_CASE(test_true)
 
 BOOST_AUTO_TEST_CASE(test_false)
 {
-    output_array<1> buffer;
+    test_array<1> buffer;
     ubjson::encoder encoder(buffer);
     BOOST_REQUIRE_EQUAL(encoder.put(false), 1);
     BOOST_REQUIRE_EQUAL(buffer.size(), 1);
@@ -62,7 +67,7 @@ BOOST_AUTO_TEST_CASE(test_false)
 
 BOOST_AUTO_TEST_CASE(test_int8_zero)
 {
-    output_array<2> buffer;
+    test_array<2> buffer;
     ubjson::encoder encoder(buffer);
     BOOST_REQUIRE_EQUAL(encoder.put(protoc::int8_t(0)), 2);
     BOOST_REQUIRE_EQUAL(buffer.size(), 2);
@@ -72,7 +77,7 @@ BOOST_AUTO_TEST_CASE(test_int8_zero)
 
 BOOST_AUTO_TEST_CASE(test_int8_one)
 {
-    output_array<2> buffer;
+    test_array<2> buffer;
     ubjson::encoder encoder(buffer);
     BOOST_REQUIRE_EQUAL(encoder.put(protoc::int8_t(1)), 2);
     BOOST_REQUIRE_EQUAL(buffer.size(), 2);
@@ -82,7 +87,7 @@ BOOST_AUTO_TEST_CASE(test_int8_one)
 
 BOOST_AUTO_TEST_CASE(test_int8_minus_one)
 {
-    output_array<2> buffer;
+    test_array<2> buffer;
     ubjson::encoder encoder(buffer);
     BOOST_REQUIRE_EQUAL(encoder.put(protoc::int8_t(-1)), 2);
     BOOST_REQUIRE_EQUAL(buffer.size(), 2);
@@ -92,7 +97,7 @@ BOOST_AUTO_TEST_CASE(test_int8_minus_one)
 
 BOOST_AUTO_TEST_CASE(test_int8_127)
 {
-    output_array<2> buffer;
+    test_array<2> buffer;
     ubjson::encoder encoder(buffer);
     BOOST_REQUIRE_EQUAL(encoder.put(protoc::int8_t(127)), 2);
     BOOST_REQUIRE_EQUAL(buffer.size(), 2);
@@ -102,7 +107,7 @@ BOOST_AUTO_TEST_CASE(test_int8_127)
 
 BOOST_AUTO_TEST_CASE(test_int8_minus_127)
 {
-    output_array<2> buffer;
+    test_array<2> buffer;
     ubjson::encoder encoder(buffer);
     BOOST_REQUIRE_EQUAL(encoder.put(protoc::int8_t(-127)), 2);
     BOOST_REQUIRE_EQUAL(buffer.size(), 2);
@@ -112,7 +117,7 @@ BOOST_AUTO_TEST_CASE(test_int8_minus_127)
 
 BOOST_AUTO_TEST_CASE(test_int8_minus_128)
 {
-    output_array<2> buffer;
+    test_array<2> buffer;
     ubjson::encoder encoder(buffer);
     BOOST_REQUIRE_EQUAL(encoder.put(protoc::int8_t(-128)), 2);
     BOOST_REQUIRE_EQUAL(buffer.size(), 2);
@@ -122,7 +127,7 @@ BOOST_AUTO_TEST_CASE(test_int8_minus_128)
 
 BOOST_AUTO_TEST_CASE(test_int8_buffer_empty)
 {
-    output_array<0> buffer;
+    test_array<0> buffer;
     ubjson::encoder encoder(buffer);
     BOOST_REQUIRE_EQUAL(encoder.put(protoc::int8_t(0)), 0);
     BOOST_REQUIRE_EQUAL(buffer.size(), 0);
@@ -130,7 +135,7 @@ BOOST_AUTO_TEST_CASE(test_int8_buffer_empty)
 
 BOOST_AUTO_TEST_CASE(test_int8_buffer_one)
 {
-    output_array<1> buffer;
+    test_array<1> buffer;
     ubjson::encoder encoder(buffer);
     BOOST_REQUIRE_EQUAL(encoder.put(protoc::int8_t(0)), 0);
     BOOST_REQUIRE_EQUAL(buffer.size(), 0);
@@ -138,7 +143,7 @@ BOOST_AUTO_TEST_CASE(test_int8_buffer_one)
 
 BOOST_AUTO_TEST_CASE(test_int16_zero)
 {
-    output_array<3> buffer;
+    test_array<3> buffer;
     ubjson::encoder encoder(buffer);
     BOOST_REQUIRE_EQUAL(encoder.put(protoc::int16_t(0)), 3);
     BOOST_REQUIRE_EQUAL(buffer.size(), 3);
@@ -149,7 +154,7 @@ BOOST_AUTO_TEST_CASE(test_int16_zero)
 
 BOOST_AUTO_TEST_CASE(test_int16_one)
 {
-    output_array<3> buffer;
+    test_array<3> buffer;
     ubjson::encoder encoder(buffer);
     BOOST_REQUIRE_EQUAL(encoder.put(protoc::int16_t(1)), 3);
     BOOST_REQUIRE_EQUAL(buffer.size(), 3);
@@ -160,7 +165,7 @@ BOOST_AUTO_TEST_CASE(test_int16_one)
 
 BOOST_AUTO_TEST_CASE(test_int16_minus_one)
 {
-    output_array<3> buffer;
+    test_array<3> buffer;
     ubjson::encoder encoder(buffer);
     BOOST_REQUIRE_EQUAL(encoder.put(protoc::int16_t(-1)), 3);
     BOOST_REQUIRE_EQUAL(buffer.size(), 3);
@@ -171,7 +176,7 @@ BOOST_AUTO_TEST_CASE(test_int16_minus_one)
 
 BOOST_AUTO_TEST_CASE(test_int16_buffer_empty)
 {
-    output_array<0> buffer;
+    test_array<0> buffer;
     ubjson::encoder encoder(buffer);
     BOOST_REQUIRE_EQUAL(encoder.put(protoc::int16_t(0)), 0);
     BOOST_REQUIRE_EQUAL(buffer.size(), 0);
@@ -179,7 +184,7 @@ BOOST_AUTO_TEST_CASE(test_int16_buffer_empty)
 
 BOOST_AUTO_TEST_CASE(test_int16_buffer_one)
 {
-    output_array<1> buffer;
+    test_array<1> buffer;
     ubjson::encoder encoder(buffer);
     BOOST_REQUIRE_EQUAL(encoder.put(protoc::int16_t(0)), 0);
     BOOST_REQUIRE_EQUAL(buffer.size(), 0);
@@ -187,7 +192,7 @@ BOOST_AUTO_TEST_CASE(test_int16_buffer_one)
 
 BOOST_AUTO_TEST_CASE(test_int16_buffer_two)
 {
-    output_array<2> buffer;
+    test_array<2> buffer;
     ubjson::encoder encoder(buffer);
     BOOST_REQUIRE_EQUAL(encoder.put(protoc::int16_t(0)), 0);
     BOOST_REQUIRE_EQUAL(buffer.size(), 0);
@@ -195,7 +200,7 @@ BOOST_AUTO_TEST_CASE(test_int16_buffer_two)
 
 BOOST_AUTO_TEST_CASE(test_int32_zero)
 {
-    output_array<5> buffer;
+    test_array<5> buffer;
     ubjson::encoder encoder(buffer);
     BOOST_REQUIRE_EQUAL(encoder.put(protoc::int32_t(0)), 5);
     BOOST_REQUIRE_EQUAL(buffer.size(), 5);
@@ -208,7 +213,7 @@ BOOST_AUTO_TEST_CASE(test_int32_zero)
 
 BOOST_AUTO_TEST_CASE(test_int32_one)
 {
-    output_array<5> buffer;
+    test_array<5> buffer;
     ubjson::encoder encoder(buffer);
     BOOST_REQUIRE_EQUAL(encoder.put(protoc::int32_t(1)), 5);
     BOOST_REQUIRE_EQUAL(buffer.size(), 5);
@@ -221,7 +226,7 @@ BOOST_AUTO_TEST_CASE(test_int32_one)
 
 BOOST_AUTO_TEST_CASE(test_int32_minus_one)
 {
-    output_array<5> buffer;
+    test_array<5> buffer;
     ubjson::encoder encoder(buffer);
     BOOST_REQUIRE_EQUAL(encoder.put(protoc::int32_t(-1)), 5);
     BOOST_REQUIRE_EQUAL(buffer.size(), 5);
@@ -234,7 +239,7 @@ BOOST_AUTO_TEST_CASE(test_int32_minus_one)
 
 BOOST_AUTO_TEST_CASE(test_int32_buffer_empty)
 {
-    output_array<0> buffer;
+    test_array<0> buffer;
     ubjson::encoder encoder(buffer);
     BOOST_REQUIRE_EQUAL(encoder.put(protoc::int32_t(0)), 0);
     BOOST_REQUIRE_EQUAL(buffer.size(), 0);
@@ -242,7 +247,7 @@ BOOST_AUTO_TEST_CASE(test_int32_buffer_empty)
 
 BOOST_AUTO_TEST_CASE(test_int32_buffer_one)
 {
-    output_array<1> buffer;
+    test_array<1> buffer;
     ubjson::encoder encoder(buffer);
     BOOST_REQUIRE_EQUAL(encoder.put(protoc::int32_t(0)), 0);
     BOOST_REQUIRE_EQUAL(buffer.size(), 0);
@@ -250,7 +255,7 @@ BOOST_AUTO_TEST_CASE(test_int32_buffer_one)
 
 BOOST_AUTO_TEST_CASE(test_int32_buffer_two)
 {
-    output_array<2> buffer;
+    test_array<2> buffer;
     ubjson::encoder encoder(buffer);
     BOOST_REQUIRE_EQUAL(encoder.put(protoc::int32_t(0)), 0);
     BOOST_REQUIRE_EQUAL(buffer.size(), 0);
@@ -258,7 +263,7 @@ BOOST_AUTO_TEST_CASE(test_int32_buffer_two)
 
 BOOST_AUTO_TEST_CASE(test_int32_buffer_three)
 {
-    output_array<3> buffer;
+    test_array<3> buffer;
     ubjson::encoder encoder(buffer);
     BOOST_REQUIRE_EQUAL(encoder.put(protoc::int32_t(0)), 0);
     BOOST_REQUIRE_EQUAL(buffer.size(), 0);
@@ -266,7 +271,7 @@ BOOST_AUTO_TEST_CASE(test_int32_buffer_three)
 
 BOOST_AUTO_TEST_CASE(test_int32_buffer_four)
 {
-    output_array<4> buffer;
+    test_array<4> buffer;
     ubjson::encoder encoder(buffer);
     BOOST_REQUIRE_EQUAL(encoder.put(protoc::int32_t(0)), 0);
     BOOST_REQUIRE_EQUAL(buffer.size(), 0);
@@ -274,7 +279,7 @@ BOOST_AUTO_TEST_CASE(test_int32_buffer_four)
 
 BOOST_AUTO_TEST_CASE(test_int64_zero)
 {
-    output_array<9> buffer;
+    test_array<9> buffer;
     ubjson::encoder encoder(buffer);
     BOOST_REQUIRE_EQUAL(encoder.put(protoc::int64_t(0)), 9);
     BOOST_REQUIRE_EQUAL(buffer.size(), 9);
@@ -291,7 +296,7 @@ BOOST_AUTO_TEST_CASE(test_int64_zero)
 
 BOOST_AUTO_TEST_CASE(test_int64_one)
 {
-    output_array<9> buffer;
+    test_array<9> buffer;
     ubjson::encoder encoder(buffer);
     BOOST_REQUIRE_EQUAL(encoder.put(protoc::int64_t(1)), 9);
     BOOST_REQUIRE_EQUAL(buffer.size(), 9);
@@ -308,7 +313,7 @@ BOOST_AUTO_TEST_CASE(test_int64_one)
 
 BOOST_AUTO_TEST_CASE(test_int64_minus_one)
 {
-    output_array<9> buffer;
+    test_array<9> buffer;
     ubjson::encoder encoder(buffer);
     BOOST_REQUIRE_EQUAL(encoder.put(protoc::int64_t(-1)), 9);
     BOOST_REQUIRE_EQUAL(buffer.size(), 9);
@@ -325,7 +330,7 @@ BOOST_AUTO_TEST_CASE(test_int64_minus_one)
 
 BOOST_AUTO_TEST_CASE(test_int64_buffer_empty)
 {
-    output_array<0> buffer;
+    test_array<0> buffer;
     ubjson::encoder encoder(buffer);
     BOOST_REQUIRE_EQUAL(encoder.put(protoc::int64_t(0)), 0);
     BOOST_REQUIRE_EQUAL(buffer.size(), 0);
@@ -333,7 +338,7 @@ BOOST_AUTO_TEST_CASE(test_int64_buffer_empty)
 
 BOOST_AUTO_TEST_CASE(test_int64_buffer_one)
 {
-    output_array<1> buffer;
+    test_array<1> buffer;
     ubjson::encoder encoder(buffer);
     BOOST_REQUIRE_EQUAL(encoder.put(protoc::int64_t(0)), 0);
     BOOST_REQUIRE_EQUAL(buffer.size(), 0);
@@ -341,7 +346,7 @@ BOOST_AUTO_TEST_CASE(test_int64_buffer_one)
 
 BOOST_AUTO_TEST_CASE(test_int64_buffer_two)
 {
-    output_array<2> buffer;
+    test_array<2> buffer;
     ubjson::encoder encoder(buffer);
     BOOST_REQUIRE_EQUAL(encoder.put(protoc::int64_t(0)), 0);
     BOOST_REQUIRE_EQUAL(buffer.size(), 0);
@@ -349,7 +354,7 @@ BOOST_AUTO_TEST_CASE(test_int64_buffer_two)
 
 BOOST_AUTO_TEST_CASE(test_int64_buffer_three)
 {
-    output_array<3> buffer;
+    test_array<3> buffer;
     ubjson::encoder encoder(buffer);
     BOOST_REQUIRE_EQUAL(encoder.put(protoc::int64_t(0)), 0);
     BOOST_REQUIRE_EQUAL(buffer.size(), 0);
@@ -357,7 +362,7 @@ BOOST_AUTO_TEST_CASE(test_int64_buffer_three)
 
 BOOST_AUTO_TEST_CASE(test_int64_buffer_four)
 {
-    output_array<4> buffer;
+    test_array<4> buffer;
     ubjson::encoder encoder(buffer);
     BOOST_REQUIRE_EQUAL(encoder.put(protoc::int64_t(0)), 0);
     BOOST_REQUIRE_EQUAL(buffer.size(), 0);
@@ -365,7 +370,7 @@ BOOST_AUTO_TEST_CASE(test_int64_buffer_four)
 
 BOOST_AUTO_TEST_CASE(test_int64_buffer_five)
 {
-    output_array<5> buffer;
+    test_array<5> buffer;
     ubjson::encoder encoder(buffer);
     BOOST_REQUIRE_EQUAL(encoder.put(protoc::int64_t(0)), 0);
     BOOST_REQUIRE_EQUAL(buffer.size(), 0);
@@ -373,7 +378,7 @@ BOOST_AUTO_TEST_CASE(test_int64_buffer_five)
 
 BOOST_AUTO_TEST_CASE(test_int64_buffer_six)
 {
-    output_array<6> buffer;
+    test_array<6> buffer;
     ubjson::encoder encoder(buffer);
     BOOST_REQUIRE_EQUAL(encoder.put(protoc::int64_t(0)), 0);
     BOOST_REQUIRE_EQUAL(buffer.size(), 0);
@@ -381,7 +386,7 @@ BOOST_AUTO_TEST_CASE(test_int64_buffer_six)
 
 BOOST_AUTO_TEST_CASE(test_int64_buffer_seven)
 {
-    output_array<7> buffer;
+    test_array<7> buffer;
     ubjson::encoder encoder(buffer);
     BOOST_REQUIRE_EQUAL(encoder.put(protoc::int64_t(0)), 0);
     BOOST_REQUIRE_EQUAL(buffer.size(), 0);
@@ -389,7 +394,7 @@ BOOST_AUTO_TEST_CASE(test_int64_buffer_seven)
 
 BOOST_AUTO_TEST_CASE(test_int64_buffer_eight)
 {
-    output_array<8> buffer;
+    test_array<8> buffer;
     ubjson::encoder encoder(buffer);
     BOOST_REQUIRE_EQUAL(encoder.put(protoc::int64_t(0)), 0);
     BOOST_REQUIRE_EQUAL(buffer.size(), 0);
@@ -401,7 +406,7 @@ BOOST_AUTO_TEST_CASE(test_int64_buffer_eight)
 
 BOOST_AUTO_TEST_CASE(test_float_zero)
 {
-    output_array<5> buffer;
+    test_array<5> buffer;
     ubjson::encoder encoder(buffer);
     BOOST_REQUIRE_EQUAL(encoder.put(0.0f), 5);
     BOOST_REQUIRE_EQUAL(buffer.size(), 5);
@@ -414,7 +419,7 @@ BOOST_AUTO_TEST_CASE(test_float_zero)
 
 BOOST_AUTO_TEST_CASE(test_float_one)
 {
-    output_array<5> buffer;
+    test_array<5> buffer;
     ubjson::encoder encoder(buffer);
     BOOST_REQUIRE_EQUAL(encoder.put(1.0f), 5);
     BOOST_REQUIRE_EQUAL(buffer.size(), 5);
@@ -427,7 +432,7 @@ BOOST_AUTO_TEST_CASE(test_float_one)
 
 BOOST_AUTO_TEST_CASE(test_float_minus_one)
 {
-    output_array<5> buffer;
+    test_array<5> buffer;
     ubjson::encoder encoder(buffer);
     BOOST_REQUIRE_EQUAL(encoder.put(-1.0f), 5);
     BOOST_REQUIRE_EQUAL(buffer.size(), 5);
@@ -440,7 +445,7 @@ BOOST_AUTO_TEST_CASE(test_float_minus_one)
 
 BOOST_AUTO_TEST_CASE(test_float_two)
 {
-    output_array<5> buffer;
+    test_array<5> buffer;
     ubjson::encoder encoder(buffer);
     BOOST_REQUIRE_EQUAL(encoder.put(2.0f), 5);
     BOOST_REQUIRE_EQUAL(buffer.size(), 5);
@@ -453,7 +458,7 @@ BOOST_AUTO_TEST_CASE(test_float_two)
 
 BOOST_AUTO_TEST_CASE(test_float_minus_two)
 {
-    output_array<5> buffer;
+    test_array<5> buffer;
     ubjson::encoder encoder(buffer);
     BOOST_REQUIRE_EQUAL(encoder.put(-2.0f), 5);
     BOOST_REQUIRE_EQUAL(buffer.size(), 5);
@@ -466,7 +471,7 @@ BOOST_AUTO_TEST_CASE(test_float_minus_two)
 
 BOOST_AUTO_TEST_CASE(test_float_infinity)
 {
-    output_array<1> buffer;
+    test_array<1> buffer;
     ubjson::encoder encoder(buffer);
     BOOST_REQUIRE_EQUAL(encoder.put(std::numeric_limits<protoc::float32_t>::infinity()), 1);
     BOOST_REQUIRE_EQUAL(buffer.size(), 1);
@@ -475,7 +480,7 @@ BOOST_AUTO_TEST_CASE(test_float_infinity)
 
 BOOST_AUTO_TEST_CASE(test_float_minus_infinity)
 {
-    output_array<1> buffer;
+    test_array<1> buffer;
     ubjson::encoder encoder(buffer);
     BOOST_REQUIRE_EQUAL(encoder.put(-std::numeric_limits<protoc::float32_t>::infinity()), 1);
     BOOST_REQUIRE_EQUAL(buffer.size(), 1);
@@ -484,7 +489,7 @@ BOOST_AUTO_TEST_CASE(test_float_minus_infinity)
 
 BOOST_AUTO_TEST_CASE(test_float_nan)
 {
-    output_array<1> buffer;
+    test_array<1> buffer;
     ubjson::encoder encoder(buffer);
     BOOST_REQUIRE_EQUAL(encoder.put(std::numeric_limits<protoc::float32_t>::quiet_NaN()), 1);
     BOOST_REQUIRE_EQUAL(buffer.size(), 1);
@@ -493,7 +498,7 @@ BOOST_AUTO_TEST_CASE(test_float_nan)
 
 BOOST_AUTO_TEST_CASE(test_float_buffer_empty)
 {
-    output_array<0> buffer;
+    test_array<0> buffer;
     ubjson::encoder encoder(buffer);
     BOOST_REQUIRE_EQUAL(encoder.put(0.0f), 0);
     BOOST_REQUIRE_EQUAL(buffer.size(), 0);
@@ -501,7 +506,7 @@ BOOST_AUTO_TEST_CASE(test_float_buffer_empty)
 
 BOOST_AUTO_TEST_CASE(test_float_buffer_one)
 {
-    output_array<1> buffer;
+    test_array<1> buffer;
     ubjson::encoder encoder(buffer);
     BOOST_REQUIRE_EQUAL(encoder.put(0.0f), 0);
     BOOST_REQUIRE_EQUAL(buffer.size(), 0);
@@ -509,7 +514,7 @@ BOOST_AUTO_TEST_CASE(test_float_buffer_one)
 
 BOOST_AUTO_TEST_CASE(test_float_buffer_two)
 {
-    output_array<2> buffer;
+    test_array<2> buffer;
     ubjson::encoder encoder(buffer);
     BOOST_REQUIRE_EQUAL(encoder.put(0.0f), 0);
     BOOST_REQUIRE_EQUAL(buffer.size(), 0);
@@ -517,7 +522,7 @@ BOOST_AUTO_TEST_CASE(test_float_buffer_two)
 
 BOOST_AUTO_TEST_CASE(test_float_buffer_three)
 {
-    output_array<3> buffer;
+    test_array<3> buffer;
     ubjson::encoder encoder(buffer);
     BOOST_REQUIRE_EQUAL(encoder.put(0.0f), 0);
     BOOST_REQUIRE_EQUAL(buffer.size(), 0);
@@ -525,7 +530,7 @@ BOOST_AUTO_TEST_CASE(test_float_buffer_three)
 
 BOOST_AUTO_TEST_CASE(test_float_buffer_four)
 {
-    output_array<4> buffer;
+    test_array<4> buffer;
     ubjson::encoder encoder(buffer);
     BOOST_REQUIRE_EQUAL(encoder.put(0.0f), 0);
     BOOST_REQUIRE_EQUAL(buffer.size(), 0);
@@ -533,7 +538,7 @@ BOOST_AUTO_TEST_CASE(test_float_buffer_four)
 
 BOOST_AUTO_TEST_CASE(test_double_zero)
 {
-    output_array<9> buffer;
+    test_array<9> buffer;
     ubjson::encoder encoder(buffer);
     BOOST_REQUIRE_EQUAL(encoder.put(0.0), 9);
     BOOST_REQUIRE_EQUAL(buffer.size(), 9);
@@ -550,7 +555,7 @@ BOOST_AUTO_TEST_CASE(test_double_zero)
 
 BOOST_AUTO_TEST_CASE(test_double_one)
 {
-    output_array<9> buffer;
+    test_array<9> buffer;
     ubjson::encoder encoder(buffer);
     BOOST_REQUIRE_EQUAL(encoder.put(1.0), 9);
     BOOST_REQUIRE_EQUAL(buffer.size(), 9);
@@ -567,7 +572,7 @@ BOOST_AUTO_TEST_CASE(test_double_one)
 
 BOOST_AUTO_TEST_CASE(test_double_minus_one)
 {
-    output_array<9> buffer;
+    test_array<9> buffer;
     ubjson::encoder encoder(buffer);
     BOOST_REQUIRE_EQUAL(encoder.put(-1.0), 9);
     BOOST_REQUIRE_EQUAL(buffer.size(), 9);
@@ -584,7 +589,7 @@ BOOST_AUTO_TEST_CASE(test_double_minus_one)
 
 BOOST_AUTO_TEST_CASE(test_double_two)
 {
-    output_array<9> buffer;
+    test_array<9> buffer;
     ubjson::encoder encoder(buffer);
     BOOST_REQUIRE_EQUAL(encoder.put(2.0), 9);
     BOOST_REQUIRE_EQUAL(buffer.size(), 9);
@@ -601,7 +606,7 @@ BOOST_AUTO_TEST_CASE(test_double_two)
 
 BOOST_AUTO_TEST_CASE(test_double_minus_two)
 {
-    output_array<9> buffer;
+    test_array<9> buffer;
     ubjson::encoder encoder(buffer);
     BOOST_REQUIRE_EQUAL(encoder.put(-2.0), 9);
     BOOST_REQUIRE_EQUAL(buffer.size(), 9);
@@ -618,7 +623,7 @@ BOOST_AUTO_TEST_CASE(test_double_minus_two)
 
 BOOST_AUTO_TEST_CASE(test_double_infinity)
 {
-    output_array<1> buffer;
+    test_array<1> buffer;
     ubjson::encoder encoder(buffer);
     BOOST_REQUIRE_EQUAL(encoder.put(std::numeric_limits<protoc::float64_t>::infinity()), 1);
     BOOST_REQUIRE_EQUAL(buffer.size(), 1);
@@ -627,7 +632,7 @@ BOOST_AUTO_TEST_CASE(test_double_infinity)
 
 BOOST_AUTO_TEST_CASE(test_double_minus_infinity)
 {
-    output_array<1> buffer;
+    test_array<1> buffer;
     ubjson::encoder encoder(buffer);
     BOOST_REQUIRE_EQUAL(encoder.put(-std::numeric_limits<protoc::float64_t>::infinity()), 1);
     BOOST_REQUIRE_EQUAL(buffer.size(), 1);
@@ -636,7 +641,7 @@ BOOST_AUTO_TEST_CASE(test_double_minus_infinity)
 
 BOOST_AUTO_TEST_CASE(test_double_nan)
 {
-    output_array<1> buffer;
+    test_array<1> buffer;
     ubjson::encoder encoder(buffer);
     BOOST_REQUIRE_EQUAL(encoder.put(std::numeric_limits<protoc::float64_t>::quiet_NaN()), 1);
     BOOST_REQUIRE_EQUAL(buffer.size(), 1);
@@ -645,7 +650,7 @@ BOOST_AUTO_TEST_CASE(test_double_nan)
 
 BOOST_AUTO_TEST_CASE(test_double_buffer_empty)
 {
-    output_array<0> buffer;
+    test_array<0> buffer;
     ubjson::encoder encoder(buffer);
     BOOST_REQUIRE_EQUAL(encoder.put(0.0), 0);
     BOOST_REQUIRE_EQUAL(buffer.size(), 0);
@@ -653,7 +658,7 @@ BOOST_AUTO_TEST_CASE(test_double_buffer_empty)
 
 BOOST_AUTO_TEST_CASE(test_double_buffer_one)
 {
-    output_array<1> buffer;
+    test_array<1> buffer;
     ubjson::encoder encoder(buffer);
     BOOST_REQUIRE_EQUAL(encoder.put(0.0), 0);
     BOOST_REQUIRE_EQUAL(buffer.size(), 0);
@@ -661,7 +666,7 @@ BOOST_AUTO_TEST_CASE(test_double_buffer_one)
 
 BOOST_AUTO_TEST_CASE(test_double_buffer_two)
 {
-    output_array<2> buffer;
+    test_array<2> buffer;
     ubjson::encoder encoder(buffer);
     BOOST_REQUIRE_EQUAL(encoder.put(0.0), 0);
     BOOST_REQUIRE_EQUAL(buffer.size(), 0);
@@ -669,7 +674,7 @@ BOOST_AUTO_TEST_CASE(test_double_buffer_two)
 
 BOOST_AUTO_TEST_CASE(test_double_buffer_three)
 {
-    output_array<3> buffer;
+    test_array<3> buffer;
     ubjson::encoder encoder(buffer);
     BOOST_REQUIRE_EQUAL(encoder.put(0.0), 0);
     BOOST_REQUIRE_EQUAL(buffer.size(), 0);
@@ -677,7 +682,7 @@ BOOST_AUTO_TEST_CASE(test_double_buffer_three)
 
 BOOST_AUTO_TEST_CASE(test_double_buffer_four)
 {
-    output_array<4> buffer;
+    test_array<4> buffer;
     ubjson::encoder encoder(buffer);
     BOOST_REQUIRE_EQUAL(encoder.put(0.0), 0);
     BOOST_REQUIRE_EQUAL(buffer.size(), 0);
@@ -685,7 +690,7 @@ BOOST_AUTO_TEST_CASE(test_double_buffer_four)
 
 BOOST_AUTO_TEST_CASE(test_double_buffer_five)
 {
-    output_array<5> buffer;
+    test_array<5> buffer;
     ubjson::encoder encoder(buffer);
     BOOST_REQUIRE_EQUAL(encoder.put(0.0), 0);
     BOOST_REQUIRE_EQUAL(buffer.size(), 0);
@@ -693,7 +698,7 @@ BOOST_AUTO_TEST_CASE(test_double_buffer_five)
 
 BOOST_AUTO_TEST_CASE(test_double_buffer_six)
 {
-    output_array<6> buffer;
+    test_array<6> buffer;
     ubjson::encoder encoder(buffer);
     BOOST_REQUIRE_EQUAL(encoder.put(0.0), 0);
     BOOST_REQUIRE_EQUAL(buffer.size(), 0);
@@ -701,7 +706,7 @@ BOOST_AUTO_TEST_CASE(test_double_buffer_six)
 
 BOOST_AUTO_TEST_CASE(test_double_buffer_seven)
 {
-    output_array<7> buffer;
+    test_array<7> buffer;
     ubjson::encoder encoder(buffer);
     BOOST_REQUIRE_EQUAL(encoder.put(0.0), 0);
     BOOST_REQUIRE_EQUAL(buffer.size(), 0);
@@ -709,7 +714,7 @@ BOOST_AUTO_TEST_CASE(test_double_buffer_seven)
 
 BOOST_AUTO_TEST_CASE(test_double_buffer_eight)
 {
-    output_array<8> buffer;
+    test_array<8> buffer;
     ubjson::encoder encoder(buffer);
     BOOST_REQUIRE_EQUAL(encoder.put(0.0), 0);
     BOOST_REQUIRE_EQUAL(buffer.size(), 0);
@@ -721,7 +726,7 @@ BOOST_AUTO_TEST_CASE(test_double_buffer_eight)
 
 BOOST_AUTO_TEST_CASE(test_string_empty)
 {
-    output_array<3> buffer;
+    test_array<3> buffer;
     ubjson::encoder encoder(buffer);
     BOOST_REQUIRE_EQUAL(encoder.put(""), 3);
     BOOST_REQUIRE_EQUAL(buffer.size(), 3);
@@ -732,7 +737,7 @@ BOOST_AUTO_TEST_CASE(test_string_empty)
 
 BOOST_AUTO_TEST_CASE(test_string_buffer_empty)
 {
-    output_array<0> buffer;
+    test_array<0> buffer;
     ubjson::encoder encoder(buffer);
     BOOST_REQUIRE_EQUAL(encoder.put(""), 0);
     BOOST_REQUIRE_EQUAL(buffer.size(), 0);
@@ -740,7 +745,7 @@ BOOST_AUTO_TEST_CASE(test_string_buffer_empty)
 
 BOOST_AUTO_TEST_CASE(test_string_buffer_one)
 {
-    output_array<1> buffer;
+    test_array<1> buffer;
     ubjson::encoder encoder(buffer);
     BOOST_REQUIRE_EQUAL(encoder.put(""), 0);
     BOOST_REQUIRE_EQUAL(buffer.size(), 0);
@@ -748,7 +753,7 @@ BOOST_AUTO_TEST_CASE(test_string_buffer_one)
 
 BOOST_AUTO_TEST_CASE(test_string_buffer_two)
 {
-    output_array<2> buffer;
+    test_array<2> buffer;
     ubjson::encoder encoder(buffer);
     BOOST_REQUIRE_EQUAL(encoder.put(""), 0);
     BOOST_REQUIRE_EQUAL(buffer.size(), 0);
@@ -756,7 +761,7 @@ BOOST_AUTO_TEST_CASE(test_string_buffer_two)
 
 BOOST_AUTO_TEST_CASE(test_string_alpha)
 {
-    output_array<3+5> buffer;
+    test_array<3+5> buffer;
     ubjson::encoder encoder(buffer);
     BOOST_REQUIRE_EQUAL(encoder.put("alpha"), buffer.capacity());
     BOOST_REQUIRE_EQUAL(buffer.size(), 8);
@@ -772,7 +777,7 @@ BOOST_AUTO_TEST_CASE(test_string_alpha)
 
 BOOST_AUTO_TEST_CASE(test_string_ab)
 {
-    output_array<3+2> buffer;
+    test_array<3+2> buffer;
     ubjson::encoder encoder(buffer);
     BOOST_REQUIRE_EQUAL(encoder.put("ab"), buffer.capacity());
     BOOST_REQUIRE_EQUAL(buffer.size(), 5);
@@ -785,7 +790,7 @@ BOOST_AUTO_TEST_CASE(test_string_ab)
 
 BOOST_AUTO_TEST_CASE(test_string_buffer_ab_empty)
 {
-    output_array<3> buffer;
+    test_array<3> buffer;
     ubjson::encoder encoder(buffer);
     BOOST_REQUIRE_EQUAL(encoder.put("ab"), 0);
     BOOST_REQUIRE_EQUAL(buffer.size(), 0);
@@ -793,7 +798,7 @@ BOOST_AUTO_TEST_CASE(test_string_buffer_ab_empty)
 
 BOOST_AUTO_TEST_CASE(test_string_buffer_ab_one)
 {
-    output_array<3+1> buffer;
+    test_array<3+1> buffer;
     ubjson::encoder encoder(buffer);
     BOOST_REQUIRE_EQUAL(encoder.put("ab"), 0);
     BOOST_REQUIRE_EQUAL(buffer.size(), 0);
@@ -801,7 +806,7 @@ BOOST_AUTO_TEST_CASE(test_string_buffer_ab_one)
 
 BOOST_AUTO_TEST_CASE(test_string_buffer_alpha_empty)
 {
-    output_array<3> buffer;
+    test_array<3> buffer;
     ubjson::encoder encoder(buffer);
     BOOST_REQUIRE_EQUAL(encoder.put("alpha"), 0);
     BOOST_REQUIRE_EQUAL(buffer.size(), 0);
@@ -809,7 +814,7 @@ BOOST_AUTO_TEST_CASE(test_string_buffer_alpha_empty)
 
 BOOST_AUTO_TEST_CASE(test_string_medium_a)
 {
-    output_array<4+0x80> buffer;
+    test_array<4+0x80> buffer;
     ubjson::encoder encoder(buffer);
     std::string data(0x80, 'a');
     BOOST_REQUIRE_EQUAL(encoder.put(data), buffer.capacity());
@@ -828,7 +833,7 @@ BOOST_AUTO_TEST_CASE(test_string_medium_a)
 
 BOOST_AUTO_TEST_CASE(test_array_begin)
 {
-    output_array<1> buffer;
+    test_array<1> buffer;
     ubjson::encoder encoder(buffer);
     BOOST_REQUIRE_EQUAL(encoder.put_array_begin(), 1);
     BOOST_REQUIRE_EQUAL(buffer.size(), 1);
@@ -837,7 +842,7 @@ BOOST_AUTO_TEST_CASE(test_array_begin)
 
 BOOST_AUTO_TEST_CASE(test_array_begin_empty)
 {
-    output_array<0> buffer;
+    test_array<0> buffer;
     ubjson::encoder encoder(buffer);
     BOOST_REQUIRE_EQUAL(encoder.put_array_begin(), 0);
     BOOST_REQUIRE_EQUAL(buffer.size(), 0);
@@ -845,7 +850,7 @@ BOOST_AUTO_TEST_CASE(test_array_begin_empty)
 
 BOOST_AUTO_TEST_CASE(test_array_end)
 {
-    output_array<1> buffer;
+    test_array<1> buffer;
     ubjson::encoder encoder(buffer);
     BOOST_REQUIRE_EQUAL(encoder.put_array_end(), 1);
     BOOST_REQUIRE_EQUAL(buffer.size(), 1);
@@ -854,7 +859,7 @@ BOOST_AUTO_TEST_CASE(test_array_end)
 
 BOOST_AUTO_TEST_CASE(test_array_end_empty)
 {
-    output_array<0> buffer;
+    test_array<0> buffer;
     ubjson::encoder encoder(buffer);
     BOOST_REQUIRE_EQUAL(encoder.put_array_end(), 0);
     BOOST_REQUIRE_EQUAL(buffer.size(), 0);
@@ -862,7 +867,7 @@ BOOST_AUTO_TEST_CASE(test_array_end_empty)
 
 BOOST_AUTO_TEST_CASE(test_object_begin)
 {
-    output_array<1> buffer;
+    test_array<1> buffer;
     ubjson::encoder encoder(buffer);
     BOOST_REQUIRE_EQUAL(encoder.put_object_begin(), 1);
     BOOST_REQUIRE_EQUAL(buffer.size(), 1);
@@ -871,7 +876,7 @@ BOOST_AUTO_TEST_CASE(test_object_begin)
 
 BOOST_AUTO_TEST_CASE(test_object_begin_empty)
 {
-    output_array<0> buffer;
+    test_array<0> buffer;
     ubjson::encoder encoder(buffer);
     BOOST_REQUIRE_EQUAL(encoder.put_object_begin(), 0);
     BOOST_REQUIRE_EQUAL(buffer.size(), 0);
@@ -879,7 +884,7 @@ BOOST_AUTO_TEST_CASE(test_object_begin_empty)
 
 BOOST_AUTO_TEST_CASE(test_object_end)
 {
-    output_array<1> buffer;
+    test_array<1> buffer;
     ubjson::encoder encoder(buffer);
     BOOST_REQUIRE_EQUAL(encoder.put_object_end(), 1);
     BOOST_REQUIRE_EQUAL(buffer.size(), 1);
@@ -888,7 +893,7 @@ BOOST_AUTO_TEST_CASE(test_object_end)
 
 BOOST_AUTO_TEST_CASE(test_object_end_empty)
 {
-    output_array<0> buffer;
+    test_array<0> buffer;
     ubjson::encoder encoder(buffer);
     BOOST_REQUIRE_EQUAL(encoder.put_object_end(), 0);
     BOOST_REQUIRE_EQUAL(buffer.size(), 0);
