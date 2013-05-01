@@ -34,6 +34,7 @@ public:
     typedef protoc::input_range<protoc::uint8_t> input_range;
 
     decoder(input_range::const_iterator begin, input_range::const_iterator end);
+    decoder(const decoder&);
 
     token type() const;
     void next();

@@ -30,6 +30,11 @@ iarchive::iarchive(decoder::input_range::const_iterator begin,
 {
 }
 
+iarchive::iarchive(const decoder& input)
+    : input(input)
+{
+}
+
 iarchive::~iarchive()
 {
 }

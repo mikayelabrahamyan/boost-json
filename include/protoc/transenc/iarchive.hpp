@@ -49,6 +49,7 @@ class iarchive : public boost::archive::detail::common_iarchive<iarchive>
 
 public:
     iarchive(decoder::input_range::const_iterator begin, decoder::input_range::const_iterator end);
+    iarchive(const decoder& input);
     ~iarchive();
 
     void load_override(boost::serialization::nvp<bool>, int);

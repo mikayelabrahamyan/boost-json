@@ -45,6 +45,13 @@ decoder::decoder(input_range::const_iterator begin,
     next();
 }
 
+decoder::decoder(const decoder& other)
+    : input(other.input)
+{
+    current.type = other.current.type;
+    current.range = other.current.range;
+}
+
 token decoder::type() const
 {
     return current.type;
