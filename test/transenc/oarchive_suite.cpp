@@ -400,6 +400,10 @@ BOOST_AUTO_TEST_CASE(test_map_bool_two)
     BOOST_REQUIRE_EQUAL(result.str().data(), "\x91\x90" "\xA9\x01" "A" "\x81" "\x98\x90" "\xA9\x01" "B" "\x80" "\x98\x99");
 }
 
+//-----------------------------------------------------------------------------
+// Struct
+//-----------------------------------------------------------------------------
+
 struct person
 {
     person(const std::string& name, int age)

@@ -52,6 +52,29 @@ public:
     iarchive(const decoder& input);
     ~iarchive();
 
+    template<typename value_type>
+    void load_override(const boost::serialization::nvp<value_type>& data, long)
+    {
+        token type = input.type();
+        if (type == token_tuple_begin)
+        {
+            input.next();
+            boost::archive::load(*this->This(), const_cast<value_type&>(data.value()));
+            type = input.type();
+            if (type != token_tuple_end)
+            {
+                goto error;
+            }
+        }
+        else
+        {
+        error:
+            std::ostringstream error;
+            error << type;
+            throw unexpected_token(error.str());
+        }
+    }
+
     void load_override(boost::serialization::nvp<bool>, int);
     void load_override(boost::serialization::nvp<protoc::int8_t>, int);
     void load_override(boost::serialization::nvp<protoc::int16_t>, int);

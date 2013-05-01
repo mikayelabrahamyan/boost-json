@@ -48,17 +48,10 @@ public:
     ~oarchive();
 
     template<typename value_type>
-    void save(const value_type& data)
-    {
-    }
-
-    template<typename value_type>
     void save_override(const boost::serialization::nvp<value_type>& data, long)
     {
         output.put_tuple_begin();
-        this->This()->save_start(data.name());
         boost::archive::save(*this->This(), const_cast<const value_type&>(data.value()));
-        this->This()->save_end(data.name());
         output.put_tuple_end();
     }
 

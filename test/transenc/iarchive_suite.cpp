@@ -458,4 +458,36 @@ BOOST_AUTO_TEST_CASE(test_map_missing_pair_end_2)
                         unexpected_token);
 }
 
+//-----------------------------------------------------------------------------
+// Struct
+//-----------------------------------------------------------------------------
+
+struct person
+{
+    person(const std::string& name, int age)
+        : name(name),
+          age(age)
+    {}
+
+    template<typename T>
+    void serialize(T& archive, const unsigned int)
+    {
+        archive & boost::serialization::make_nvp("name", name);
+        archive & boost::serialization::make_nvp("age", age);
+    }
+
+    std::string name;
+    protoc::int16_t age;
+};
+
+BOOST_AUTO_TEST_CASE(test_struct_person)
+{
+    const protoc::uint8_t input[] = { transenc::code_tuple_begin, transenc::code_string_int8, 0x04, 'K', 'A', 'N', 'T', transenc::code_int16, 0x7F, 0x00, transenc::code_tuple_end };
+    transenc::iarchive in(input, input + sizeof(input));
+    person value("", 99);
+    BOOST_REQUIRE_NO_THROW(in >> boost::serialization::make_nvp("value", value));
+    BOOST_REQUIRE_EQUAL(value.name, "KANT");
+    BOOST_REQUIRE_EQUAL(value.age, 127);
+}
+
 BOOST_AUTO_TEST_SUITE_END()
