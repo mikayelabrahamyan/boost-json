@@ -41,8 +41,14 @@ enum token
     token_float32,
     token_float64,
 
+    token_tag8,
+    token_tag16,
+    token_tag32,
+    token_tag64,
+
     token_string,
     token_binary,
+    token_name,
 
     token_tuple_begin,
     token_tuple_end,
