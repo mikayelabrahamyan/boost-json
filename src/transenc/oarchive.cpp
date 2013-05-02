@@ -23,10 +23,9 @@ namespace protoc
 namespace transenc
 {
 
-oarchive::oarchive(std::ostream& stream)
+oarchive::oarchive(const encoder& output)
     : boost::archive::detail::common_oarchive<oarchive>(),
-      buffer(stream),
-      output(buffer)
+      output(output)
 {
 }
 
@@ -112,6 +111,12 @@ void oarchive::save_override(const boost::serialization::nvp<std::string>& data,
 void oarchive::save_override(const boost::serialization::nvp<const std::string>& data, int)
 {
     output.put(data.value());
+}
+
+stream_oarchive::stream_oarchive(std::ostream& stream)
+    : boost::base_from_member<member_type>(member_type(stream)),
+      base_type(member)
+{
 }
 
 }

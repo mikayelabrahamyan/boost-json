@@ -29,6 +29,11 @@ encoder::encoder(output& buffer)
 {
 };
 
+encoder::encoder(const encoder& other)
+    : buffer(other.buffer)
+{
+}
+
 std::size_t encoder::put()
 {
     return put_token(code_null);

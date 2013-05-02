@@ -29,6 +29,7 @@
 #include <boost/serialization/vector.hpp>
 #include <boost/archive/detail/common_oarchive.hpp>
 #include <boost/archive/detail/register_archive.hpp>
+#include <boost/utility/base_from_member.hpp>
 #include <protoc/types.hpp>
 #include <protoc/output_stream.hpp>
 #include <protoc/transenc/encoder.hpp>
@@ -44,7 +45,7 @@ class oarchive : public boost::archive::detail::common_oarchive<oarchive>
     friend class boost::archive::save_access;
 
 public:
-    oarchive(std::ostream& stream);
+    oarchive(const encoder& output);
     ~oarchive();
 
     template<typename value_type>
@@ -170,8 +171,21 @@ public:
     void save_binary(void *, std::size_t) {}
 
 private:
-    protoc::output_stream<protoc::uint8_t> buffer;
     encoder output;
+};
+
+// base_from_member is needed because we want to add a member that must be
+// initialized before oarchive because it is passed as an argument to its
+// constructor
+class stream_oarchive
+    : private boost::base_from_member< protoc::output_stream<protoc::uint8_t> >,
+      public oarchive
+{
+    typedef protoc::output_stream<protoc::uint8_t> member_type;
+    typedef oarchive base_type;
+
+public:
+    stream_oarchive(std::ostream& stream);
 };
 
 }

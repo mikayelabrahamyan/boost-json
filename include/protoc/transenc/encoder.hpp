@@ -34,6 +34,7 @@ public:
     typedef protoc::output<protoc::uint8_t> output;
 
     encoder(output&);
+    encoder(const encoder&);
 
     std::size_t put(); // Null
     std::size_t put(bool);
