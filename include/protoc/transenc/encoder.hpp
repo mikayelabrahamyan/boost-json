@@ -47,6 +47,13 @@ public:
     std::size_t put(const std::string&);
     std::size_t put(const std::vector<protoc::int8_t>&);
 
+    std::size_t put_tag(protoc::int8_t);
+    std::size_t put_tag(protoc::int16_t);
+    std::size_t put_tag(protoc::int32_t);
+    std::size_t put_tag(protoc::int64_t);
+    std::size_t put_tag(const char *);
+    std::size_t put_tag(const std::string&);
+
     std::size_t put_tuple_begin();
     std::size_t put_tuple_end();
     std::size_t put_array_begin();
