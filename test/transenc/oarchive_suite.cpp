@@ -280,6 +280,14 @@ BOOST_AUTO_TEST_CASE(test_literal_alpha)
     BOOST_REQUIRE_EQUAL(result.str().data(), "\xA9\x05" "alpha");
 }
 
+BOOST_AUTO_TEST_CASE(test_literal_alpha_2)
+{
+    std::ostringstream result;
+    transenc::stream_oarchive ar(result);
+    ar << "alpha";
+    BOOST_REQUIRE_EQUAL(result.str().data(), "\xA9\x05" "alpha");
+}
+
 //-----------------------------------------------------------------------------
 // Pair
 //-----------------------------------------------------------------------------
