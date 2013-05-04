@@ -39,18 +39,18 @@ iarchive::~iarchive()
 {
 }
 
-void iarchive::load_override(boost::serialization::nvp<bool> data, int)
+void iarchive::load_override(bool& value, int)
 {
     const token type = input.type();
     switch (type)
     {
     case token_true:
-        data.value() = true;
+        value = true;
         input.next();
         break;
 
     case token_false:
-        data.value() = false;
+        value = false;
         input.next();
         break;
 
@@ -61,13 +61,13 @@ void iarchive::load_override(boost::serialization::nvp<bool> data, int)
     }
 }
 
-void iarchive::load_override(boost::serialization::nvp<protoc::int8_t> data, int)
+void iarchive::load_override(protoc::int8_t& value, int)
 {
     const token type = input.type();
     switch (type)
     {
     case token_int8:
-        data.value() = input.get_int8();
+        value = input.get_int8();
         input.next();
         break;
 
@@ -78,18 +78,18 @@ void iarchive::load_override(boost::serialization::nvp<protoc::int8_t> data, int
     }
 }
 
-void iarchive::load_override(boost::serialization::nvp<protoc::int16_t> data, int)
+void iarchive::load_override(protoc::int16_t& value, int)
 {
     const token type = input.type();
     switch (type)
     {
     case token_int16:
-        data.value() = input.get_int16();
+        value = input.get_int16();
         input.next();
         break;
 
     case token_int8:
-        data.value() = input.get_int8();
+        value = input.get_int8();
         input.next();
         break;
 
@@ -100,23 +100,23 @@ void iarchive::load_override(boost::serialization::nvp<protoc::int16_t> data, in
     }
 }
 
-void iarchive::load_override(boost::serialization::nvp<protoc::int32_t> data, int)
+void iarchive::load_override(protoc::int32_t& value, int)
 {
     const token type = input.type();
     switch (type)
     {
     case token_int32:
-        data.value() = input.get_int32();
+        value = input.get_int32();
         input.next();
         break;
 
     case token_int16:
-        data.value() = input.get_int16();
+        value = input.get_int16();
         input.next();
         break;
 
     case token_int8:
-        data.value() = input.get_int8();
+        value = input.get_int8();
         input.next();
         break;
 
@@ -127,28 +127,28 @@ void iarchive::load_override(boost::serialization::nvp<protoc::int32_t> data, in
     }
 }
 
-void iarchive::load_override(boost::serialization::nvp<protoc::int64_t> data, int)
+void iarchive::load_override(protoc::int64_t& value, int)
 {
     const token type = input.type();
     switch (type)
     {
     case token_int64:
-        data.value() = input.get_int64();
+        value = input.get_int64();
         input.next();
         break;
 
     case token_int32:
-        data.value() = input.get_int32();
+        value = input.get_int32();
         input.next();
         break;
 
     case token_int16:
-        data.value() = input.get_int16();
+        value = input.get_int16();
         input.next();
         break;
 
     case token_int8:
-        data.value() = input.get_int8();
+        value = input.get_int8();
         input.next();
         break;
 
@@ -159,13 +159,13 @@ void iarchive::load_override(boost::serialization::nvp<protoc::int64_t> data, in
     }
 }
 
-void iarchive::load_override(boost::serialization::nvp<protoc::float32_t> data, int)
+void iarchive::load_override(protoc::float32_t& value, int)
 {
     const token type = input.type();
     switch (type)
     {
     case token_float32:
-        data.value() = input.get_float32();
+        value = input.get_float32();
         input.next();
         break;
 
@@ -176,18 +176,18 @@ void iarchive::load_override(boost::serialization::nvp<protoc::float32_t> data, 
     }
 }
 
-void iarchive::load_override(boost::serialization::nvp<protoc::float64_t> data, int)
+void iarchive::load_override(protoc::float64_t& value, int)
 {
     const token type = input.type();
     switch (type)
     {
     case token_float64:
-        data.value() = input.get_float64();
+        value = input.get_float64();
         input.next();
         break;
 
     case token_float32:
-        data.value() = input.get_float32();
+        value = input.get_float32();
         input.next();
         break;
 
@@ -198,13 +198,13 @@ void iarchive::load_override(boost::serialization::nvp<protoc::float64_t> data, 
     }
 }
 
-void iarchive::load_override(boost::serialization::nvp<std::string> data, int)
+void iarchive::load_override(std::string& value, int)
 {
     const token type = input.type();
     switch (type)
     {
     case token_string:
-        data.value() = input.get_string();
+        value = input.get_string();
         input.next();
         break;
 

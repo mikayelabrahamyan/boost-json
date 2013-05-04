@@ -53,13 +53,13 @@ public:
     ~iarchive();
 
     template<typename value_type>
-    void load_override(const boost::serialization::nvp<value_type>& data, long)
+    void load_override(value_type& value, long)
     {
         token type = input.type();
         if (type == token_tuple_begin)
         {
             input.next();
-            boost::archive::load(*this->This(), const_cast<value_type&>(data.value()));
+            boost::archive::load(*this->This(), const_cast<value_type&>(value));
             type = input.type();
             if (type != token_tuple_end)
             {
@@ -75,25 +75,25 @@ public:
         }
     }
 
-    void load_override(boost::serialization::nvp<bool>, int);
-    void load_override(boost::serialization::nvp<protoc::int8_t>, int);
-    void load_override(boost::serialization::nvp<protoc::int16_t>, int);
-    void load_override(boost::serialization::nvp<protoc::int32_t>, int);
-    void load_override(boost::serialization::nvp<protoc::int64_t>, int);
-    void load_override(boost::serialization::nvp<protoc::float32_t>, int);
-    void load_override(boost::serialization::nvp<protoc::float64_t>, int);
-    void load_override(boost::serialization::nvp<std::string>, int);
+    void load_override(bool&, int);
+    void load_override(protoc::int8_t&, int);
+    void load_override(protoc::int16_t&, int);
+    void load_override(protoc::int32_t&, int);
+    void load_override(protoc::int64_t&, int);
+    void load_override(protoc::float32_t&, int);
+    void load_override(protoc::float64_t&, int);
+    void load_override(std::string&, int);
 
     // std::pair
     template<typename first_type, typename second_type>
-    void load_override(const boost::serialization::nvp< std::pair<first_type, second_type> >& data, int)
+    void load_override(std::pair<first_type, second_type>& data, int)
     {
         token type = input.type();
         if (type == token_tuple_begin)
         {
             input.next();
-            *this >> boost::serialization::make_nvp("first", data.value().first);
-            *this >> boost::serialization::make_nvp("second", data.value().second);
+            *this >> data.first;
+            *this >> data.second;
             type = input.type();
             if (type != token_tuple_end)
             {
@@ -111,24 +111,24 @@ public:
 
     // boost::optional
     template<typename value_type>
-    void load_override(const boost::serialization::nvp< boost::optional<value_type> >& data, int)
+    void load_override(boost::optional<value_type>& data, int)
     {
         const token type = input.type();
         if (type == token_null)
         {
-            data.value() = boost::optional<value_type>();
+            data = boost::optional<value_type>();
         }
         else
         {
             value_type item;
-            *this >> boost::serialization::make_nvp(data.name(), item);
-            data.value() = boost::optional<value_type>(item);
+            *this >> item;
+            data = boost::optional<value_type>(item);
         }
     }
 
     // std::vector
     template<typename value_type, typename allocator_type>
-    void load_override(const boost::serialization::nvp< std::vector<value_type, allocator_type> > data, int)
+    void load_override(std::vector<value_type, allocator_type>& data, int)
     {
         token type = input.type();
         if (type == token_array_begin)
@@ -157,8 +157,8 @@ public:
                 else
                 {
                     value_type item;
-                    *this >> boost::serialization::make_nvp(data.name(), item);
-                    data.value().push_back(item);
+                    *this >> item;
+                    data.push_back(item);
                 }
             }
         }
@@ -173,7 +173,7 @@ public:
 
     // std::map
     template<typename key_type, typename mapped_type, typename key_compare, typename allocator_type>
-    void load_override(const boost::serialization::nvp< std::map<key_type, mapped_type, key_compare, allocator_type> > data, int)
+    void load_override(std::map<key_type, mapped_type, key_compare, allocator_type>& data, int)
     {
         token type = input.type();
         if (type == token_array_begin)
@@ -204,8 +204,8 @@ public:
                 else
                 {
                     std::pair<key_type, mapped_type> value;
-                    *this >> boost::serialization::make_nvp(data.name(), value);
-                    data.value().insert(value);
+                    *this >> value;
+                    data.insert(value);
                     if (input.type() != token_tuple_end)
                     {
                         goto error;
@@ -221,6 +221,13 @@ public:
             error << type;
             throw unexpected_token(error.str());
         }
+    }
+
+    // boost::serialization::nvp
+    template<typename value_type>
+    void load_override(const boost::serialization::nvp<value_type>& data, long)
+    {
+        *this >> data.value();
     }
 
     // Ignore these
