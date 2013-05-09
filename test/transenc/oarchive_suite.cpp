@@ -415,6 +415,24 @@ BOOST_AUTO_TEST_CASE(test_map_bool_two)
 }
 
 //-----------------------------------------------------------------------------
+// Enum
+//-----------------------------------------------------------------------------
+
+enum Number
+{
+    one = 1
+};
+
+BOOST_AUTO_TEST_CASE(test_enum_one)
+{
+    std::ostringstream result;
+    transenc::stream_oarchive ar(result);
+    enum Number value = one;
+    ar << value;
+    BOOST_REQUIRE_EQUAL(result.str().data(), "\xA3\x01");
+}
+
+//-----------------------------------------------------------------------------
 // Struct
 //-----------------------------------------------------------------------------
 

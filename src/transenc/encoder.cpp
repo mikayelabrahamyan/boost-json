@@ -283,32 +283,17 @@ std::size_t encoder::put(const std::vector<protoc::int8_t>& value)
 
 std::size_t encoder::put_tag(protoc::int8_t value)
 {
-    if (value >= -32)
+    const output::value_type type(code_tag8);
+    const std::size_t size = sizeof(type) + sizeof(protoc::int8_t);
+
+    if (!buffer.grow(size))
     {
-        const std::size_t size = sizeof(output::value_type);
-
-        if (!buffer.grow(size))
-        {
-            return 0;
-        }
-
-        write(value);
-        return size;
+        return 0;
     }
-    else
-    {
-        const output::value_type type(code_tag8);
-        const std::size_t size = sizeof(type) + sizeof(protoc::int8_t);
 
-        if (!buffer.grow(size))
-        {
-            return 0;
-        }
-
-        buffer.write(type);
-        write(value);
-        return size;
-    }
+    buffer.write(type);
+    write(value);
+    return size;
 }
 
 std::size_t encoder::put_tag(protoc::int16_t value)

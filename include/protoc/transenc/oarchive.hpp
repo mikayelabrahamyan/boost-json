@@ -22,6 +22,7 @@
 #include <vector>
 #include <map>
 #include <utility> // std::pair
+#include <limits>
 #include <ostream>
 #include <istream>
 #include <boost/optional.hpp>
@@ -29,6 +30,8 @@
 #include <boost/serialization/vector.hpp>
 #include <boost/archive/detail/common_oarchive.hpp>
 #include <boost/archive/detail/register_archive.hpp>
+#include <boost/utility/enable_if.hpp>
+#include <boost/type_traits/is_enum.hpp>
 #include <boost/utility/base_from_member.hpp>
 #include <protoc/types.hpp>
 #include <protoc/output_stream.hpp>
@@ -48,6 +51,7 @@ public:
     oarchive(const encoder& output);
     ~oarchive();
 
+    // struct
     template<typename value_type>
     void save_override(const value_type& data, long)
     {
@@ -66,6 +70,29 @@ public:
     void save_override(protoc::float64_t, int);
     void save_override(const char *, int);
     void save_override(const std::string&, int);
+
+    // enum
+    template<typename value_type>
+    typename boost::enable_if< boost::is_enum<value_type> >::type
+    save_override(value_type data, int)
+    {
+        if (data <= std::numeric_limits<protoc::int8_t>::max())
+        {
+            output.put_tag(protoc::int8_t(data));
+        }
+        else if (data <= std::numeric_limits<protoc::int16_t>::max())
+        {
+            output.put_tag(protoc::int16_t(data));
+        }
+        else if (data <= std::numeric_limits<protoc::int32_t>::max())
+        {
+            output.put_tag(protoc::int32_t(data));
+        }
+        else
+        {
+            output.put_tag(protoc::int64_t(data));
+        }
+    }
 
     // std::pair
     template<typename first_type, typename second_type>
