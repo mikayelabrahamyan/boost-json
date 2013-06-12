@@ -406,12 +406,12 @@ std::size_t encoder::put_tag(const std::string& value)
 
 std::size_t encoder::put_tuple_begin()
 {
-    return put_token(code_tuple_begin);
+    return put_token(code_record_begin);
 }
 
 std::size_t encoder::put_tuple_end()
 {
-    return put_token(code_tuple_end);
+    return put_token(code_record_end);
 }
 
 std::size_t encoder::put_array_begin()

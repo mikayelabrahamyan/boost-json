@@ -50,8 +50,8 @@ enum token
     token_binary,
     token_name,
 
-    token_tuple_begin,
-    token_tuple_end,
+    token_record_begin,
+    token_record_end,
     token_array_begin,
     token_array_end
 };

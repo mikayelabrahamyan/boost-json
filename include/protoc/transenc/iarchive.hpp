@@ -56,12 +56,12 @@ public:
     void load_override(value_type& value, long)
     {
         token type = input.type();
-        if (type == token_tuple_begin)
+        if (type == token_record_begin)
         {
             input.next();
             boost::archive::load(*this->This(), const_cast<value_type&>(value));
             type = input.type();
-            if (type != token_tuple_end)
+            if (type != token_record_end)
             {
                 goto error;
             }
@@ -89,13 +89,13 @@ public:
     void load_override(std::pair<first_type, second_type>& data, int)
     {
         token type = input.type();
-        if (type == token_tuple_begin)
+        if (type == token_record_begin)
         {
             input.next();
             *this >> data.first;
             *this >> data.second;
             type = input.type();
-            if (type != token_tuple_end)
+            if (type != token_record_end)
             {
                 goto error;
             }
@@ -206,7 +206,7 @@ public:
                     std::pair<key_type, mapped_type> value;
                     *this >> value;
                     data.insert(value);
-                    if (input.type() != token_tuple_end)
+                    if (input.type() != token_record_end)
                     {
                         goto error;
                     }

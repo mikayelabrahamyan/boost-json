@@ -105,13 +105,13 @@ void decoder::next()
             ++input;
             break;
 
-        case code_tuple_begin:
-            current.type = token_tuple_begin;
+        case code_record_begin:
+            current.type = token_record_begin;
             ++input;
             break;
 
-        case code_tuple_end:
-            current.type = token_tuple_end;
+        case code_record_end:
+            current.type = token_record_end;
             ++input;
             break;
 

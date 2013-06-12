@@ -1104,7 +1104,7 @@ BOOST_AUTO_TEST_CASE(test_tuple_begin)
     transenc::encoder encoder(buffer);
     BOOST_REQUIRE_EQUAL(encoder.put_tuple_begin(), 1);
     BOOST_REQUIRE_EQUAL(buffer.size(), 1);
-    BOOST_REQUIRE_EQUAL(buffer[0], transenc::code_tuple_begin);
+    BOOST_REQUIRE_EQUAL(buffer[0], transenc::code_record_begin);
 }
 
 BOOST_AUTO_TEST_CASE(test_tuple_begin_empty)
@@ -1121,7 +1121,7 @@ BOOST_AUTO_TEST_CASE(test_tuple_end)
     transenc::encoder encoder(buffer);
     BOOST_REQUIRE_EQUAL(encoder.put_tuple_end(), 1);
     BOOST_REQUIRE_EQUAL(buffer.size(), 1);
-    BOOST_REQUIRE_EQUAL(buffer[0], transenc::code_tuple_end);
+    BOOST_REQUIRE_EQUAL(buffer[0], transenc::code_record_end);
 }
 
 BOOST_AUTO_TEST_CASE(test_tuple_end_empty)
