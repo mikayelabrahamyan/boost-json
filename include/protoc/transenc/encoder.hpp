@@ -18,6 +18,7 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
+#include <cstdlib>
 #include <string>
 #include <vector>
 #include <protoc/types.hpp>
@@ -55,13 +56,17 @@ public:
     std::size_t put_tag(const char *);
     std::size_t put_tag(const std::string&);
 
-    std::size_t put_tuple_begin();
-    std::size_t put_tuple_end();
-    std::size_t put_array_begin();
+    std::size_t put_record_begin();
+    std::size_t put_record_end();
+    std::size_t put_array_begin(std::size_t);
     std::size_t put_array_end();
+    std::size_t put_map_begin();
+    std::size_t put_map_begin(std::size_t);
+    std::size_t put_map_end();
 
 private:
     std::size_t put_token(output::value_type);
+    std::size_t put_size_t(std::size_t);
 
     std::size_t write(protoc::int8_t);
     std::size_t write(protoc::uint8_t);

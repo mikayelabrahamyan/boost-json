@@ -53,7 +53,9 @@ enum token
     token_record_begin,
     token_record_end,
     token_array_begin,
-    token_array_end
+    token_array_end,
+    token_map_begin,
+    token_map_end
 };
 
 }

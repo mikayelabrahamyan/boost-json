@@ -360,7 +360,7 @@ BOOST_AUTO_TEST_CASE(test_vector_bool_empty)
     transenc::stream_oarchive ar(result);
     std::vector<bool> value;
     ar << value;
-    BOOST_REQUIRE_EQUAL(result.str().data(), "\x91\x99");
+    BOOST_REQUIRE_EQUAL(result.str().data(), "\x91\x00\x99");
 }
 
 BOOST_AUTO_TEST_CASE(test_vector_bool_one)
@@ -370,7 +370,7 @@ BOOST_AUTO_TEST_CASE(test_vector_bool_one)
     std::vector<bool> value;
     value.push_back(true);
     ar << value;
-    BOOST_REQUIRE_EQUAL(result.str().data(), "\x91\x81\x99");
+    BOOST_REQUIRE_EQUAL(result.str().data(), "\x91\x01\x81\x99");
 }
 
 BOOST_AUTO_TEST_CASE(test_vector_bool_two)
@@ -381,7 +381,7 @@ BOOST_AUTO_TEST_CASE(test_vector_bool_two)
     value.push_back(true);
     value.push_back(false);
     ar << value;
-    BOOST_REQUIRE_EQUAL(result.str().data(), "\x91\x81\x80\x99");
+    BOOST_REQUIRE_EQUAL(result.str().data(), "\x91\x02\x81\x80\x99");
 }
 
 BOOST_AUTO_TEST_CASE(test_map_bool_empty)
@@ -390,7 +390,7 @@ BOOST_AUTO_TEST_CASE(test_map_bool_empty)
     transenc::stream_oarchive ar(result);
     std::map<std::string, bool> value;
     ar << value;
-    BOOST_REQUIRE_EQUAL(result.str().data(), "\x91\x99");
+    BOOST_REQUIRE_EQUAL(result.str().data(), "\x92\x82\x9A");
 }
 
 BOOST_AUTO_TEST_CASE(test_map_bool_one)
@@ -400,7 +400,7 @@ BOOST_AUTO_TEST_CASE(test_map_bool_one)
     std::map<std::string, bool> value;
     value["A"] = true;
     ar << value;
-    BOOST_REQUIRE_EQUAL(result.str().data(), "\x91\x90" "\xA9\x01" "A" "\x81" "\x98\x99");
+    BOOST_REQUIRE_EQUAL(result.str().data(), "\x92\x82\x90" "\xA9\x01" "A" "\x81" "\x98\x9A");
 }
 
 BOOST_AUTO_TEST_CASE(test_map_bool_two)
@@ -411,7 +411,7 @@ BOOST_AUTO_TEST_CASE(test_map_bool_two)
     value["A"] = true;
     value["B"] = false;
     ar << value;
-    BOOST_REQUIRE_EQUAL(result.str().data(), "\x91\x90" "\xA9\x01" "A" "\x81" "\x98\x90" "\xA9\x01" "B" "\x80" "\x98\x99");
+    BOOST_REQUIRE_EQUAL(result.str().data(), "\x92\x82\x90" "\xA9\x01" "A" "\x81" "\x98\x90" "\xA9\x01" "B" "\x80" "\x98\x9A");
 }
 
 //-----------------------------------------------------------------------------

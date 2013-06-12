@@ -404,24 +404,54 @@ std::size_t encoder::put_tag(const std::string& value)
     return sizeof(output::value_type) + size + length;
 }
 
-std::size_t encoder::put_tuple_begin()
+std::size_t encoder::put_record_begin()
 {
     return put_token(code_record_begin);
 }
 
-std::size_t encoder::put_tuple_end()
+std::size_t encoder::put_record_end()
 {
     return put_token(code_record_end);
 }
 
-std::size_t encoder::put_array_begin()
+std::size_t encoder::put_array_begin(std::size_t size)
 {
-    return put_token(code_array_begin);
+    std::size_t result = put_token(code_array_begin);
+    if (result == 0)
+    {
+        return 0;
+    }
+    return result + put_size_t(size);
 }
 
 std::size_t encoder::put_array_end()
 {
     return put_token(code_array_end);
+}
+
+std::size_t encoder::put_map_begin()
+{
+    std::size_t result = put_token(code_map_begin);
+    if (result == 0)
+    {
+        return 0;
+    }
+    return result + put();
+}
+
+std::size_t encoder::put_map_begin(std::size_t size)
+{
+    std::size_t result = put_token(code_map_begin);
+    if (result == 0)
+    {
+        return 0;
+    }
+    return result + put_size_t(size);
+}
+
+std::size_t encoder::put_map_end()
+{
+    return put_token(code_map_end);
 }
 
 std::size_t encoder::put_token(output::value_type value)
@@ -436,6 +466,55 @@ std::size_t encoder::put_token(output::value_type value)
     buffer.write(value);
 
     return size;
+}
+
+std::size_t encoder::put_size_t(std::size_t value)
+{
+    if (value < static_cast<std::size_t>(std::numeric_limits<protoc::int8_t>::max()))
+    {
+        if (!buffer.grow(sizeof(protoc::uint8_t)))
+        {
+            return 0;
+        }
+        return write(static_cast<protoc::int8_t>(value));
+    }
+    else if (value < static_cast<std::string::size_type>(std::numeric_limits<protoc::uint16_t>::max()))
+    {
+        const std::size_t size = sizeof(output::value_type) + sizeof(protoc::uint16_t);
+        if (!buffer.grow(size))
+        {
+            return 0;
+        }
+        buffer.write(code_name_int16);
+        write(static_cast<uint16_t>(value));
+        return size;
+    }
+    else if (value < static_cast<std::string::size_type>(std::numeric_limits<protoc::uint32_t>::max()))
+    {
+        const std::size_t size = sizeof(output::value_type) + sizeof(protoc::uint32_t);
+        if (!buffer.grow(size))
+        {
+            return 0;
+        }
+        buffer.write(code_name_int32);
+        write(static_cast<uint32_t>(value));
+        return size;
+    }
+    else if (value < static_cast<std::string::size_type>(std::numeric_limits<protoc::int64_t>::max()))
+    {
+        const std::size_t size = sizeof(output::value_type) + sizeof(protoc::uint64_t);
+        if (!buffer.grow(size))
+        {
+            return 0;
+        }
+        buffer.write(code_name_int64);
+        write(static_cast<int64_t>(value));
+        return size;
+    }
+    else
+    {
+        return 0;
+    }
 }
 
 std::size_t encoder::write(protoc::int8_t value)

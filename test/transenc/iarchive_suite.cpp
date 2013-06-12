@@ -331,6 +331,18 @@ BOOST_AUTO_TEST_CASE(test_optional_null)
     BOOST_REQUIRE(!value);
 }
 
+BOOST_AUTO_TEST_CASE(test_optional_null_value)
+{
+    const protoc::uint8_t input[] = { transenc::code_null, transenc::code_true };
+    transenc::iarchive in(input, input + sizeof(input));
+    boost::optional<bool> value;
+    BOOST_REQUIRE_NO_THROW(in >> value);
+    BOOST_REQUIRE(!value);
+    BOOST_REQUIRE_NO_THROW(in >> value);
+    BOOST_REQUIRE(value);
+    BOOST_REQUIRE_EQUAL(*value, true);
+}
+
 BOOST_AUTO_TEST_CASE(test_optional_wrong_type)
 {
     const protoc::uint8_t input[] = { transenc::code_true };
@@ -346,7 +358,7 @@ BOOST_AUTO_TEST_CASE(test_optional_wrong_type)
 
 BOOST_AUTO_TEST_CASE(test_vector_bool_empty)
 {
-    const protoc::uint8_t input[] = { transenc::code_array_begin, transenc::code_array_end };
+    const protoc::uint8_t input[] = { transenc::code_array_begin, 0x00, transenc::code_array_end };
     transenc::iarchive in(input, input + sizeof(input));
     std::vector<bool> value;
     BOOST_REQUIRE_NO_THROW(in >> value);
@@ -355,7 +367,7 @@ BOOST_AUTO_TEST_CASE(test_vector_bool_empty)
 
 BOOST_AUTO_TEST_CASE(test_vector_bool_one)
 {
-    const protoc::uint8_t input[] = { transenc::code_array_begin, transenc::code_true, transenc::code_array_end };
+    const protoc::uint8_t input[] = { transenc::code_array_begin, 0x01, transenc::code_true, transenc::code_array_end };
     transenc::iarchive in(input, input + sizeof(input));
     std::vector<bool> value;
     BOOST_REQUIRE_NO_THROW(in >> value);
@@ -365,7 +377,7 @@ BOOST_AUTO_TEST_CASE(test_vector_bool_one)
 
 BOOST_AUTO_TEST_CASE(test_vector_bool_two)
 {
-    const protoc::uint8_t input[] = { transenc::code_array_begin, transenc::code_true, transenc::code_false, transenc::code_array_end };
+    const protoc::uint8_t input[] = { transenc::code_array_begin, 0x02, transenc::code_true, transenc::code_false, transenc::code_array_end };
     transenc::iarchive in(input, input + sizeof(input));
     std::vector<bool> value;
     BOOST_REQUIRE_NO_THROW(in >> value);
@@ -376,7 +388,7 @@ BOOST_AUTO_TEST_CASE(test_vector_bool_two)
 
 BOOST_AUTO_TEST_CASE(test_vector_mixed)
 {
-    const protoc::uint8_t input[] = { transenc::code_array_begin, transenc::code_true, 0x00, transenc::code_array_end };
+    const protoc::uint8_t input[] = { transenc::code_array_begin, 0x02, transenc::code_true, 0x00, transenc::code_array_end };
     transenc::iarchive in(input, input + sizeof(input));
     std::vector<bool> value;
     BOOST_REQUIRE_THROW(in >> value,
@@ -385,7 +397,7 @@ BOOST_AUTO_TEST_CASE(test_vector_mixed)
 
 BOOST_AUTO_TEST_CASE(test_vector_missing_end)
 {
-    const protoc::uint8_t input[] = { transenc::code_array_begin, transenc::code_true };
+    const protoc::uint8_t input[] = { transenc::code_array_begin, 0x01, transenc::code_true };
     transenc::iarchive in(input, input + sizeof(input));
     std::vector<bool> value;
     BOOST_REQUIRE_THROW(in >> value,
@@ -403,7 +415,16 @@ BOOST_AUTO_TEST_CASE(test_vector_missing_begin)
 
 BOOST_AUTO_TEST_CASE(test_map_bool_empty)
 {
-    const protoc::uint8_t input[] = { transenc::code_array_begin, transenc::code_array_end };
+    const protoc::uint8_t input[] = { transenc::code_map_begin, 0x00, transenc::code_map_end };
+    transenc::iarchive in(input, input + sizeof(input));
+    std::map<std::string, bool> value;
+    BOOST_REQUIRE_NO_THROW(in >> value);
+    BOOST_REQUIRE_EQUAL(value.size(), 0);
+}
+
+BOOST_AUTO_TEST_CASE(test_map_bool_empty_null)
+{
+    const protoc::uint8_t input[] = { transenc::code_map_begin, transenc::code_null, transenc::code_map_end };
     transenc::iarchive in(input, input + sizeof(input));
     std::map<std::string, bool> value;
     BOOST_REQUIRE_NO_THROW(in >> value);
@@ -412,7 +433,7 @@ BOOST_AUTO_TEST_CASE(test_map_bool_empty)
 
 BOOST_AUTO_TEST_CASE(test_map_bool_one)
 {
-    const protoc::uint8_t input[] = { transenc::code_array_begin, transenc::code_record_begin, transenc::code_string_int8, 0x01, 'A', transenc::code_true, transenc::code_record_end, transenc::code_array_end };
+    const protoc::uint8_t input[] = { transenc::code_map_begin, 0x01, transenc::code_record_begin, transenc::code_string_int8, 0x01, 'A', transenc::code_true, transenc::code_record_end, transenc::code_map_end };
     transenc::iarchive in(input, input + sizeof(input));
     std::map<std::string, bool> value;
     BOOST_REQUIRE_NO_THROW(in >> value);
@@ -422,7 +443,7 @@ BOOST_AUTO_TEST_CASE(test_map_bool_one)
 
 BOOST_AUTO_TEST_CASE(test_map_bool_two)
 {
-    const protoc::uint8_t input[] = { transenc::code_array_begin, transenc::code_record_begin, transenc::code_string_int8, 0x01, 'A', transenc::code_true, transenc::code_record_end, transenc::code_record_begin, transenc::code_string_int8, 0x01, 'B', transenc::code_false, transenc::code_record_end, transenc::code_array_end };
+    const protoc::uint8_t input[] = { transenc::code_map_begin, 0x02, transenc::code_record_begin, transenc::code_string_int8, 0x01, 'A', transenc::code_true, transenc::code_record_end, transenc::code_record_begin, transenc::code_string_int8, 0x01, 'B', transenc::code_false, transenc::code_record_end, transenc::code_map_end };
     transenc::iarchive in(input, input + sizeof(input));
     std::map<std::string, bool> value;
     BOOST_REQUIRE_NO_THROW(in >> value);
@@ -433,7 +454,7 @@ BOOST_AUTO_TEST_CASE(test_map_bool_two)
 
 BOOST_AUTO_TEST_CASE(test_map_missing_end)
 {
-    const protoc::uint8_t input[] = { transenc::code_array_begin, transenc::code_record_begin, transenc::code_string_int8, 0x01, 'A', transenc::code_true, transenc::code_record_end };
+    const protoc::uint8_t input[] = { transenc::code_map_begin, 0x01, transenc::code_record_begin, transenc::code_string_int8, 0x01, 'A', transenc::code_true, transenc::code_record_end };
     transenc::iarchive in(input, input + sizeof(input));
     std::map<std::string, bool> value;
     BOOST_REQUIRE_THROW(in >> value,
@@ -442,7 +463,7 @@ BOOST_AUTO_TEST_CASE(test_map_missing_end)
 
 BOOST_AUTO_TEST_CASE(test_map_missing_pair_end)
 {
-    const protoc::uint8_t input[] = { transenc::code_array_begin, transenc::code_record_begin, transenc::code_string_int8, 0x01, 'A', transenc::code_true, transenc::code_array_end };
+    const protoc::uint8_t input[] = { transenc::code_map_begin, 0x01, transenc::code_record_begin, transenc::code_string_int8, 0x01, 'A', transenc::code_true, transenc::code_map_end };
     transenc::iarchive in(input, input + sizeof(input));
     std::map<std::string, bool> value;
     BOOST_REQUIRE_THROW(in >> value,
@@ -451,7 +472,7 @@ BOOST_AUTO_TEST_CASE(test_map_missing_pair_end)
 
 BOOST_AUTO_TEST_CASE(test_map_missing_pair_end_2)
 {
-    const protoc::uint8_t input[] = { transenc::code_array_begin, transenc::code_record_begin, transenc::code_string_int8, 0x01, 'A', transenc::code_true };
+    const protoc::uint8_t input[] = { transenc::code_map_begin, 0x01, transenc::code_record_begin, transenc::code_string_int8, 0x01, 'A', transenc::code_true };
     transenc::iarchive in(input, input + sizeof(input));
     std::map<std::string, bool> value;
     BOOST_REQUIRE_THROW(in >> value,

@@ -55,9 +55,9 @@ public:
     template<typename value_type>
     void save_override(const value_type& data, long)
     {
-        output.put_tuple_begin();
+        output.put_record_begin();
         boost::archive::save(*this->This(), const_cast<const value_type&>(data));
-        output.put_tuple_end();
+        output.put_record_end();
     }
 
     // The const variants are needed when used in containers
@@ -98,10 +98,10 @@ public:
     template<typename first_type, typename second_type>
     void save_override(const std::pair<first_type, second_type>& data, int)
     {
-        output.put_tuple_begin();
+        output.put_record_begin();
         *this << data.first;
         *this << data.second;
-        output.put_tuple_end();
+        output.put_record_end();
     }
 
     template<typename first_type, typename second_type>
@@ -134,7 +134,7 @@ public:
     template<typename value_type, typename allocator_type>
     void save_override(const std::vector<value_type, allocator_type>& data, int version)
     {
-        output.put_array_begin();
+        output.put_array_begin(data.size());
         for (typename std::vector<value_type, allocator_type>::const_iterator it = data.begin();
              it != data.end();
              ++it)
@@ -155,14 +155,14 @@ public:
     template<typename key_type, typename mapped_type, typename key_compare, typename allocator_type>
     void save_override(const std::map<key_type, mapped_type, key_compare, allocator_type>& data, int version)
     {
-        output.put_array_begin();
+        output.put_map_begin();
         for (typename std::map<key_type, mapped_type>::const_iterator it = data.begin();
              it != data.end();
              ++it)
         {
             this->save_override(*it, version);
         }
-        output.put_array_end();
+        output.put_map_end();
     }
 
     // boost::serialization::nvp

@@ -1068,7 +1068,7 @@ BOOST_AUTO_TEST_CASE(test_array_begin)
 {
     test_array<1> buffer;
     transenc::encoder encoder(buffer);
-    BOOST_REQUIRE_EQUAL(encoder.put_array_begin(), 1);
+    BOOST_REQUIRE_EQUAL(encoder.put_array_begin(sizeof(buffer)), 1);
     BOOST_REQUIRE_EQUAL(buffer.size(), 1);
     BOOST_REQUIRE_EQUAL(buffer[0], transenc::code_array_begin);
 }
@@ -1077,7 +1077,7 @@ BOOST_AUTO_TEST_CASE(test_array_begin_empty)
 {
     test_array<0> buffer;
     transenc::encoder encoder(buffer);
-    BOOST_REQUIRE_EQUAL(encoder.put_array_begin(), 0);
+    BOOST_REQUIRE_EQUAL(encoder.put_array_begin(sizeof(buffer)), 0);
     BOOST_REQUIRE_EQUAL(buffer.size(), 0);
 }
 
@@ -1098,37 +1098,37 @@ BOOST_AUTO_TEST_CASE(test_array_end_empty)
     BOOST_REQUIRE_EQUAL(buffer.size(), 0);
 }
 
-BOOST_AUTO_TEST_CASE(test_tuple_begin)
+BOOST_AUTO_TEST_CASE(test_record_begin)
 {
     test_array<1> buffer;
     transenc::encoder encoder(buffer);
-    BOOST_REQUIRE_EQUAL(encoder.put_tuple_begin(), 1);
+    BOOST_REQUIRE_EQUAL(encoder.put_record_begin(), 1);
     BOOST_REQUIRE_EQUAL(buffer.size(), 1);
     BOOST_REQUIRE_EQUAL(buffer[0], transenc::code_record_begin);
 }
 
-BOOST_AUTO_TEST_CASE(test_tuple_begin_empty)
+BOOST_AUTO_TEST_CASE(test_record_begin_empty)
 {
     test_array<0> buffer;
     transenc::encoder encoder(buffer);
-    BOOST_REQUIRE_EQUAL(encoder.put_tuple_begin(), 0);
+    BOOST_REQUIRE_EQUAL(encoder.put_record_begin(), 0);
     BOOST_REQUIRE_EQUAL(buffer.size(), 0);
 }
 
-BOOST_AUTO_TEST_CASE(test_tuple_end)
+BOOST_AUTO_TEST_CASE(test_record_end)
 {
     test_array<1> buffer;
     transenc::encoder encoder(buffer);
-    BOOST_REQUIRE_EQUAL(encoder.put_tuple_end(), 1);
+    BOOST_REQUIRE_EQUAL(encoder.put_record_end(), 1);
     BOOST_REQUIRE_EQUAL(buffer.size(), 1);
     BOOST_REQUIRE_EQUAL(buffer[0], transenc::code_record_end);
 }
 
-BOOST_AUTO_TEST_CASE(test_tuple_end_empty)
+BOOST_AUTO_TEST_CASE(test_record_end_empty)
 {
     test_array<0> buffer;
     transenc::encoder encoder(buffer);
-    BOOST_REQUIRE_EQUAL(encoder.put_tuple_end(), 0);
+    BOOST_REQUIRE_EQUAL(encoder.put_record_end(), 0);
     BOOST_REQUIRE_EQUAL(buffer.size(), 0);
 }
 

@@ -117,6 +117,7 @@ public:
         if (type == token_null)
         {
             data = boost::optional<value_type>();
+            input.next();
         }
         else
         {
@@ -135,6 +136,12 @@ public:
         {
             scope_stack.push(scope(type)); // FIXME: Not popped in error situations
             input.next();
+            boost::optional<protoc::int8_t> count; // FIXME: std::size_t
+            *this >> count;
+            if (count)
+            {
+                data.reserve(*count);
+            }
             while (true)
             {
                 type = input.type();
@@ -176,18 +183,20 @@ public:
     void load_override(std::map<key_type, mapped_type, key_compare, allocator_type>& data, int)
     {
         token type = input.type();
-        if (type == token_array_begin)
+        if (type == token_map_begin)
         {
             scope_stack.push(scope(type));
             input.next();
+            boost::optional<protoc::int8_t> count; // FIXME: std::size_t
+            *this >> count; // Ignore
             while (true)
             {
                 assert(!scope_stack.empty());
 
                 type = input.type();
-                if (type == token_array_end)
+                if (type == token_map_end)
                 {
-                    if (scope_stack.top().group == token_array_begin)
+                    if (scope_stack.top().group == token_map_begin)
                     {
                         scope_stack.pop();
                     }

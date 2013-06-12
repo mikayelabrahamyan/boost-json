@@ -125,6 +125,16 @@ void decoder::next()
             ++input;
             break;
 
+        case code_map_begin:
+            current.type = token_map_begin;
+            ++input;
+            break;
+
+        case code_map_end:
+            current.type = token_map_end;
+            ++input;
+            break;
+
         case code_int8:
             current.type = next_int8();
             break;
