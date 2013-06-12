@@ -88,7 +88,6 @@ add_executable(protoctest
   test/ubjson/oarchive_suite.cpp
 )
 
-add_dependencies(protoctest protoc)
 set_target_properties(protoctest PROPERTIES RUNTIME_OUTPUT_DIRECTORY bin)
 set_target_properties(protoctest PROPERTIES LIBRARY_OUTPUT_DIRECTORY lib)
-target_link_libraries(protoctest ${EXTRA_LIBS})
+target_link_libraries(protoctest protoc ${EXTRA_LIBS})
