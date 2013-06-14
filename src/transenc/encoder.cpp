@@ -414,6 +414,16 @@ std::size_t encoder::put_record_end()
     return put_token(code_record_end);
 }
 
+std::size_t encoder::put_array_begin()
+{
+    std::size_t result = put_token(code_array_begin);
+    if (result == 0)
+    {
+        return 0;
+    }
+    return result + put();
+}
+
 std::size_t encoder::put_array_begin(std::size_t size)
 {
     std::size_t result = put_token(code_array_begin);

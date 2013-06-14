@@ -21,6 +21,7 @@
 #include <string>
 #include <vector>
 #include <map>
+#include <set>
 #include <stack>
 #include <sstream>
 #include <boost/optional.hpp>
@@ -166,6 +167,53 @@ public:
                     value_type item;
                     *this >> item;
                     data.push_back(item);
+                }
+            }
+        }
+        else
+        {
+        error:
+            std::ostringstream error;
+            error << type;
+            throw unexpected_token(error.str());
+        }
+    }
+
+    // std::set
+    template<typename value_type, typename allocator_type>
+    void load_override(std::set<value_type, allocator_type>& data, int)
+    {
+        token type = input.type();
+        if (type == token_array_begin)
+        {
+            scope_stack.push(scope(type)); // FIXME: Not popped in error situations
+            input.next();
+            boost::optional<protoc::int8_t> count; // FIXME: std::size_t
+            *this >> count; // Ignore
+            while (true)
+            {
+                type = input.type();
+                if (type == token_array_end)
+                {
+                    if (scope_stack.top().group == token_array_begin)
+                    {
+                        scope_stack.pop();
+                    }
+                    else
+                    {
+                        goto error;
+                    }
+                    break;
+                }
+                else if ((type == token_eof) || (type == token_error))
+                {
+                    goto error;
+                }
+                else
+                {
+                    value_type item;
+                    *this >> item;
+                    data.insert(item);
                 }
             }
         }

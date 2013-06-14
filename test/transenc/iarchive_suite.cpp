@@ -413,6 +413,36 @@ BOOST_AUTO_TEST_CASE(test_vector_missing_begin)
                         unexpected_token);
 }
 
+BOOST_AUTO_TEST_CASE(test_set_int_empty)
+{
+    const protoc::uint8_t input[] = { transenc::code_array_begin, transenc::code_null, transenc::code_array_end };
+    transenc::iarchive in(input, input + sizeof(input));
+    std::set<int> value;
+    BOOST_REQUIRE_NO_THROW(in >> value);
+    BOOST_REQUIRE_EQUAL(value.size(), 0);
+}
+
+BOOST_AUTO_TEST_CASE(test_set_int_one)
+{
+    const protoc::uint8_t input[] = { transenc::code_array_begin, transenc::code_null, 0x11, transenc::code_array_end };
+    transenc::iarchive in(input, input + sizeof(input));
+    std::set<int> value;
+    BOOST_REQUIRE_NO_THROW(in >> value);
+    BOOST_REQUIRE_EQUAL(value.size(), 1);
+    BOOST_REQUIRE_EQUAL(value.count(0x11), 1);
+}
+
+BOOST_AUTO_TEST_CASE(test_set_int_two)
+{
+    const protoc::uint8_t input[] = { transenc::code_array_begin, transenc::code_null, 0x11, 0x22, transenc::code_array_end };
+    transenc::iarchive in(input, input + sizeof(input));
+    std::set<int> value;
+    BOOST_REQUIRE_NO_THROW(in >> value);
+    BOOST_REQUIRE_EQUAL(value.size(), 2);
+    BOOST_REQUIRE_EQUAL(value.count(0x11), 1);
+    BOOST_REQUIRE_EQUAL(value.count(0x22), 1);
+}
+
 BOOST_AUTO_TEST_CASE(test_map_bool_empty)
 {
     const protoc::uint8_t input[] = { transenc::code_map_begin, 0x00, transenc::code_map_end };

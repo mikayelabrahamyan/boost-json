@@ -21,6 +21,7 @@
 #include <string>
 #include <vector>
 #include <map>
+#include <set>
 #include <utility> // std::pair
 #include <limits>
 #include <ostream>
@@ -149,6 +150,20 @@ public:
     void save_override(const std::vector<protoc::int8_t, allocator_type>& data, int)
     {
         output.put(data);
+    }
+
+    // std::set
+    template<typename value_type, typename allocator_type>
+    void save_override(const std::set<value_type, allocator_type>& data, int version)
+    {
+        output.put_array_begin();
+        for (typename std::set<value_type, allocator_type>::const_iterator it = data.begin();
+             it != data.end();
+             ++it)
+        {
+            this->save_override(*it, version);
+        }
+        output.put_array_end();
     }
 
     // std::map

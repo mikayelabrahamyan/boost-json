@@ -58,6 +58,7 @@ public:
 
     std::size_t put_record_begin();
     std::size_t put_record_end();
+    std::size_t put_array_begin();
     std::size_t put_array_begin(std::size_t);
     std::size_t put_array_end();
     std::size_t put_map_begin();

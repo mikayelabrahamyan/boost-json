@@ -384,6 +384,36 @@ BOOST_AUTO_TEST_CASE(test_vector_bool_two)
     BOOST_REQUIRE_EQUAL(result.str().data(), "\x91\x02\x81\x80\x99");
 }
 
+BOOST_AUTO_TEST_CASE(test_set_int_empty)
+{
+    std::ostringstream result;
+    transenc::stream_oarchive ar(result);
+    std::set<int> value;
+    ar << value;
+    BOOST_REQUIRE_EQUAL(result.str().data(), "\x91\x82\x99");
+}
+
+BOOST_AUTO_TEST_CASE(test_set_int_one)
+{
+    std::ostringstream result;
+    transenc::stream_oarchive ar(result);
+    std::set<int> value;
+    value.insert(1);
+    ar << value;
+    BOOST_REQUIRE_EQUAL(result.str().data(), "\x91\x82\xC0\x01\x00\x00\x00\x99");
+}
+
+BOOST_AUTO_TEST_CASE(test_set_int_two)
+{
+    std::ostringstream result;
+    transenc::stream_oarchive ar(result);
+    std::set<int> value;
+    value.insert(1);
+    value.insert(2);
+    ar << value;
+    BOOST_REQUIRE_EQUAL(result.str().data(), "\x91\x82\xC0\x01\x00\x00\x00\xC0\x02\x00\x00\x00\x99");
+}
+
 BOOST_AUTO_TEST_CASE(test_map_bool_empty)
 {
     std::ostringstream result;
