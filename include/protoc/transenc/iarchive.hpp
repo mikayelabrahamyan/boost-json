@@ -151,6 +151,7 @@ public:
                     if (scope_stack.top().group == token_array_begin)
                     {
                         scope_stack.pop();
+                        input.next();
                     }
                     else
                     {
@@ -198,6 +199,7 @@ public:
                     if (scope_stack.top().group == token_array_begin)
                     {
                         scope_stack.pop();
+                        input.next();
                     }
                     else
                     {
@@ -247,6 +249,7 @@ public:
                     if (scope_stack.top().group == token_map_begin)
                     {
                         scope_stack.pop();
+                        input.next();
                     }
                     else
                     {

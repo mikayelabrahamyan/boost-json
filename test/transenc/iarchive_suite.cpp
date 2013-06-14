@@ -541,4 +541,73 @@ BOOST_AUTO_TEST_CASE(test_struct_person)
     BOOST_REQUIRE_EQUAL(value.age, 127);
 }
 
+template <typename Type>
+struct type_struct
+{
+    template<typename T>
+    void serialize(T& archive, const unsigned int)
+    {
+        archive & data;
+    }
+
+    Type data;
+};
+
+BOOST_AUTO_TEST_CASE(test_struct_vector_empty)
+{
+    const protoc::uint8_t input[] = { transenc::code_record_begin, transenc::code_array_begin, 0x00, transenc::code_array_end, transenc::code_record_end };
+    transenc::iarchive in(input, input + sizeof(input));
+    type_struct< std::vector<bool> > value;
+    BOOST_REQUIRE_NO_THROW(in >> value);
+    BOOST_REQUIRE_EQUAL(value.data.size(), 0);
+}
+
+BOOST_AUTO_TEST_CASE(test_struct_vector_one)
+{
+    const protoc::uint8_t input[] = { transenc::code_record_begin, transenc::code_array_begin, 0x01, transenc::code_true, transenc::code_array_end, transenc::code_record_end };
+    transenc::iarchive in(input, input + sizeof(input));
+    type_struct< std::vector<bool> > value;
+    BOOST_REQUIRE_NO_THROW(in >> value);
+    BOOST_REQUIRE_EQUAL(value.data.size(), 1);
+    BOOST_REQUIRE_EQUAL(value.data[0], true);
+}
+
+BOOST_AUTO_TEST_CASE(test_struct_set_empty)
+{
+    const protoc::uint8_t input[] = { transenc::code_record_begin, transenc::code_array_begin, transenc::code_null, transenc::code_array_end, transenc::code_record_end };
+    transenc::iarchive in(input, input + sizeof(input));
+    type_struct< std::set<int> > value;
+    BOOST_REQUIRE_NO_THROW(in >> value);
+    BOOST_REQUIRE_EQUAL(value.data.size(), 0);
+}
+
+BOOST_AUTO_TEST_CASE(test_struct_set_one)
+{
+    const protoc::uint8_t input[] = { transenc::code_record_begin, transenc::code_array_begin, transenc::code_null, 0x11, transenc::code_array_end, transenc::code_record_end };
+    transenc::iarchive in(input, input + sizeof(input));
+    type_struct< std::set<int> > value;
+    BOOST_REQUIRE_NO_THROW(in >> value);
+    BOOST_REQUIRE_EQUAL(value.data.size(), 1);
+    BOOST_REQUIRE_EQUAL(value.data.count(0x11), 1);
+}
+
+BOOST_AUTO_TEST_CASE(test_struct_map_empty)
+{
+    const protoc::uint8_t input[] = { transenc::code_record_begin, transenc::code_map_begin, transenc::code_null, transenc::code_map_end, transenc::code_record_end };
+    transenc::iarchive in(input, input + sizeof(input));
+    type_struct< std::map<std::string, bool> > value;
+    BOOST_REQUIRE_NO_THROW(in >> value);
+    BOOST_REQUIRE_EQUAL(value.data.size(), 0);
+}
+
+BOOST_AUTO_TEST_CASE(test_struct_map_one)
+{
+    const protoc::uint8_t input[] = { transenc::code_record_begin, transenc::code_map_begin, transenc::code_null, transenc::code_record_begin, transenc::code_string_int8, 0x01, 'A', transenc::code_true, transenc::code_record_end, transenc::code_map_end, transenc::code_record_end };
+    transenc::iarchive in(input, input + sizeof(input));
+    type_struct< std::map<std::string, bool> > value;
+    BOOST_REQUIRE_NO_THROW(in >> value);
+    BOOST_REQUIRE_EQUAL(value.data.size(), 1);
+    BOOST_REQUIRE_EQUAL(value.data["A"], true);
+}
+
 BOOST_AUTO_TEST_SUITE_END()
