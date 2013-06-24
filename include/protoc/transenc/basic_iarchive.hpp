@@ -1,5 +1,5 @@
-#ifndef PROTOC_TRANSENC_IARCHIVE_HPP
-#define PROTOC_TRANSENC_IARCHIVE_HPP
+#ifndef PROTOC_TRANSENC_BASIC_IARCHIVE_HPP
+#define PROTOC_TRANSENC_BASIC_IARCHIVE_HPP
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -37,7 +37,7 @@ namespace protoc
 namespace transenc
 {
 
-class iarchive : public boost::archive::detail::common_iarchive<iarchive>
+class basic_iarchive : public boost::archive::detail::common_iarchive<basic_iarchive>
 {
     friend class boost::archive::load_access;
 
@@ -49,9 +49,9 @@ class iarchive : public boost::archive::detail::common_iarchive<iarchive>
     };
 
 public:
-    iarchive(decoder::input_range::const_iterator begin, decoder::input_range::const_iterator end);
-    iarchive(const decoder& input);
-    ~iarchive();
+    basic_iarchive(decoder::input_range::const_iterator begin, decoder::input_range::const_iterator end);
+    basic_iarchive(const decoder& input);
+    ~basic_iarchive();
 
     template<typename value_type>
     void load_override(value_type& value, long)
@@ -310,6 +310,6 @@ private:
 }
 }
 
-BOOST_SERIALIZATION_REGISTER_ARCHIVE(protoc::transenc::iarchive);
+BOOST_SERIALIZATION_REGISTER_ARCHIVE(protoc::transenc::basic_iarchive);
 
 #endif /* PROTOC_TRANSENC_ARCHIVE_HPP */

@@ -17,29 +17,29 @@
 
 #include <sstream>
 #include <protoc/exceptions.hpp>
-#include <protoc/transenc/iarchive.hpp>
+#include <protoc/transenc/basic_iarchive.hpp>
 
 namespace protoc
 {
 namespace transenc
 {
 
-iarchive::iarchive(decoder::input_range::const_iterator begin,
-                   decoder::input_range::const_iterator end)
+basic_iarchive::basic_iarchive(decoder::input_range::const_iterator begin,
+                               decoder::input_range::const_iterator end)
     : input(begin, end)
 {
 }
 
-iarchive::iarchive(const decoder& input)
+basic_iarchive::basic_iarchive(const decoder& input)
     : input(input)
 {
 }
 
-iarchive::~iarchive()
+basic_iarchive::~basic_iarchive()
 {
 }
 
-void iarchive::load_override(bool& value, int)
+void basic_iarchive::load_override(bool& value, int)
 {
     const token type = input.type();
     switch (type)
@@ -61,7 +61,7 @@ void iarchive::load_override(bool& value, int)
     }
 }
 
-void iarchive::load_override(protoc::int8_t& value, int)
+void basic_iarchive::load_override(protoc::int8_t& value, int)
 {
     const token type = input.type();
     switch (type)
@@ -78,7 +78,7 @@ void iarchive::load_override(protoc::int8_t& value, int)
     }
 }
 
-void iarchive::load_override(protoc::int16_t& value, int)
+void basic_iarchive::load_override(protoc::int16_t& value, int)
 {
     const token type = input.type();
     switch (type)
@@ -100,7 +100,7 @@ void iarchive::load_override(protoc::int16_t& value, int)
     }
 }
 
-void iarchive::load_override(protoc::int32_t& value, int)
+void basic_iarchive::load_override(protoc::int32_t& value, int)
 {
     const token type = input.type();
     switch (type)
@@ -127,7 +127,7 @@ void iarchive::load_override(protoc::int32_t& value, int)
     }
 }
 
-void iarchive::load_override(protoc::int64_t& value, int)
+void basic_iarchive::load_override(protoc::int64_t& value, int)
 {
     const token type = input.type();
     switch (type)
@@ -159,7 +159,7 @@ void iarchive::load_override(protoc::int64_t& value, int)
     }
 }
 
-void iarchive::load_override(protoc::float32_t& value, int)
+void basic_iarchive::load_override(protoc::float32_t& value, int)
 {
     const token type = input.type();
     switch (type)
@@ -176,7 +176,7 @@ void iarchive::load_override(protoc::float32_t& value, int)
     }
 }
 
-void iarchive::load_override(protoc::float64_t& value, int)
+void basic_iarchive::load_override(protoc::float64_t& value, int)
 {
     const token type = input.type();
     switch (type)
@@ -198,7 +198,7 @@ void iarchive::load_override(protoc::float64_t& value, int)
     }
 }
 
-void iarchive::load_override(std::string& value, int)
+void basic_iarchive::load_override(std::string& value, int)
 {
     const token type = input.type();
     switch (type)

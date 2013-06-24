@@ -19,10 +19,18 @@
 
 #include <sstream>
 #include <protoc/exceptions.hpp>
-#include <protoc/transenc/iarchive.hpp>
+#include <protoc/transenc/basic_iarchive.hpp>
 #include <protoc/transenc/codes.hpp>
 
 using namespace protoc;
+
+namespace protoc
+{
+namespace transenc
+{
+typedef basic_iarchive iarchive; // Workaround
+}
+}
 
 BOOST_AUTO_TEST_SUITE(transenc_iarchive_suite)
 
