@@ -44,7 +44,53 @@ std::size_t encoder::put(bool value)
     return put_token((value) ? code_true : code_false);
 }
 
-std::size_t encoder::put(protoc::int8_t value)
+std::size_t encoder::put(int value)
+{
+    if ((value <= std::numeric_limits<protoc::int8_t>::max()) &&
+        (value >= std::numeric_limits<protoc::int8_t>::min()))
+    {
+        return put_int8(value);
+    }
+    else if ((value <= std::numeric_limits<protoc::int16_t>::max()) &&
+             (value >= std::numeric_limits<protoc::int16_t>::min()))
+    {
+        return put_int16(value);
+    }
+    else if ((value <= std::numeric_limits<protoc::int32_t>::max()) &&
+             (value >= std::numeric_limits<protoc::int32_t>::min()))
+    {
+        return put_int32(value);
+    }
+    else
+    {
+        return put_int64(value);
+    }
+}
+
+std::size_t encoder::put(long long value)
+{
+    if ((value <= std::numeric_limits<protoc::int8_t>::max()) &&
+        (value >= std::numeric_limits<protoc::int8_t>::min()))
+    {
+        return put_int8(value);
+    }
+    else if ((value <= std::numeric_limits<protoc::int16_t>::max()) &&
+             (value >= std::numeric_limits<protoc::int16_t>::min()))
+    {
+        return put_int16(value);
+    }
+    else if ((value <= std::numeric_limits<protoc::int32_t>::max()) &&
+             (value >= std::numeric_limits<protoc::int32_t>::min()))
+    {
+        return put_int32(value);
+    }
+    else
+    {
+        return put_int64(value);
+    }
+}
+
+std::size_t encoder::put_int8(protoc::int8_t value)
 {
     if (value >= -32)
     {
@@ -74,7 +120,7 @@ std::size_t encoder::put(protoc::int8_t value)
     }
 }
 
-std::size_t encoder::put(protoc::int16_t value)
+std::size_t encoder::put_int16(protoc::int16_t value)
 {
     const output::value_type type(code_int16);
     const std::size_t size = sizeof(type) + sizeof(protoc::int16_t);
@@ -90,7 +136,7 @@ std::size_t encoder::put(protoc::int16_t value)
     return size;
 }
 
-std::size_t encoder::put(protoc::int32_t value)
+std::size_t encoder::put_int32(protoc::int32_t value)
 {
     const output::value_type type(code_int32);
     const std::size_t size = sizeof(type) + sizeof(protoc::int32_t);
@@ -106,7 +152,7 @@ std::size_t encoder::put(protoc::int32_t value)
     return size;
 }
 
-std::size_t encoder::put(protoc::int64_t value)
+std::size_t encoder::put_int64(protoc::int64_t value)
 {
     const output::value_type type(code_int64);
     const std::size_t size = sizeof(type) + sizeof(protoc::int64_t);
@@ -230,7 +276,7 @@ std::size_t encoder::put(const std::string& value)
     return sizeof(output::value_type) + size + length;
 }
 
-std::size_t encoder::put(const std::vector<protoc::int8_t>& value)
+std::size_t encoder::put(const std::vector<char>& value)
 {
     const std::string::size_type length = value.size();
 
@@ -273,7 +319,7 @@ std::size_t encoder::put(const std::vector<protoc::int8_t>& value)
         size = write(static_cast<int64_t>(length));
     }
 
-    for (std::vector<protoc::int8_t>::const_iterator it = value.begin(); it != value.end(); ++it)
+    for (std::vector<char>::const_iterator it = value.begin(); it != value.end(); ++it)
     {
         buffer.write(*it);
     }

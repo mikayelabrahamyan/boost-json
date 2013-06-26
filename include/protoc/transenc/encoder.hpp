@@ -23,13 +23,14 @@
 #include <vector>
 #include <protoc/types.hpp>
 #include <protoc/output.hpp>
+#include <protoc/encoder_base.hpp>
 
 namespace protoc
 {
 namespace transenc
 {
 
-class encoder
+class encoder : public protoc::encoder_base
 {
 public:
     typedef protoc::output<protoc::uint8_t> output;
@@ -39,15 +40,13 @@ public:
 
     std::size_t put(); // Null
     std::size_t put(bool);
-    std::size_t put(protoc::int8_t);
-    std::size_t put(protoc::int16_t);
-    std::size_t put(protoc::int32_t);
-    std::size_t put(protoc::int64_t);
+    std::size_t put(int);
+    std::size_t put(long long);
     std::size_t put(protoc::float32_t);
     std::size_t put(protoc::float64_t);
     std::size_t put(const char *);
     std::size_t put(const std::string&);
-    std::size_t put(const std::vector<protoc::int8_t>&);
+    std::size_t put(const std::vector<char>&);
 
     std::size_t put_tag(protoc::int8_t);
     std::size_t put_tag(protoc::int16_t);
@@ -66,6 +65,10 @@ public:
     std::size_t put_map_end();
 
 private:
+    std::size_t put_int8(protoc::int8_t);
+    std::size_t put_int16(protoc::int16_t);
+    std::size_t put_int32(protoc::int32_t);
+    std::size_t put_int64(protoc::int64_t);
     std::size_t put_token(output::value_type);
     std::size_t put_size_t(std::size_t);
 
