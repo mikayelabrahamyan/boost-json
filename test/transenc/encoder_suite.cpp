@@ -18,6 +18,7 @@
 #include <boost/test/unit_test.hpp>
 
 #include <limits>
+#include <cmath> // std::abs
 #include <protoc/output.hpp>
 #include <protoc/output_array.hpp>
 #include <protoc/transenc/encoder.hpp>
@@ -539,7 +540,8 @@ BOOST_AUTO_TEST_CASE(test_float_nan)
 {
     test_array<5> buffer;
     transenc::encoder encoder(buffer);
-    BOOST_REQUIRE_EQUAL(encoder.put(std::numeric_limits<protoc::float32_t>::quiet_NaN()), 5);
+    // std::abs() is a workaround for clang 3.2, which sets the negative sign on NaN
+    BOOST_REQUIRE_EQUAL(encoder.put(std::abs(std::numeric_limits<protoc::float32_t>::quiet_NaN())), 5);
     BOOST_REQUIRE_EQUAL(buffer.size(), 5);
     BOOST_REQUIRE_EQUAL(buffer[0], transenc::code_float32);
     BOOST_REQUIRE_EQUAL(buffer[1], 0x00);
@@ -711,7 +713,7 @@ BOOST_AUTO_TEST_CASE(test_double_nan)
 {
     test_array<9> buffer;
     transenc::encoder encoder(buffer);
-    BOOST_REQUIRE_EQUAL(encoder.put(std::numeric_limits<protoc::float64_t>::quiet_NaN()), 9);
+    BOOST_REQUIRE_EQUAL(encoder.put(std::abs(std::numeric_limits<protoc::float64_t>::quiet_NaN())), 9);
     BOOST_REQUIRE_EQUAL(buffer.size(), 9);
     BOOST_REQUIRE_EQUAL(buffer[0], transenc::code_float64);
     BOOST_REQUIRE_EQUAL(buffer[1], 0x00);
