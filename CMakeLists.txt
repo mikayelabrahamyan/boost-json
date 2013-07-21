@@ -49,7 +49,6 @@ set(LIBRARY_OUTPUT_PATH lib)
 set(EXTRA_LIBS -lprotoc ${EXTRA_LIBS})
 
 add_library(protoc STATIC
-  src/basic_oarchive.cpp
   src/json/decoder.cpp
   src/json/encoder.cpp
   src/json/iarchive.cpp

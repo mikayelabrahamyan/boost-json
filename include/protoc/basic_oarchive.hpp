@@ -103,6 +103,51 @@ private:
 namespace protoc
 {
 
+inline basic_oarchive::basic_oarchive(encoder_base& encoder)
+    : boost::archive::detail::common_oarchive<basic_oarchive>(),
+      encoder(encoder)
+{
+}
+
+inline basic_oarchive::~basic_oarchive()
+{
+}
+
+inline void basic_oarchive::save_override(bool value, int)
+{
+    encoder.put(value);
+}
+
+inline void basic_oarchive::save_override(int value, int)
+{
+    encoder.put(value);
+}
+
+inline void basic_oarchive::save_override(long long value, int)
+{
+    encoder.put(value);
+}
+
+inline void basic_oarchive::save_override(float value, int)
+{
+    encoder.put(value);
+}
+
+inline void basic_oarchive::save_override(double value, int)
+{
+    encoder.put(value);
+}
+
+inline void basic_oarchive::save_override(const char *value, int)
+{
+    encoder.put(value);
+}
+
+inline void basic_oarchive::save_override(const std::string& value, int)
+{
+    encoder.put(value);
+}
+
 // struct
 template<typename value_type>
 void basic_oarchive::save_override(const value_type& data, long)
