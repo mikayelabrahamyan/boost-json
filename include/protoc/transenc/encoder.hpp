@@ -46,7 +46,7 @@ public:
     std::size_t put(protoc::float64_t);
     std::size_t put(const char *);
     std::size_t put(const std::string&);
-    std::size_t put(const std::vector<char>&);
+    std::size_t put(void *, std::size_t);
 
     std::size_t put_tag(protoc::int8_t);
     std::size_t put_tag(protoc::int16_t);

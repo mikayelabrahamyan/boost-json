@@ -276,10 +276,8 @@ std::size_t encoder::put(const std::string& value)
     return sizeof(output::value_type) + size + length;
 }
 
-std::size_t encoder::put(const std::vector<char>& value)
+std::size_t encoder::put(void *value, std::size_t length)
 {
-    const std::string::size_type length = value.size();
-
     std::size_t size = 0;
 
     if (length < static_cast<std::string::size_type>(std::numeric_limits<protoc::int8_t>::max()))
@@ -319,9 +317,9 @@ std::size_t encoder::put(const std::vector<char>& value)
         size = write(static_cast<int64_t>(length));
     }
 
-    for (std::vector<char>::const_iterator it = value.begin(); it != value.end(); ++it)
+    for (std::size_t i = 0; i < length; ++i)
     {
-        buffer.write(*it);
+        buffer.write(static_cast<char *>(value)[i]);
     }
 
     return sizeof(output::value_type) + size + length;

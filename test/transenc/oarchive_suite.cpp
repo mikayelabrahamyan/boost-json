@@ -20,6 +20,9 @@
 #include <sstream>
 #include <protoc/exceptions.hpp>
 #include <protoc/transenc/oarchive.hpp>
+#include <protoc/vector.hpp>
+#include <protoc/set.hpp>
+#include <protoc/map.hpp>
 
 using namespace protoc;
 
@@ -476,7 +479,7 @@ struct person
     {}
 
     template<typename T>
-    void serialize(T& archive, const unsigned int)
+    void serialize(T& archive, const unsigned int) const
     {
         archive & name;
         archive & age;

@@ -29,7 +29,7 @@
 #include <boost/optional.hpp>
 #include <boost/ref.hpp>
 #include <boost/serialization/nvp.hpp>
-#include <boost/serialization/vector.hpp>
+// #include <boost/serialization/vector.hpp>
 #include <boost/archive/detail/common_oarchive.hpp>
 #include <boost/archive/detail/register_archive.hpp>
 #include <boost/utility/enable_if.hpp>
@@ -51,9 +51,19 @@ class basic_oarchive
     : public protoc::basic_oarchive
 {
 public:
-    basic_oarchive(transenc::encoder& enc)
-        : protoc::basic_oarchive(enc)
-    {}
+    basic_oarchive(transenc::encoder&);
+
+    virtual void save_record_begin();
+    virtual void save_record_end();
+    virtual void save_array_begin();
+    virtual void save_array_begin(std::size_t);
+    virtual void save_array_end();
+    virtual void save_map_begin();
+    virtual void save_map_begin(std::size_t);
+    virtual void save_map_end();
+
+protected:
+    transenc::encoder& enc;
 };
 
 // base_from_member is needed because we want to add a member that must be
@@ -77,10 +87,64 @@ public:
     {}
 };
 
-}
-}
+} // namespace transenc
+} // namespace protoc
 
 BOOST_SERIALIZATION_REGISTER_ARCHIVE(protoc::transenc::basic_oarchive);
 BOOST_SERIALIZATION_REGISTER_ARCHIVE(protoc::transenc::stream_oarchive);
+
+namespace protoc
+{
+namespace transenc
+{
+
+inline basic_oarchive::basic_oarchive(transenc::encoder& enc)
+    : protoc::basic_oarchive(enc), // FIXME: Do not pass encoder to base
+      enc(enc)
+{
+}
+
+inline void basic_oarchive::save_record_begin()
+{
+    enc.put_record_begin();
+}
+
+inline void basic_oarchive::save_record_end()
+{
+    enc.put_record_end();
+}
+
+inline void basic_oarchive::save_array_begin()
+{
+    enc.put_array_begin();
+}
+
+inline void basic_oarchive::save_array_begin(std::size_t size)
+{
+    enc.put_array_begin(size);
+}
+
+inline void basic_oarchive::save_array_end()
+{
+    enc.put_array_end();
+}
+
+inline void basic_oarchive::save_map_begin()
+{
+    enc.put_map_begin();
+}
+
+inline void basic_oarchive::save_map_begin(std::size_t size)
+{
+    enc.put_map_begin(size);
+}
+
+inline void basic_oarchive::save_map_end()
+{
+    enc.put_map_end();
+}
+
+} // namespace transenc
+} // namespace protoc
 
 #endif /* PROTOC_TRANSENC_OARCHIVE_HPP */
