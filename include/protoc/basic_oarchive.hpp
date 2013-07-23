@@ -51,8 +51,8 @@ public:
     virtual void save_map_begin(std::size_t) = 0;
     virtual void save_map_end() = 0;
 
-    template<typename value_type>
-    void save_override(const value_type& data, long /*version*/)
+    template<typename T>
+    void save_override(const T& data, long /*version*/)
     {
         boost::archive::save(*this->This(), data);
     }
