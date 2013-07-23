@@ -38,11 +38,11 @@ namespace protoc
 namespace transenc
 {
 
-class basic_oarchive
+class oarchive
     : public protoc::basic_oarchive
 {
 public:
-    basic_oarchive(transenc::encoder&);
+    oarchive(transenc::encoder&);
 
     virtual void save();
     virtual void save(bool);
@@ -73,7 +73,7 @@ protected:
 class stream_oarchive
     : private boost::base_from_member< protoc::output_stream<protoc::uint8_t> >,
       private boost::base_from_member<transenc::encoder>,
-      public basic_oarchive
+      public oarchive
 {
     typedef protoc::output_stream<protoc::uint8_t> member1_type;
     typedef transenc::encoder member2_type;
@@ -84,14 +84,14 @@ public:
     stream_oarchive(std::ostream& stream)
         : base_member1_type(member1_type(stream)),
           base_member2_type(boost::ref(base_member1_type::member)),
-          basic_oarchive(base_member2_type::member)
+          oarchive(base_member2_type::member)
     {}
 };
 
 } // namespace transenc
 } // namespace protoc
 
-BOOST_SERIALIZATION_REGISTER_ARCHIVE(protoc::transenc::basic_oarchive);
+BOOST_SERIALIZATION_REGISTER_ARCHIVE(protoc::transenc::oarchive);
 BOOST_SERIALIZATION_REGISTER_ARCHIVE(protoc::transenc::stream_oarchive);
 
 namespace protoc
@@ -99,93 +99,93 @@ namespace protoc
 namespace transenc
 {
 
-inline basic_oarchive::basic_oarchive(transenc::encoder& encoder)
+inline oarchive::oarchive(transenc::encoder& encoder)
     : protoc::basic_oarchive(),
       encoder(encoder)
 {
 }
 
-inline void basic_oarchive::save()
+inline void oarchive::save()
 {
     encoder.put();
 }
 
-inline void basic_oarchive::save(bool value)
+inline void oarchive::save(bool value)
 {
     encoder.put(value);
 }
 
-inline void basic_oarchive::save(int value)
+inline void oarchive::save(int value)
 {
     encoder.put(value);
 }
 
-inline void basic_oarchive::save(long long value)
+inline void oarchive::save(long long value)
 {
     encoder.put(value);
 }
 
-inline void basic_oarchive::save(float value)
+inline void oarchive::save(float value)
 {
     encoder.put(value);
 }
 
-inline void basic_oarchive::save(double value)
+inline void oarchive::save(double value)
 {
     encoder.put(value);
 }
 
-inline void basic_oarchive::save(const char *value)
+inline void oarchive::save(const char *value)
 {
     encoder.put(value);
 }
 
-inline void basic_oarchive::save(const std::string& value)
+inline void oarchive::save(const std::string& value)
 {
     encoder.put(value);
 }
 
-inline void basic_oarchive::save_binary(const char *data, std::size_t size)
+inline void oarchive::save_binary(const char *data, std::size_t size)
 {
     encoder.put(data, size);
 }
 
-inline void basic_oarchive::save_record_begin()
+inline void oarchive::save_record_begin()
 {
     encoder.put_record_begin();
 }
 
-inline void basic_oarchive::save_record_end()
+inline void oarchive::save_record_end()
 {
     encoder.put_record_end();
 }
 
-inline void basic_oarchive::save_array_begin()
+inline void oarchive::save_array_begin()
 {
     encoder.put_array_begin();
 }
 
-inline void basic_oarchive::save_array_begin(std::size_t size)
+inline void oarchive::save_array_begin(std::size_t size)
 {
     encoder.put_array_begin(size);
 }
 
-inline void basic_oarchive::save_array_end()
+inline void oarchive::save_array_end()
 {
     encoder.put_array_end();
 }
 
-inline void basic_oarchive::save_map_begin()
+inline void oarchive::save_map_begin()
 {
     encoder.put_map_begin();
 }
 
-inline void basic_oarchive::save_map_begin(std::size_t size)
+inline void oarchive::save_map_begin(std::size_t size)
 {
     encoder.put_map_begin(size);
 }
 
-inline void basic_oarchive::save_map_end()
+inline void oarchive::save_map_end()
 {
     encoder.put_map_end();
 }
