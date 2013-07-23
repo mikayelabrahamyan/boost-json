@@ -20,10 +20,12 @@
 #include <sstream>
 #include <protoc/exceptions.hpp>
 #include <protoc/transenc/oarchive.hpp>
+#include <protoc/string.hpp>
 #include <protoc/vector.hpp>
 #include <protoc/set.hpp>
 #include <protoc/map.hpp>
 #include <protoc/optional.hpp>
+#include <protoc/nvp.hpp>
 
 using namespace protoc;
 

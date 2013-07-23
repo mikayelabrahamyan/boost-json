@@ -19,7 +19,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 #include <cstdlib> // std::size_t
-#include <boost/serialization/nvp.hpp>
 #include <boost/archive/detail/common_oarchive.hpp>
 #include <protoc/encoder_base.hpp>
 
@@ -52,18 +51,14 @@ public:
     virtual void save_map_begin(std::size_t) = 0;
     virtual void save_map_end() = 0;
 
-    void save_override(const char *, int);
-    void save_override(const std::string&, int);
-
     template<typename value_type>
     void save_override(const value_type& data, long version)
     {
         boost::archive::save(*this->This(), data);
     }
 
-    // boost::serialization::nvp
-    template<typename value_type>
-    void save_override(const boost::serialization::nvp<value_type>& data, int);
+    // String literal
+    void save_override(const char *, int);
 
     // Ignore these
     void save_override(const boost::archive::version_type, int) {}
@@ -96,21 +91,9 @@ inline basic_oarchive::~basic_oarchive()
 {
 }
 
-inline void basic_oarchive::save_override(const char *value, int)
+inline void basic_oarchive::save_override(const char *data, int)
 {
-    encoder.put(value);
-}
-
-inline void basic_oarchive::save_override(const std::string& value, int)
-{
-    encoder.put(value);
-}
-
-// boost::serialization::nvp
-template<typename value_type>
-void basic_oarchive::save_override(const boost::serialization::nvp<value_type>& data, int)
-{
-    *this << data.value();
+    save(data);
 }
 
 inline void basic_oarchive::save_binary(void *data, std::size_t size)
