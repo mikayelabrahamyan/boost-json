@@ -23,6 +23,7 @@
 #include <protoc/vector.hpp>
 #include <protoc/set.hpp>
 #include <protoc/map.hpp>
+#include <protoc/optional.hpp>
 
 using namespace protoc;
 

@@ -19,7 +19,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 #include <cstdlib> // std::size_t
-#include <boost/optional.hpp>
 #include <boost/serialization/nvp.hpp>
 #include <boost/archive/detail/common_oarchive.hpp>
 #include <protoc/encoder_base.hpp>
@@ -35,6 +34,15 @@ public:
     basic_oarchive(encoder_base& encoder);
     ~basic_oarchive();
 
+    virtual void save() = 0; // Null
+    virtual void save(bool) = 0;
+    virtual void save(int) = 0;
+    virtual void save(long long) = 0;
+    virtual void save(float) = 0;
+    virtual void save(double) = 0;
+    virtual void save(const char *) = 0;
+    virtual void save(const std::string&) = 0;
+
     virtual void save_record_begin() = 0;
     virtual void save_record_end() = 0;
     virtual void save_array_begin() = 0;
@@ -44,12 +52,6 @@ public:
     virtual void save_map_begin(std::size_t) = 0;
     virtual void save_map_end() = 0;
 
-    // The const variants are needed when used in containers
-    void save_override(bool, int);
-    void save_override(int, int);
-    void save_override(long long, int);
-    void save_override(float, int);
-    void save_override(double, int);
     void save_override(const char *, int);
     void save_override(const std::string&, int);
 
@@ -58,12 +60,6 @@ public:
     {
         boost::archive::save(*this->This(), data);
     }
-
-    // boost::optional
-    template<typename value_type>
-    void save_override(const boost::optional<value_type>& data, int);
-    template<typename value_type>
-    void save_override(boost::optional<value_type>& data, int version);
 
     // boost::serialization::nvp
     template<typename value_type>
@@ -100,31 +96,6 @@ inline basic_oarchive::~basic_oarchive()
 {
 }
 
-inline void basic_oarchive::save_override(bool value, int)
-{
-    encoder.put(value);
-}
-
-inline void basic_oarchive::save_override(int value, int)
-{
-    encoder.put(value);
-}
-
-inline void basic_oarchive::save_override(long long value, int)
-{
-    encoder.put(value);
-}
-
-inline void basic_oarchive::save_override(float value, int)
-{
-    encoder.put(value);
-}
-
-inline void basic_oarchive::save_override(double value, int)
-{
-    encoder.put(value);
-}
-
 inline void basic_oarchive::save_override(const char *value, int)
 {
     encoder.put(value);
@@ -133,26 +104,6 @@ inline void basic_oarchive::save_override(const char *value, int)
 inline void basic_oarchive::save_override(const std::string& value, int)
 {
     encoder.put(value);
-}
-
-// boost::optional
-template<typename value_type>
-void basic_oarchive::save_override(const boost::optional<value_type>& data, int)
-{
-    if (data)
-    {
-        *this << *data;
-    }
-    else
-    {
-        encoder.put();
-    }
-}
-
-template<typename value_type>
-void basic_oarchive::save_override(boost::optional<value_type>& data, int version)
-{
-    this->save_override(const_cast<const boost::optional<value_type>&>(data), version);
 }
 
 // boost::serialization::nvp

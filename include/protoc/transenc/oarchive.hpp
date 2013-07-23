@@ -19,21 +19,14 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 #include <string>
-#include <vector>
-#include <map>
-#include <set>
-#include <utility> // std::pair
 #include <limits>
 #include <ostream>
 #include <istream>
 #include <boost/optional.hpp>
 #include <boost/ref.hpp>
 #include <boost/serialization/nvp.hpp>
-// #include <boost/serialization/vector.hpp>
 #include <boost/archive/detail/common_oarchive.hpp>
 #include <boost/archive/detail/register_archive.hpp>
-#include <boost/utility/enable_if.hpp>
-#include <boost/type_traits/is_enum.hpp>
 #include <boost/utility/base_from_member.hpp>
 #include <protoc/types.hpp>
 #include <protoc/output_stream.hpp>
@@ -52,6 +45,15 @@ class basic_oarchive
 {
 public:
     basic_oarchive(transenc::encoder&);
+
+    virtual void save();
+    virtual void save(bool);
+    virtual void save(int);
+    virtual void save(long long);
+    virtual void save(float);
+    virtual void save(double);
+    virtual void save(const char *);
+    virtual void save(const std::string&);
 
     virtual void save_record_begin();
     virtual void save_record_end();
@@ -102,6 +104,46 @@ inline basic_oarchive::basic_oarchive(transenc::encoder& enc)
     : protoc::basic_oarchive(enc), // FIXME: Do not pass encoder to base
       enc(enc)
 {
+}
+
+inline void basic_oarchive::save()
+{
+    enc.put();
+}
+
+inline void basic_oarchive::save(bool value)
+{
+    enc.put(value);
+}
+
+inline void basic_oarchive::save(int value)
+{
+    enc.put(value);
+}
+
+inline void basic_oarchive::save(long long value)
+{
+    enc.put(value);
+}
+
+inline void basic_oarchive::save(float value)
+{
+    enc.put(value);
+}
+
+inline void basic_oarchive::save(double value)
+{
+    enc.put(value);
+}
+
+inline void basic_oarchive::save(const char *value)
+{
+    enc.put(value);
+}
+
+inline void basic_oarchive::save(const std::string& value)
+{
+    enc.put(value);
 }
 
 inline void basic_oarchive::save_record_begin()
