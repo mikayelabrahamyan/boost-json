@@ -38,8 +38,6 @@ namespace protoc
 namespace transenc
 {
 
-// FIXME: Change to use basic_oarchive (with base_from_member for transenc::encoder?)
-
 class basic_oarchive
     : public protoc::basic_oarchive
 {
@@ -54,6 +52,7 @@ public:
     virtual void save(double);
     virtual void save(const char *);
     virtual void save(const std::string&);
+    virtual void save_binary(const char *, std::size_t);
 
     virtual void save_record_begin();
     virtual void save_record_end();
@@ -65,7 +64,7 @@ public:
     virtual void save_map_end();
 
 protected:
-    transenc::encoder& enc;
+    transenc::encoder& encoder;
 };
 
 // base_from_member is needed because we want to add a member that must be
@@ -100,90 +99,95 @@ namespace protoc
 namespace transenc
 {
 
-inline basic_oarchive::basic_oarchive(transenc::encoder& enc)
-    : protoc::basic_oarchive(enc), // FIXME: Do not pass encoder to base
-      enc(enc)
+inline basic_oarchive::basic_oarchive(transenc::encoder& encoder)
+    : protoc::basic_oarchive(),
+      encoder(encoder)
 {
 }
 
 inline void basic_oarchive::save()
 {
-    enc.put();
+    encoder.put();
 }
 
 inline void basic_oarchive::save(bool value)
 {
-    enc.put(value);
+    encoder.put(value);
 }
 
 inline void basic_oarchive::save(int value)
 {
-    enc.put(value);
+    encoder.put(value);
 }
 
 inline void basic_oarchive::save(long long value)
 {
-    enc.put(value);
+    encoder.put(value);
 }
 
 inline void basic_oarchive::save(float value)
 {
-    enc.put(value);
+    encoder.put(value);
 }
 
 inline void basic_oarchive::save(double value)
 {
-    enc.put(value);
+    encoder.put(value);
 }
 
 inline void basic_oarchive::save(const char *value)
 {
-    enc.put(value);
+    encoder.put(value);
 }
 
 inline void basic_oarchive::save(const std::string& value)
 {
-    enc.put(value);
+    encoder.put(value);
+}
+
+inline void basic_oarchive::save_binary(const char *data, std::size_t size)
+{
+    encoder.put(data, size);
 }
 
 inline void basic_oarchive::save_record_begin()
 {
-    enc.put_record_begin();
+    encoder.put_record_begin();
 }
 
 inline void basic_oarchive::save_record_end()
 {
-    enc.put_record_end();
+    encoder.put_record_end();
 }
 
 inline void basic_oarchive::save_array_begin()
 {
-    enc.put_array_begin();
+    encoder.put_array_begin();
 }
 
 inline void basic_oarchive::save_array_begin(std::size_t size)
 {
-    enc.put_array_begin(size);
+    encoder.put_array_begin(size);
 }
 
 inline void basic_oarchive::save_array_end()
 {
-    enc.put_array_end();
+    encoder.put_array_end();
 }
 
 inline void basic_oarchive::save_map_begin()
 {
-    enc.put_map_begin();
+    encoder.put_map_begin();
 }
 
 inline void basic_oarchive::save_map_begin(std::size_t size)
 {
-    enc.put_map_begin(size);
+    encoder.put_map_begin(size);
 }
 
 inline void basic_oarchive::save_map_end()
 {
-    enc.put_map_end();
+    encoder.put_map_end();
 }
 
 } // namespace transenc

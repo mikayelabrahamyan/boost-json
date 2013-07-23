@@ -20,7 +20,6 @@
 
 #include <cstdlib> // std::size_t
 #include <boost/archive/detail/common_oarchive.hpp>
-#include <protoc/encoder_base.hpp>
 
 namespace protoc
 {
@@ -30,8 +29,8 @@ class basic_oarchive : public boost::archive::detail::common_oarchive<basic_oarc
     friend class boost::archive::save_access;
 
 public:
-    basic_oarchive(encoder_base& encoder);
-    ~basic_oarchive();
+    basic_oarchive() : boost::archive::detail::common_oarchive<basic_oarchive>() {}
+    ~basic_oarchive() {}
 
     virtual void save() = 0; // Null
     virtual void save(bool) = 0;
@@ -41,6 +40,8 @@ public:
     virtual void save(double) = 0;
     virtual void save(const char *) = 0;
     virtual void save(const std::string&) = 0;
+    virtual void save_binary(const char *, std::size_t) = 0;
+
 
     virtual void save_record_begin() = 0;
     virtual void save_record_end() = 0;
@@ -52,13 +53,16 @@ public:
     virtual void save_map_end() = 0;
 
     template<typename value_type>
-    void save_override(const value_type& data, long version)
+    void save_override(const value_type& data, long /*version*/)
     {
         boost::archive::save(*this->This(), data);
     }
 
     // String literal
-    void save_override(const char *, int);
+    void save_override(const char *data, int /*version*/)
+    {
+        save(data);
+    }
 
     // Ignore these
     void save_override(const boost::archive::version_type, int) {}
@@ -69,37 +73,7 @@ public:
     void save_override(const boost::archive::class_id_reference_type, int) {}
     void save_override(const boost::archive::tracking_type, int) {}
     void save_override(const boost::archive::class_name_type&, int) {}
-
-    void save_binary(void *, std::size_t);
-
-private:
-    encoder_base& encoder;
 };
-
-} // namespace protoc
-
-namespace protoc
-{
-
-inline basic_oarchive::basic_oarchive(encoder_base& encoder)
-    : boost::archive::detail::common_oarchive<basic_oarchive>(),
-      encoder(encoder)
-{
-}
-
-inline basic_oarchive::~basic_oarchive()
-{
-}
-
-inline void basic_oarchive::save_override(const char *data, int)
-{
-    save(data);
-}
-
-inline void basic_oarchive::save_binary(void *data, std::size_t size)
-{
-    encoder.put(data, size);
-}
 
 } // namespace protoc
 

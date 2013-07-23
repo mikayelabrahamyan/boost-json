@@ -50,7 +50,7 @@ public:
     virtual std::size_t put_map_end() = 0;
     // FIXME: put_separator(const char *) ?
 
-    virtual std::size_t put(void *, std::size_t) = 0;
+    virtual std::size_t put(const char *, std::size_t) = 0;
 };
 
 } // namespace protoc

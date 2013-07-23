@@ -276,7 +276,7 @@ std::size_t encoder::put(const std::string& value)
     return sizeof(output::value_type) + size + length;
 }
 
-std::size_t encoder::put(void *value, std::size_t length)
+std::size_t encoder::put(const char *value, std::size_t length)
 {
     std::size_t size = 0;
 
@@ -319,7 +319,7 @@ std::size_t encoder::put(void *value, std::size_t length)
 
     for (std::size_t i = 0; i < length; ++i)
     {
-        buffer.write(static_cast<char *>(value)[i]);
+        buffer.write(value[i]);
     }
 
     return sizeof(output::value_type) + size + length;
