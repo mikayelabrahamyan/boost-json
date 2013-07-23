@@ -18,6 +18,7 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
+#include <boost/utility/enable_if.hpp>
 #include <boost/serialization/split_free.hpp>
 
 namespace protoc { class basic_oarchive; }
@@ -35,8 +36,9 @@ struct serialize_functor
                       const T& data,
                       const unsigned int version)
     {
-        // FIXME: add record_begin/end for classes/structs for both load/save (see how in split_free)
+        ar.save_record_begin(); // basic_oarchive can only save
         data.serialize(ar, version);
+        ar.save_record_end();
     }
 };
 
@@ -56,6 +58,7 @@ struct save_functor
 template <typename T>
 struct load_functor
 {
+    // FIXME: This should specialize basic_iarchive, not basic_oarchive
     void operator () (protoc::basic_oarchive& ar,
                       const T& data,
                       const unsigned int)
