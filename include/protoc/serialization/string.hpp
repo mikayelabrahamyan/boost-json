@@ -1,5 +1,5 @@
-#ifndef PROTOC_SET_HPP
-#define PROTOC_SET_HPP
+#ifndef PROTOC_STRING_HPP
+#define PROTOC_STRING_HPP
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -18,9 +18,9 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-#include <set>
+#include <string>
 #include <boost/serialization/split_free.hpp>
-#include <protoc/serialization.hpp>
+#include <protoc/serialization/serialization.hpp>
 #include <protoc/basic_oarchive.hpp>
 
 namespace boost
@@ -28,29 +28,22 @@ namespace boost
 namespace serialization
 {
 
-template <typename Key, typename Compare, typename Allocator>
-struct save_functor< typename std::set<Key, Compare, Allocator> >
+template <typename CharT, typename Traits, typename Allocator>
+struct save_functor< typename std::basic_string<CharT, Traits, Allocator> >
 {
     void operator () (protoc::basic_oarchive& ar,
-                      const std::set<Key, Compare, Allocator>& data,
-                      const unsigned int version)
+                      const std::basic_string<CharT, Traits, Allocator>& data,
+                      const unsigned int)
     {
-        ar.save_array_begin();
-        for (typename std::set<Key, Compare, Allocator>::const_iterator it = data.begin();
-             it != data.end();
-             ++it)
-        {
-            ar.save_override(*it, version);
-        }
-        ar.save_array_end();
+        ar.save(data);
     }
 };
 
-template <typename Key, typename Compare, typename Allocator>
-struct serialize_functor< typename std::set<Key, Compare, Allocator> >
+template <typename CharT, typename Traits, typename Allocator>
+struct serialize_functor< typename std::basic_string<CharT, Traits, Allocator> >
 {
     void operator () (protoc::basic_oarchive& ar,
-                      const std::set<Key, Compare, Allocator>& data,
+                      const std::basic_string<CharT, Traits, Allocator>& data,
                       const unsigned int version)
     {
         split_free(ar, data, version);
@@ -60,4 +53,4 @@ struct serialize_functor< typename std::set<Key, Compare, Allocator> >
 } // namespace serialization
 } // namespace boost
 
-#endif // PROTOC_SET_HPP
+#endif // PROTOC_STRING_HPP

@@ -1,5 +1,5 @@
-#ifndef PROTOC_OPTIONAL_HPP
-#define PROTOC_OPTIONAL_HPP
+#ifndef PROTOC_MAP_HPP
+#define PROTOC_MAP_HPP
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -18,9 +18,10 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-#include <boost/optional.hpp>
+#include <map>
 #include <boost/serialization/split_free.hpp>
-#include <protoc/serialization.hpp>
+#include <protoc/serialization/serialization.hpp>
+#include <protoc/serialization/pair.hpp>
 #include <protoc/basic_oarchive.hpp>
 
 namespace boost
@@ -28,29 +29,29 @@ namespace boost
 namespace serialization
 {
 
-template <typename T>
-struct save_functor< typename boost::optional<T> >
+template <typename Key, typename T, typename Compare, typename Allocator>
+struct save_functor< typename std::map<Key, T, Compare, Allocator> >
 {
     void operator () (protoc::basic_oarchive& ar,
-                      const boost::optional<T>& data,
+                      const std::map<Key, T, Compare, Allocator>& data,
                       const unsigned int version)
     {
-        if (data)
+        ar.save_map_begin();
+        for (typename std::map<Key, T, Compare, Allocator>::const_iterator it = data.begin();
+             it != data.end();
+             ++it)
         {
-            ar.save_override(*data, version);
+            ar.save_override(*it, version);
         }
-        else
-        {
-            ar.save();
-        }
+        ar.save_map_end();
     }
 };
 
-template <typename T>
-struct serialize_functor< typename boost::optional<T> >
+template <typename Key, typename T, typename Compare, typename Allocator>
+struct serialize_functor< typename std::map<Key, T, Compare, Allocator> >
 {
     void operator () (protoc::basic_oarchive& ar,
-                      const boost::optional<T>& data,
+                      const std::map<Key, T, Compare, Allocator>& data,
                       const unsigned int version)
     {
         split_free(ar, data, version);
@@ -60,4 +61,4 @@ struct serialize_functor< typename boost::optional<T> >
 } // namespace serialization
 } // namespace boost
 
-#endif // PROTOC_OPTIONAL_HPP
+#endif // PROTOC_MAP_HPP

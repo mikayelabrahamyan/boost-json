@@ -1,5 +1,5 @@
-#ifndef PROTOC_MAP_HPP
-#define PROTOC_MAP_HPP
+#ifndef PROTOC_SET_HPP
+#define PROTOC_SET_HPP
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -18,40 +18,39 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-#include <map>
+#include <set>
 #include <boost/serialization/split_free.hpp>
-#include <protoc/serialization.hpp>
+#include <protoc/serialization/serialization.hpp>
 #include <protoc/basic_oarchive.hpp>
-#include <protoc/pair.hpp>
 
 namespace boost
 {
 namespace serialization
 {
 
-template <typename Key, typename T, typename Compare, typename Allocator>
-struct save_functor< typename std::map<Key, T, Compare, Allocator> >
+template <typename Key, typename Compare, typename Allocator>
+struct save_functor< typename std::set<Key, Compare, Allocator> >
 {
     void operator () (protoc::basic_oarchive& ar,
-                      const std::map<Key, T, Compare, Allocator>& data,
+                      const std::set<Key, Compare, Allocator>& data,
                       const unsigned int version)
     {
-        ar.save_map_begin();
-        for (typename std::map<Key, T, Compare, Allocator>::const_iterator it = data.begin();
+        ar.save_array_begin();
+        for (typename std::set<Key, Compare, Allocator>::const_iterator it = data.begin();
              it != data.end();
              ++it)
         {
             ar.save_override(*it, version);
         }
-        ar.save_map_end();
+        ar.save_array_end();
     }
 };
 
-template <typename Key, typename T, typename Compare, typename Allocator>
-struct serialize_functor< typename std::map<Key, T, Compare, Allocator> >
+template <typename Key, typename Compare, typename Allocator>
+struct serialize_functor< typename std::set<Key, Compare, Allocator> >
 {
     void operator () (protoc::basic_oarchive& ar,
-                      const std::map<Key, T, Compare, Allocator>& data,
+                      const std::set<Key, Compare, Allocator>& data,
                       const unsigned int version)
     {
         split_free(ar, data, version);
@@ -61,4 +60,4 @@ struct serialize_functor< typename std::map<Key, T, Compare, Allocator> >
 } // namespace serialization
 } // namespace boost
 
-#endif // PROTOC_MAP_HPP
+#endif // PROTOC_SET_HPP

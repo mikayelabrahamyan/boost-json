@@ -20,7 +20,7 @@
 
 #include <boost/serialization/nvp.hpp>
 #include <boost/serialization/split_free.hpp>
-#include <protoc/serialization.hpp>
+#include <protoc/serialization/serialization.hpp>
 #include <protoc/basic_oarchive.hpp>
 
 namespace boost

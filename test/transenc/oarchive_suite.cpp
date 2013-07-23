@@ -20,12 +20,12 @@
 #include <sstream>
 #include <protoc/exceptions.hpp>
 #include <protoc/transenc/oarchive.hpp>
-#include <protoc/string.hpp>
-#include <protoc/vector.hpp>
-#include <protoc/set.hpp>
-#include <protoc/map.hpp>
-#include <protoc/optional.hpp>
-#include <protoc/nvp.hpp>
+#include <protoc/serialization/string.hpp>
+#include <protoc/serialization/vector.hpp>
+#include <protoc/serialization/set.hpp>
+#include <protoc/serialization/map.hpp>
+#include <protoc/serialization/optional.hpp>
+#include <protoc/serialization/nvp.hpp>
 
 using namespace protoc;
 

@@ -1,5 +1,5 @@
-#ifndef PROTOC_PAIR_HPP
-#define PROTOC_PAIR_HPP
+#ifndef PROTOC_OPTIONAL_HPP
+#define PROTOC_OPTIONAL_HPP
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -18,9 +18,9 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-#include <utility>
+#include <boost/optional.hpp>
 #include <boost/serialization/split_free.hpp>
-#include <protoc/serialization.hpp>
+#include <protoc/serialization/serialization.hpp>
 #include <protoc/basic_oarchive.hpp>
 
 namespace boost
@@ -28,25 +28,29 @@ namespace boost
 namespace serialization
 {
 
-template <typename T1, typename T2>
-struct save_functor< typename std::pair<T1, T2> >
+template <typename T>
+struct save_functor< typename boost::optional<T> >
 {
     void operator () (protoc::basic_oarchive& ar,
-                      const std::pair<T1, T2>& data,
+                      const boost::optional<T>& data,
                       const unsigned int version)
     {
-        ar.save_record_begin();
-        ar << data.first;
-        ar << data.second;
-        ar.save_record_end();
+        if (data)
+        {
+            ar.save_override(*data, version);
+        }
+        else
+        {
+            ar.save();
+        }
     }
 };
 
-template <typename T1, typename T2>
-struct serialize_functor< typename std::pair<T1, T2> >
+template <typename T>
+struct serialize_functor< typename boost::optional<T> >
 {
     void operator () (protoc::basic_oarchive& ar,
-                      const std::pair<T1, T2>& data,
+                      const boost::optional<T>& data,
                       const unsigned int version)
     {
         split_free(ar, data, version);
@@ -56,4 +60,4 @@ struct serialize_functor< typename std::pair<T1, T2> >
 } // namespace serialization
 } // namespace boost
 
-#endif // PROTOC_PAIR_HPP
+#endif // PROTOC_OPTIONAL_HPP

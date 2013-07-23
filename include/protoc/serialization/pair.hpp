@@ -1,5 +1,5 @@
-#ifndef PROTOC_STRING_HPP
-#define PROTOC_STRING_HPP
+#ifndef PROTOC_PAIR_HPP
+#define PROTOC_PAIR_HPP
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -18,9 +18,9 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-#include <string>
+#include <utility> // std::pair
 #include <boost/serialization/split_free.hpp>
-#include <protoc/serialization.hpp>
+#include <protoc/serialization/serialization.hpp>
 #include <protoc/basic_oarchive.hpp>
 
 namespace boost
@@ -28,22 +28,25 @@ namespace boost
 namespace serialization
 {
 
-template <typename CharT, typename Traits, typename Allocator>
-struct save_functor< typename std::basic_string<CharT, Traits, Allocator> >
+template <typename T1, typename T2>
+struct save_functor< typename std::pair<T1, T2> >
 {
     void operator () (protoc::basic_oarchive& ar,
-                      const std::basic_string<CharT, Traits, Allocator>& data,
-                      const unsigned int)
+                      const std::pair<T1, T2>& data,
+                      const unsigned int version)
     {
-        ar.save(data);
+        ar.save_record_begin();
+        ar << data.first;
+        ar << data.second;
+        ar.save_record_end();
     }
 };
 
-template <typename CharT, typename Traits, typename Allocator>
-struct serialize_functor< typename std::basic_string<CharT, Traits, Allocator> >
+template <typename T1, typename T2>
+struct serialize_functor< typename std::pair<T1, T2> >
 {
     void operator () (protoc::basic_oarchive& ar,
-                      const std::basic_string<CharT, Traits, Allocator>& data,
+                      const std::pair<T1, T2>& data,
                       const unsigned int version)
     {
         split_free(ar, data, version);
@@ -53,4 +56,4 @@ struct serialize_functor< typename std::basic_string<CharT, Traits, Allocator> >
 } // namespace serialization
 } // namespace boost
 
-#endif // PROTOC_STRING_HPP
+#endif // PROTOC_PAIR_HPP
