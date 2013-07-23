@@ -29,8 +29,7 @@ class basic_oarchive : public boost::archive::detail::common_oarchive<basic_oarc
     friend class boost::archive::save_access;
 
 public:
-    basic_oarchive() : boost::archive::detail::common_oarchive<basic_oarchive>() {}
-    ~basic_oarchive() {}
+    virtual ~basic_oarchive() {}
 
     virtual void save() = 0; // Null
     virtual void save(bool) = 0;
