@@ -535,7 +535,7 @@ struct person
     }
 
     std::string name;
-    protoc::int16_t age;
+    int age;
 };
 
 BOOST_AUTO_TEST_CASE(test_struct_person)

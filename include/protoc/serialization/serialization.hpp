@@ -30,26 +30,6 @@ namespace serialization
 {
 
 template <typename T>
-struct serialize_functor
-{
-    void operator () (protoc::basic_iarchive& ar,
-                      T& data,
-                      const unsigned int version)
-    {
-        // FIXME
-    }
-
-    void operator () (protoc::basic_oarchive& ar,
-                      const T& data,
-                      const unsigned int version)
-    {
-        ar.save_record_begin(); // basic_oarchive can only save
-        data.serialize(ar, version);
-        ar.save_record_end();
-    }
-};
-
-template <typename T>
 struct save_functor
 {
     void operator () (protoc::basic_oarchive& ar,
@@ -65,13 +45,35 @@ struct save_functor
 template <typename T>
 struct load_functor
 {
-    // FIXME: This should specialize basic_iarchive, not basic_oarchive
-    void operator () (protoc::basic_oarchive& ar,
+    void operator () (protoc::basic_iarchive& ar,
                       const T& data,
                       const unsigned int)
     {
-        // FIXME
-        assert(false);
+        ar.load_record_begin();
+        data.load(ar);
+        ar.load_record_end();
+    }
+};
+
+template <typename T>
+struct serialize_functor
+{
+    void operator () (protoc::basic_iarchive& ar,
+                      T& data,
+                      const unsigned int version)
+    {
+        ar.load_record_begin(); // basic_iarchive can only load
+        data.serialize(ar, version);
+        ar.load_record_end();
+    }
+
+    void operator () (protoc::basic_oarchive& ar,
+                      const T& data,
+                      const unsigned int version)
+    {
+        ar.save_record_begin(); // basic_oarchive can only save
+        data.serialize(ar, version);
+        ar.save_record_end();
     }
 };
 
@@ -88,14 +90,6 @@ inline void save(protoc::basic_oarchive& ar,
                  const unsigned int version)
 {
     save_functor<value_type>()(ar, data, version);
-}
-
-template <typename value_type>
-inline void load(protoc::basic_oarchive& ar,
-                 const value_type& data,
-                 const unsigned int version)
-{
-    load_functor<value_type>()(ar, data, version);
 }
 
 template <typename value_type>
@@ -117,14 +111,6 @@ inline void serialize(protoc::basic_oarchive& ar,
 //-----------------------------------------------------------------------------
 // basic_iarchive
 //-----------------------------------------------------------------------------
-
-template <typename value_type>
-inline void save(protoc::basic_iarchive& ar,
-                 const value_type& data,
-                 const unsigned int version)
-{
-    save_functor<value_type>()(ar, data, version);
-}
 
 template <typename value_type>
 inline void load(protoc::basic_iarchive& ar,
