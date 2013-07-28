@@ -40,9 +40,14 @@ public:
 
     virtual void load_record_begin() = 0;
     virtual void load_record_end() = 0;
+
     virtual boost::optional<std::size_t> load_array_begin() = 0;
     virtual void load_array_end() = 0;
-    virtual bool at_array_end() = 0;
+    virtual bool at_array_end() const = 0;
+
+    virtual boost::optional<std::size_t> load_map_begin() = 0;
+    virtual void load_map_end() = 0;
+    virtual bool at_map_end() const = 0;
 
     virtual bool load_null() = 0; // FIXME: Change to templated load_null_override() ?
 

@@ -54,7 +54,15 @@ struct load_functor< typename std::map<Key, T, Compare, Allocator> >
                       std::map<Key, T, Compare, Allocator>& data,
                       const unsigned int version)
     {
-        // FIXME
+        ar.load_map_begin();
+        while (!ar.at_map_end())
+        {
+            // We cannot use std::map<Key, T>::value_type because it has a const key
+            std::pair<Key, T> value;
+            ar.load_override(value, version);
+            data.insert(value);
+        }
+        ar.load_map_end();
     }
 };
 
