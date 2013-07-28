@@ -18,7 +18,7 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-#include <cstdlib> // std::size_t
+#include <cstddef> // std::size_t
 #include <boost/archive/detail/common_oarchive.hpp>
 
 namespace protoc

@@ -399,7 +399,7 @@ BOOST_AUTO_TEST_CASE(test_vector_mixed)
     transenc::iarchive in(input, input + sizeof(input));
     std::vector<bool> value;
     BOOST_REQUIRE_THROW(in >> value,
-                        unexpected_token);
+                        invalid_value);
 }
 
 BOOST_AUTO_TEST_CASE(test_vector_missing_end)
@@ -408,7 +408,7 @@ BOOST_AUTO_TEST_CASE(test_vector_missing_end)
     transenc::iarchive in(input, input + sizeof(input));
     std::vector<bool> value;
     BOOST_REQUIRE_THROW(in >> value,
-                        unexpected_token);
+                        invalid_value);
 }
 
 BOOST_AUTO_TEST_CASE(test_vector_missing_begin)

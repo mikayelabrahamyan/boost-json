@@ -42,7 +42,7 @@ public:
 
     virtual void load_record_begin();
     virtual void load_record_end();
-    virtual void load_array_begin();
+    virtual boost::optional<std::size_t> load_array_begin();
     virtual void load_array_end();
     virtual bool at_array_end();
 
@@ -117,9 +117,23 @@ inline void iarchive::load_record_end()
     reader.next(reader::token_record_end);
 }
 
-inline void iarchive::load_array_begin()
+inline boost::optional<std::size_t> iarchive::load_array_begin()
 {
+    boost::optional<std::size_t> result;
     reader.next(reader::token_array_begin);
+    switch (reader.type())
+    {
+    case reader::token_null:
+        reader.next();
+        break;
+    case reader::token_integer:
+        result = reader.get<int>();
+        reader.next();
+        break;
+    default:
+        break; // FIXME: throw exception?
+    }
+    return result;
 }
 
 inline void iarchive::load_array_end()

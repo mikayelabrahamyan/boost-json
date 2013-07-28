@@ -53,9 +53,12 @@ struct load_functor< typename std::vector<T, Allocator> >
                       std::vector<T, Allocator>& data,
                       const unsigned int version)
     {
-        // FIXME: Get optional<size> for collection size?
         // FIXME: Handle nested collections
-        ar.load_array_begin();
+        boost::optional<std::size_t> count = ar.load_array_begin();
+        if (count)
+        {
+            data.reserve(*count);
+        }
         while (!ar.at_array_end())
         {
             T value;

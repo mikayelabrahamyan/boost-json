@@ -18,6 +18,9 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
+#include <cstddef> // std::size_t
+#include <string>
+#include <boost/optional.hpp>
 #include <boost/archive/detail/common_iarchive.hpp>
 
 namespace protoc
@@ -37,7 +40,7 @@ public:
 
     virtual void load_record_begin() = 0;
     virtual void load_record_end() = 0;
-    virtual void load_array_begin() = 0;
+    virtual boost::optional<std::size_t> load_array_begin() = 0;
     virtual void load_array_end() = 0;
     virtual bool at_array_end() = 0;
 
