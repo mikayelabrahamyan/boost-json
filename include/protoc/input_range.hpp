@@ -63,6 +63,6 @@ protected:
 
 } // namespace protoc
 
-#include <protoc/details/input_range.ipp>
+#include <protoc/impl/input_range.ipp>
 
 #endif /* PROTOC_INPUT_RANGE_HPP */

@@ -1,5 +1,5 @@
-#ifndef PROTOC_DETAILS_INPUT_RANGE_IPP
-#define PROTOC_DETAILS_INPUT_RANGE_IPP
+#ifndef PROTOC_IMPL_INPUT_RANGE_IPP
+#define PROTOC_IMPL_INPUT_RANGE_IPP
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -118,4 +118,4 @@ typename input_range<Value>::size_type input_range<Value>::size() const
 } // namespace protoc
 
 
-#endif // PROTOC_DETAILS_INPUT_RANGE_IPP
+#endif // PROTOC_IMPL_INPUT_RANGE_IPP

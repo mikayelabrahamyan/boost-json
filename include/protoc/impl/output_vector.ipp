@@ -1,5 +1,5 @@
-#ifndef PROTOC_DETAILS_OUTPUT_VECTOR_IPP
-#define PROTOC_DETAILS_OUTPUT_VECTOR_IPP
+#ifndef PROTOC_IMPL_OUTPUT_VECTOR_IPP
+#define PROTOC_IMPL_OUTPUT_VECTOR_IPP
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -76,4 +76,4 @@ void output_vector<Value>::write(value_type value)
 
 } // namespace protoc
 
-#endif // PROTOC_DETAILS_OUTPUT_VECTOR_IPP
+#endif // PROTOC_IMPL_OUTPUT_VECTOR_IPP

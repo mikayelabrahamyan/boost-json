@@ -57,6 +57,6 @@ private:
 
 } // namespace protoc
 
-#include <protoc/details/output_vector.ipp>
+#include <protoc/impl/output_vector.ipp>
 
 #endif /* PROTOC_OUTPUT_VECTOR_HPP */
