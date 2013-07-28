@@ -19,6 +19,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 #include <boost/optional.hpp>
+#include <boost/none.hpp>
 #include <boost/serialization/split_free.hpp>
 #include <protoc/serialization/serialization.hpp>
 #include <protoc/basic_oarchive.hpp>
@@ -47,8 +48,35 @@ struct save_functor< typename boost::optional<T> >
 };
 
 template <typename T>
+struct load_functor< typename boost::optional<T> >
+{
+    void operator () (protoc::basic_iarchive& ar,
+                      boost::optional<T>& data,
+                      const unsigned int version)
+    {
+        if (ar.load_null())
+        {
+            data = boost::none;
+        }
+        else
+        {
+            T value; // FIXME: Replace with InPlaceFactory
+            ar.load_override(value, version);
+            data = value;
+        }
+    }
+};
+
+template <typename T>
 struct serialize_functor< typename boost::optional<T> >
 {
+    void operator () (protoc::basic_iarchive& ar,
+                      boost::optional<T>& data,
+                      const unsigned int version)
+    {
+        split_free(ar, data, version);
+    }
+
     void operator () (protoc::basic_oarchive& ar,
                       const boost::optional<T>& data,
                       const unsigned int version)

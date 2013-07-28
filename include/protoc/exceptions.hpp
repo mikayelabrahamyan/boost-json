@@ -34,6 +34,17 @@ public:
     {}
 };
 
+class invalid_value : public std::runtime_error
+{
+public:
+    explicit invalid_value(const std::string& message)
+        : std::runtime_error(message)
+    {}
+
+    ~invalid_value() throw()
+    {}
+};
+
 }
 
 #endif // PROTOC_EXCEPTIONS_HPP

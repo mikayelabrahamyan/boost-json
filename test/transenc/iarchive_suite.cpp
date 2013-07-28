@@ -19,8 +19,15 @@
 
 #include <sstream>
 #include <protoc/exceptions.hpp>
-#include <protoc/transenc/iarchive.hpp>
 #include <protoc/transenc/codes.hpp>
+#include <protoc/transenc/oarchive.hpp> // FIXME: Remove
+#include <protoc/transenc/iarchive.hpp>
+#include <protoc/serialization/string.hpp>
+#include <protoc/serialization/vector.hpp>
+#include <protoc/serialization/set.hpp>
+#include <protoc/serialization/map.hpp>
+#include <protoc/serialization/optional.hpp>
+#include <protoc/serialization/nvp.hpp>
 
 using namespace protoc;
 
@@ -54,135 +61,135 @@ BOOST_AUTO_TEST_CASE(test_bool_junk)
     transenc::iarchive in(input, input + sizeof(input));
     bool value = true;
     BOOST_REQUIRE_THROW(in >> value,
-                        unexpected_token);
+                        invalid_value);
 }
 
 //-----------------------------------------------------------------------------
 // Integers
 //-----------------------------------------------------------------------------
 
-BOOST_AUTO_TEST_CASE(test_int8_small_one)
+BOOST_AUTO_TEST_CASE(test_int_zero)
+{
+    const protoc::uint8_t input[] = { 0x00 };
+    transenc::iarchive in(input, input + sizeof(input));
+    int value = 99;
+    BOOST_REQUIRE_NO_THROW(in >> value);
+    BOOST_REQUIRE_EQUAL(value, 0);
+}
+
+BOOST_AUTO_TEST_CASE(test_int_one)
 {
     const protoc::uint8_t input[] = { 0x01 };
     transenc::iarchive in(input, input + sizeof(input));
-    protoc::int8_t value = 99;
+    int value = 99;
     BOOST_REQUIRE_NO_THROW(in >> value);
     BOOST_REQUIRE_EQUAL(value, 1);
 }
 
-BOOST_AUTO_TEST_CASE(test_int8_one)
+BOOST_AUTO_TEST_CASE(test_int_minus_one)
+{
+    const protoc::uint8_t input[] = { '\xFF' };
+    transenc::iarchive in(input, input + sizeof(input));
+    int value = 99;
+    BOOST_REQUIRE_NO_THROW(in >> value);
+    BOOST_REQUIRE_EQUAL(value, -1);
+}
+
+BOOST_AUTO_TEST_CASE(test_int_one_int8)
 {
     const protoc::uint8_t input[] = { transenc::code_int8, 0x01 };
     transenc::iarchive in(input, input + sizeof(input));
-    protoc::int8_t value = 99;
+    int value = 99;
     BOOST_REQUIRE_NO_THROW(in >> value);
     BOOST_REQUIRE_EQUAL(value, 1);
 }
 
-BOOST_AUTO_TEST_CASE(test_int16_one)
+BOOST_AUTO_TEST_CASE(test_int_minus_one_int8)
+{
+    const protoc::uint8_t input[] = { transenc::code_int8, '\xFF' };
+    transenc::iarchive in(input, input + sizeof(input));
+    int value = 99;
+    BOOST_REQUIRE_NO_THROW(in >> value);
+    BOOST_REQUIRE_EQUAL(value, -1);
+}
+
+BOOST_AUTO_TEST_CASE(test_int_one_int16)
 {
     const protoc::uint8_t input[] = { transenc::code_int16, 0x01, 0x00 };
     transenc::iarchive in(input, input + sizeof(input));
-    protoc::int16_t value = 99;
+    int value = 99;
     BOOST_REQUIRE_NO_THROW(in >> value);
     BOOST_REQUIRE_EQUAL(value, 1);
 }
 
-BOOST_AUTO_TEST_CASE(test_int16_one_int8_small)
+BOOST_AUTO_TEST_CASE(test_int_minus_one_int16)
 {
-    const protoc::uint8_t input[] = { 0x01 };
+    const protoc::uint8_t input[] = { transenc::code_int16, '\xFF', '\xFF' };
     transenc::iarchive in(input, input + sizeof(input));
-    protoc::int16_t value = 99;
+    int value = 99;
     BOOST_REQUIRE_NO_THROW(in >> value);
-    BOOST_REQUIRE_EQUAL(value, 1);
+    BOOST_REQUIRE_EQUAL(value, -1);
 }
 
-BOOST_AUTO_TEST_CASE(test_int16_one_int8)
-{
-    const protoc::uint8_t input[] = { transenc::code_int8, 0x01 };
-    transenc::iarchive in(input, input + sizeof(input));
-    protoc::int16_t value = 99;
-    BOOST_REQUIRE_NO_THROW(in >> value);
-    BOOST_REQUIRE_EQUAL(value, 1);
-}
-
-BOOST_AUTO_TEST_CASE(test_int32_one)
+BOOST_AUTO_TEST_CASE(test_int_one_int32)
 {
     const protoc::uint8_t input[] = { transenc::code_int32, 0x01, 0x00, 0x00, 0x00 };
     transenc::iarchive in(input, input + sizeof(input));
-    protoc::int32_t value = 99;
+    int value = 99;
     BOOST_REQUIRE_NO_THROW(in >> value);
     BOOST_REQUIRE_EQUAL(value, 1);
 }
 
-BOOST_AUTO_TEST_CASE(test_int32_one_int16)
+BOOST_AUTO_TEST_CASE(test_int_minus_one_int32)
 {
-    const protoc::uint8_t input[] = { transenc::code_int16, 0x01, 0x00 };
+    const protoc::uint8_t input[] = { transenc::code_int32, '\xFF', '\xFF', '\xFF', '\xFF' };
     transenc::iarchive in(input, input + sizeof(input));
-    protoc::int32_t value = 99;
+    int value = 99;
     BOOST_REQUIRE_NO_THROW(in >> value);
-    BOOST_REQUIRE_EQUAL(value, 1);
+    BOOST_REQUIRE_EQUAL(value, -1);
 }
 
-BOOST_AUTO_TEST_CASE(test_int32_one_int8_small)
+BOOST_AUTO_TEST_CASE(test_longlong_one_int8_small)
 {
     const protoc::uint8_t input[] = { 0x01 };
     transenc::iarchive in(input, input + sizeof(input));
-    protoc::int32_t value = 99;
+    long long value = 99;
     BOOST_REQUIRE_NO_THROW(in >> value);
     BOOST_REQUIRE_EQUAL(value, 1);
 }
 
-BOOST_AUTO_TEST_CASE(test_int32_one_int8)
+BOOST_AUTO_TEST_CASE(test_longlong_one_int8)
 {
     const protoc::uint8_t input[] = { transenc::code_int8, 0x01 };
     transenc::iarchive in(input, input + sizeof(input));
-    protoc::int32_t value = 99;
+    long long value = 99;
     BOOST_REQUIRE_NO_THROW(in >> value);
     BOOST_REQUIRE_EQUAL(value, 1);
 }
 
-BOOST_AUTO_TEST_CASE(test_int64_one)
+BOOST_AUTO_TEST_CASE(test_longlong_one_int16)
+{
+    const protoc::uint8_t input[] = { transenc::code_int16, 0x01, 0x00 };
+    transenc::iarchive in(input, input + sizeof(input));
+    long long value = 99;
+    BOOST_REQUIRE_NO_THROW(in >> value);
+    BOOST_REQUIRE_EQUAL(value, 1);
+}
+
+BOOST_AUTO_TEST_CASE(test_longlong_one_int32)
+{
+    const protoc::uint8_t input[] = { transenc::code_int32, 0x01, 0x00, 0x00, 0x00 };
+    transenc::iarchive in(input, input + sizeof(input));
+    long long value = 99;
+    BOOST_REQUIRE_NO_THROW(in >> value);
+    BOOST_REQUIRE_EQUAL(value, 1);
+}
+
+BOOST_AUTO_TEST_CASE(test_longlong_one_int64)
 {
     const protoc::uint8_t input[] = { transenc::code_int64, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
     transenc::iarchive in(input, input + sizeof(input));
-    protoc::int64_t value = 99;
-    BOOST_REQUIRE_NO_THROW(in >> value);
-    BOOST_REQUIRE_EQUAL(value, 1);
-}
-
-BOOST_AUTO_TEST_CASE(test_int64_one_int32)
-{
-    const protoc::uint8_t input[] = { transenc::code_int32, 0x01, 0x00, 0x00, 0x00 };
-    transenc::iarchive in(input, input + sizeof(input));
-    protoc::int64_t value = 99;
-    BOOST_REQUIRE_NO_THROW(in >> value);
-    BOOST_REQUIRE_EQUAL(value, 1);
-}
-
-BOOST_AUTO_TEST_CASE(test_int64_one_int16)
-{
-    const protoc::uint8_t input[] = { transenc::code_int16, 0x01, 0x00 };
-    transenc::iarchive in(input, input + sizeof(input));
-    protoc::int64_t value = 99;
-    BOOST_REQUIRE_NO_THROW(in >> value);
-    BOOST_REQUIRE_EQUAL(value, 1);
-}
-
-BOOST_AUTO_TEST_CASE(test_int64_one_int8_small)
-{
-    const protoc::uint8_t input[] = { 0x01 };
-    transenc::iarchive in(input, input + sizeof(input));
-    protoc::int64_t value = 99;
-    BOOST_REQUIRE_NO_THROW(in >> value);
-    BOOST_REQUIRE_EQUAL(value, 1);
-}
-
-BOOST_AUTO_TEST_CASE(test_int64_one_int8)
-{
-    const protoc::uint8_t input[] = { transenc::code_int8, 0x01 };
-    transenc::iarchive in(input, input + sizeof(input));
-    protoc::int64_t value = 99;
+    long long value = 99;
     BOOST_REQUIRE_NO_THROW(in >> value);
     BOOST_REQUIRE_EQUAL(value, 1);
 }
@@ -248,7 +255,7 @@ BOOST_AUTO_TEST_CASE(test_pair)
 {
     const protoc::uint8_t input[] = { transenc::code_record_begin, transenc::code_string_int8, 0x01, 'A', transenc::code_true, transenc::code_record_end };
     transenc::iarchive in(input, input + sizeof(input));
-    std::pair<std::string, bool> value;
+    std::pair<std::string, bool> value("replace", false);
     BOOST_REQUIRE_NO_THROW(in >> value);
     BOOST_REQUIRE_EQUAL(value.first, "A");
     BOOST_REQUIRE_EQUAL(value.second, true);
@@ -260,7 +267,7 @@ BOOST_AUTO_TEST_CASE(test_pair_too_short)
     transenc::iarchive in(input, input + sizeof(input));
     std::pair<std::string, bool> value;
     BOOST_REQUIRE_THROW(in >> value,
-                        unexpected_token);
+                        invalid_value);
 }
 
 BOOST_AUTO_TEST_CASE(test_pair_too_long)
@@ -287,7 +294,7 @@ BOOST_AUTO_TEST_CASE(test_pair_missing_end_2)
     transenc::iarchive in(input, input + sizeof(input));
     std::pair<std::string, bool> value;
     BOOST_REQUIRE_THROW(in >> value,
-                        unexpected_token);
+                        invalid_value);
 }
 
 BOOST_AUTO_TEST_CASE(test_pair_missing_end_3)
@@ -296,7 +303,7 @@ BOOST_AUTO_TEST_CASE(test_pair_missing_end_3)
     transenc::iarchive in(input, input + sizeof(input));
     std::pair<std::string, bool> value;
     BOOST_REQUIRE_THROW(in >> value,
-                        unexpected_token);
+                        invalid_value);
 }
 
 BOOST_AUTO_TEST_CASE(test_pair_missing_begin)
@@ -349,7 +356,7 @@ BOOST_AUTO_TEST_CASE(test_optional_wrong_type)
     transenc::iarchive in(input, input + sizeof(input));
     boost::optional<std::string> value;
     BOOST_REQUIRE_THROW(in >> value,
-                        unexpected_token);
+                        invalid_value);
 }
 
 //-----------------------------------------------------------------------------

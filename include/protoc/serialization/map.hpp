@@ -48,8 +48,26 @@ struct save_functor< typename std::map<Key, T, Compare, Allocator> >
 };
 
 template <typename Key, typename T, typename Compare, typename Allocator>
+struct load_functor< typename std::map<Key, T, Compare, Allocator> >
+{
+    void operator () (protoc::basic_iarchive& ar,
+                      std::map<Key, T, Compare, Allocator>& data,
+                      const unsigned int version)
+    {
+        // FIXME
+    }
+};
+
+template <typename Key, typename T, typename Compare, typename Allocator>
 struct serialize_functor< typename std::map<Key, T, Compare, Allocator> >
 {
+    void operator () (protoc::basic_iarchive& ar,
+                      std::map<Key, T, Compare, Allocator>& data,
+                      const unsigned int version)
+    {
+        split_free(ar, data, version);
+    }
+
     void operator () (protoc::basic_oarchive& ar,
                       const std::map<Key, T, Compare, Allocator>& data,
                       const unsigned int version)

@@ -21,6 +21,7 @@
 #include <string>
 #include <boost/serialization/split_free.hpp>
 #include <protoc/serialization/serialization.hpp>
+#include <protoc/basic_iarchive.hpp>
 #include <protoc/basic_oarchive.hpp>
 
 namespace boost
@@ -40,8 +41,26 @@ struct save_functor< typename std::basic_string<CharT, Traits, Allocator> >
 };
 
 template <typename CharT, typename Traits, typename Allocator>
+struct load_functor< typename std::basic_string<CharT, Traits, Allocator> >
+{
+    void operator () (protoc::basic_iarchive& ar,
+                      std::basic_string<CharT, Traits, Allocator>& data,
+                      const unsigned int)
+    {
+        ar.load(data);
+    }
+};
+
+template <typename CharT, typename Traits, typename Allocator>
 struct serialize_functor< typename std::basic_string<CharT, Traits, Allocator> >
 {
+    void operator () (protoc::basic_iarchive& ar,
+                      std::basic_string<CharT, Traits, Allocator>& data,
+                      const unsigned int version)
+    {
+        split_free(ar, data, version);
+    }
+
     void operator () (protoc::basic_oarchive& ar,
                       const std::basic_string<CharT, Traits, Allocator>& data,
                       const unsigned int version)

@@ -43,8 +43,29 @@ struct save_functor< typename std::pair<T1, T2> >
 };
 
 template <typename T1, typename T2>
+struct load_functor< typename std::pair<T1, T2> >
+{
+    void operator () (protoc::basic_iarchive& ar,
+                      std::pair<T1, T2>& data,
+                      const unsigned int version)
+    {
+        ar.load_record_begin();
+        ar >> data.first;
+        ar >> data.second;
+        ar.load_record_end();
+    }
+};
+
+template <typename T1, typename T2>
 struct serialize_functor< typename std::pair<T1, T2> >
 {
+    void operator () (protoc::basic_iarchive& ar,
+                      std::pair<T1, T2>& data,
+                      const unsigned int version)
+    {
+        split_free(ar, data, version);
+    }
+
     void operator () (protoc::basic_oarchive& ar,
                       const std::pair<T1, T2>& data,
                       const unsigned int version)

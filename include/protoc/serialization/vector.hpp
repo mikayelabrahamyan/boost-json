@@ -1,5 +1,5 @@
-#ifndef PROTOC_VECTOR_HPP
-#define PROTOC_VECTOR_HPP
+#ifndef PROTOC_SERIALIZATION_VECTOR_HPP
+#define PROTOC_SERIALIZATION_VECTOR_HPP
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -19,7 +19,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 #include <vector>
-#include <boost/type_traits/remove_const.hpp>
 #include <boost/serialization/split_free.hpp>
 #include <protoc/serialization/serialization.hpp>
 #include <protoc/basic_oarchive.hpp>
@@ -47,7 +46,28 @@ struct save_functor< typename std::vector<T, Allocator> >
     }
 };
 
+template <typename T, typename Allocator>
+struct load_functor< typename std::vector<T, Allocator> >
+{
+    void operator () (protoc::basic_iarchive& ar,
+                      std::vector<T, Allocator>& data,
+                      const unsigned int version)
+    {
+        // FIXME: Get optional<size> for collection size?
+        // FIXME: Handle nested collections
+        ar.load_array_begin();
+        while (!ar.at_array_end())
+        {
+            T value;
+            ar.load_override(value, version);
+            data.push_back(value);
+        }
+        ar.load_array_end();
+    }
+};
+
 // Specialization of std::vector<char> for binary data
+
 template <typename Allocator>
 struct save_functor< typename std::vector<char, Allocator> >
 {
@@ -55,17 +75,31 @@ struct save_functor< typename std::vector<char, Allocator> >
                       const std::vector<char, Allocator>& data,
                       const unsigned int version)
     {
-        // archive::save_binary takes "void *" as the first argument, so we
-        // need to remove const.
-        typedef typename std::vector<char, Allocator>::pointer pointer;
-        ar.save_binary(const_cast<typename boost::remove_const<pointer>::type>(data.data()),
-                       data.size());
+        ar.save_binary(data.data(), data.size());
+    }
+};
+
+template <typename Allocator>
+struct load_functor< typename std::vector<char, Allocator> >
+{
+    void operator () (protoc::basic_iarchive& ar,
+                      std::vector<char, Allocator>& data,
+                      const unsigned int version)
+    {
+        // FIXME: load_binary
     }
 };
 
 template <typename T, typename Allocator>
 struct serialize_functor< typename std::vector<T, Allocator> >
 {
+    void operator () (protoc::basic_iarchive& ar,
+                      std::vector<T, Allocator>& data,
+                      const unsigned int version)
+    {
+        split_free(ar, data, version);
+    }
+
     void operator () (protoc::basic_oarchive& ar,
                       const std::vector<T, Allocator>& data,
                       const unsigned int version)
@@ -77,4 +111,4 @@ struct serialize_functor< typename std::vector<T, Allocator> >
 } // namespace serialization
 } // namespace boost
 
-#endif // PROTOC_VECTOR_HPP
+#endif // PROTOC_SERIALIZATION_VECTOR_HPP

@@ -20,6 +20,7 @@
 
 #include <boost/serialization/split_free.hpp>
 
+namespace protoc { class basic_iarchive; }
 namespace protoc { class basic_oarchive; }
 
 // Non-intrusive serialization
@@ -31,6 +32,13 @@ namespace serialization
 template <typename T>
 struct serialize_functor
 {
+    void operator () (protoc::basic_iarchive& ar,
+                      T& data,
+                      const unsigned int version)
+    {
+        // FIXME
+    }
+
     void operator () (protoc::basic_oarchive& ar,
                       const T& data,
                       const unsigned int version)
@@ -67,6 +75,10 @@ struct load_functor
     }
 };
 
+//-----------------------------------------------------------------------------
+// basic_oarchive
+//-----------------------------------------------------------------------------
+
 // C++ does not have partial specialization of template functions so we use
 // functors to achieve the same effect.
 
@@ -96,6 +108,34 @@ inline void serialize(protoc::basic_oarchive& ar,
 
 template <typename value_type>
 inline void serialize(protoc::basic_oarchive& ar,
+                      value_type& data,
+                      const unsigned int version)
+{
+    serialize_functor<value_type>()(ar, data, version);
+}
+
+//-----------------------------------------------------------------------------
+// basic_iarchive
+//-----------------------------------------------------------------------------
+
+template <typename value_type>
+inline void save(protoc::basic_iarchive& ar,
+                 const value_type& data,
+                 const unsigned int version)
+{
+    save_functor<value_type>()(ar, data, version);
+}
+
+template <typename value_type>
+inline void load(protoc::basic_iarchive& ar,
+                 value_type& data,
+                 const unsigned int version)
+{
+    load_functor<value_type>()(ar, data, version);
+}
+
+template <typename value_type>
+inline void serialize(protoc::basic_iarchive& ar,
                       value_type& data,
                       const unsigned int version)
 {
