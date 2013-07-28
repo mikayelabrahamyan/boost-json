@@ -31,7 +31,7 @@
 #include <protoc/types.hpp>
 #include <protoc/output_stream.hpp>
 #include <protoc/transenc/encoder.hpp>
-#include <protoc/basic_oarchive.hpp>
+#include <protoc/serialization/basic_oarchive.hpp>
 
 namespace protoc
 {

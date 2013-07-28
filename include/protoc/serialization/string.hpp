@@ -20,8 +20,8 @@
 
 #include <string>
 #include <boost/serialization/split_free.hpp>
-#include <protoc/basic_iarchive.hpp>
-#include <protoc/basic_oarchive.hpp>
+#include <protoc/serialization/basic_iarchive.hpp>
+#include <protoc/serialization/basic_oarchive.hpp>
 #include <protoc/serialization/serialization.hpp>
 
 namespace boost

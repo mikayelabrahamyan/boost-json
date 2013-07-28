@@ -1,5 +1,5 @@
-#ifndef PROTOC_BASIC_OARCHIVE_HPP
-#define PROTOC_BASIC_OARCHIVE_HPP
+#ifndef PROTOC_SERIALIZATION_BASIC_OARCHIVE_HPP
+#define PROTOC_SERIALIZATION_BASIC_OARCHIVE_HPP
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -76,4 +76,4 @@ public:
 
 } // namespace protoc
 
-#endif // PROTOC_BASIC_OARCHIVE_HPP
+#endif // PROTOC_SERIALIZATION_BASIC_OARCHIVE_HPP

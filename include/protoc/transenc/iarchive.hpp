@@ -18,8 +18,10 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
+#include <string>
+#include <boost/optional.hpp>
 #include <protoc/transenc/reader.hpp>
-#include <protoc/basic_iarchive.hpp>
+#include <protoc/serialization/basic_iarchive.hpp>
 
 namespace protoc
 {
