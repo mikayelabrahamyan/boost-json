@@ -53,7 +53,14 @@ struct load_functor< typename std::set<Key, Compare, Allocator> >
                       std::set<Key, Compare, Allocator>& data,
                       const unsigned int version)
     {
-        // FIXME
+        ar.load_array_begin();
+        while (!ar.at_array_end())
+        {
+            Key value;
+            ar.load_override(value, version);
+            data.insert(value);
+        }
+        ar.load_array_end();
     }
 };
 
