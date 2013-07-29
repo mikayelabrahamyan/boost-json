@@ -22,6 +22,7 @@
 #include <string>
 #include <boost/optional.hpp>
 #include <boost/archive/detail/common_iarchive.hpp>
+#include <boost/archive/detail/register_archive.hpp>
 
 namespace protoc
 {
