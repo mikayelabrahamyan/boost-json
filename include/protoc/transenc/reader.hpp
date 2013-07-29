@@ -54,6 +54,7 @@ public:
 
     template <typename ForwardIterator>
     reader(ForwardIterator begin, ForwardIterator end);
+    reader(const reader&);
 
     token type() const;
 
@@ -105,6 +106,11 @@ namespace transenc
 template <typename ForwardIterator>
 reader::reader(ForwardIterator begin, ForwardIterator end)
     : decoder(begin, end)
+{
+}
+
+reader::reader(const reader& other)
+    : decoder(other.decoder)
 {
 }
 

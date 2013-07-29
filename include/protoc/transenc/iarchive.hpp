@@ -32,6 +32,7 @@ class iarchive
     : public protoc::basic_iarchive
 {
 public:
+    iarchive(const transenc::reader&);
     template <typename Iterator>
     iarchive(Iterator begin, Iterator end);
 
@@ -71,6 +72,11 @@ namespace protoc
 {
 namespace transenc
 {
+
+iarchive::iarchive(const transenc::reader& reader)
+    : reader(reader)
+{
+}
 
 template <typename Iterator>
 inline iarchive::iarchive(Iterator begin, Iterator end)
