@@ -73,7 +73,7 @@ namespace protoc
 namespace transenc
 {
 
-iarchive::iarchive(const transenc::reader& reader)
+inline iarchive::iarchive(const transenc::reader& reader)
     : reader(reader)
 {
 }
