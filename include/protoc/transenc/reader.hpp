@@ -104,17 +104,17 @@ namespace transenc
 {
 
 template <typename ForwardIterator>
-reader::reader(ForwardIterator begin, ForwardIterator end)
+inline reader::reader(ForwardIterator begin, ForwardIterator end)
     : decoder(begin, end)
 {
 }
 
-reader::reader(const reader& other)
+inline reader::reader(const reader& other)
     : decoder(other.decoder)
 {
 }
 
-reader::token reader::type() const
+inline reader::token reader::type() const
 {
     const transenc::token current = decoder.type();
     switch (current)
@@ -173,8 +173,7 @@ reader::token reader::type() const
     }
 }
 
-// FIXME: Add next_if(token) ?
-reader::token reader::next()
+inline reader::token reader::next()
 {
     const transenc::token current = decoder.type();
     switch (current)
@@ -230,7 +229,7 @@ reader::token reader::next()
     return type();
 }
 
-reader::token reader::next(token expect)
+inline reader::token reader::next(token expect)
 {
     const token current = type();
     if (current != expect)
@@ -242,7 +241,7 @@ reader::token reader::next(token expect)
     return next();
 }
 
-reader::token reader::next_sibling()
+inline reader::token reader::next_sibling()
 {
     // FIXME: Skip over children
     throw unexpected_token("not implemented");
@@ -250,7 +249,7 @@ reader::token reader::next_sibling()
 
 template <typename T>
 typename boost::enable_if<boost::is_same<T, bool>, T>::type
-reader::get() const
+inline reader::get() const
 {
     const transenc::token current = decoder.type();
     switch (current)
@@ -270,7 +269,7 @@ reader::get() const
 
 template <typename T>
 typename boost::enable_if_c<boost::is_integral<T>::value && !boost::is_same<T, bool>::value, T>::type
-reader::get() const
+inline reader::get() const
 {
     // FIXME: Use numeric_limits<T>::max() to check if value will fit
     const transenc::token current = decoder.type();
@@ -297,7 +296,7 @@ reader::get() const
 
 template <typename T>
 typename boost::enable_if<boost::is_floating_point<T>, T>::type
-reader::get() const
+inline reader::get() const
 {
     // FIXME: Use numeric_limits<T>::max() to check if value will fit
     const transenc::token current = decoder.type();
@@ -318,7 +317,7 @@ reader::get() const
 
 template <typename T>
 typename boost::enable_if<boost::is_same<T, std::string>, T>::type
-reader::get() const
+inline reader::get() const
 {
     const transenc::token current = decoder.type();
     switch (current)
