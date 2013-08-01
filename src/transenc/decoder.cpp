@@ -36,6 +36,8 @@ namespace protoc
 {
 namespace transenc
 {
+namespace detail
+{
 
 decoder::decoder(input_range::const_iterator begin,
                  input_range::const_iterator end)
@@ -607,5 +609,6 @@ token decoder::next(token type, std::size_t size)
     return type;
 }
 
+} // namespace detail
 } // namespace transenc
 } // namespace protoc

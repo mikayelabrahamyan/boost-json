@@ -55,8 +55,9 @@ struct load_functor< typename boost::optional<T> >
                       boost::optional<T>& data,
                       const unsigned int version)
     {
-        if (ar.load_null())
+        if (ar.type() == protoc::token::token_null)
         {
+            ar.load();
             data = boost::none;
         }
         else

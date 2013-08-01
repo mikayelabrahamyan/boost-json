@@ -36,6 +36,7 @@ public:
     template <typename Iterator>
     iarchive(Iterator begin, Iterator end);
 
+    virtual void load();
     virtual void load(bool&);
     virtual void load(int&);
     virtual void load(long long&);
@@ -54,7 +55,7 @@ public:
     virtual void load_map_end();
     virtual bool at_map_end() const;
 
-    virtual bool load_null();
+    virtual protoc::token::value type() const;
 
 private:
     transenc::reader reader;
@@ -84,63 +85,72 @@ inline iarchive::iarchive(Iterator begin, Iterator end)
 {
 }
 
+inline void iarchive::load()
+{
+    if (reader.type() != protoc::token::token_null)
+    {
+        return; // FIXME: throw exception?
+    }
+    reader.next();
+}
+
 inline void iarchive::load(bool& value)
 {
-    value = reader.get<bool>();
+    value = reader.get_bool();
     reader.next();
 }
 
 inline void iarchive::load(int& value)
 {
-    value = reader.get<int>();
+    value = reader.get_int();
     reader.next();
 }
 
 inline void iarchive::load(long long& value)
 {
-    value = reader.get<long long>();
+    value = reader.get_long_long();
     reader.next();
 }
 
 inline void iarchive::load(float& value)
 {
-    value = reader.get<float>();
+    value = reader.get_double();
     reader.next();
 }
 
 inline void iarchive::load(double& value)
 {
-    value = reader.get<double>();
+    value = reader.get_double();
     reader.next();
 }
 
 inline void iarchive::load(std::string& value)
 {
-    value = reader.get<std::string>();
+    value = reader.get_string();
     reader.next();
 }
 
 inline void iarchive::load_record_begin()
 {
-    reader.next(reader::token_record_begin);
+    reader.next(protoc::token::token_record_begin);
 }
 
 inline void iarchive::load_record_end()
 {
-    reader.next(reader::token_record_end);
+    reader.next(protoc::token::token_record_end);
 }
 
 inline boost::optional<std::size_t> iarchive::load_array_begin()
 {
     boost::optional<std::size_t> result;
-    reader.next(reader::token_array_begin);
+    reader.next(protoc::token::token_array_begin);
     switch (reader.type())
     {
-    case reader::token_null:
+    case protoc::token::token_null:
         reader.next();
         break;
-    case reader::token_integer:
-        result = reader.get<int>();
+    case protoc::token::token_integer:
+        result = reader.get_int();
         reader.next();
         break;
     default:
@@ -151,26 +161,26 @@ inline boost::optional<std::size_t> iarchive::load_array_begin()
 
 inline void iarchive::load_array_end()
 {
-    reader.next(reader::token_array_end);
+    reader.next(protoc::token::token_array_end);
 }
 
 inline bool iarchive::at_array_end() const
 {
     // FIXME: Handle nested containers
-    return (reader.type() == reader::token_array_end);
+    return (reader.type() == protoc::token::token_array_end);
 }
 
 inline boost::optional<std::size_t> iarchive::load_map_begin()
 {
     boost::optional<std::size_t> result;
-    reader.next(reader::token_map_begin);
+    reader.next(protoc::token::token_map_begin);
     switch (reader.type())
     {
-    case reader::token_null:
+    case protoc::token::token_null:
         reader.next();
         break;
-    case reader::token_integer:
-        result = reader.get<int>();
+    case protoc::token::token_integer:
+        result = reader.get_int();
         reader.next();
         break;
     default:
@@ -181,23 +191,18 @@ inline boost::optional<std::size_t> iarchive::load_map_begin()
 
 inline void iarchive::load_map_end()
 {
-    reader.next(reader::token_map_end);
+    reader.next(protoc::token::token_map_end);
 }
 
 inline bool iarchive::at_map_end() const
 {
     // FIXME: Handle nested containers
-    return (reader.type() == reader::token_map_end);
+    return (reader.type() == protoc::token::token_map_end);
 }
 
-inline bool iarchive::load_null()
+inline protoc::token::value iarchive::type() const
 {
-    const bool result = (reader.type() == reader::token_null);
-    if (result)
-    {
-        reader.next();
-    }
-    return result;
+    return reader.type();
 }
 
 } // namespace transenc

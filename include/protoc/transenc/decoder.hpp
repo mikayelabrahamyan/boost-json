@@ -27,6 +27,8 @@ namespace protoc
 {
 namespace transenc
 {
+namespace detail
+{
 
 class decoder
 {
@@ -81,7 +83,8 @@ private:
     } current;
 };
 
-}
-}
+} // namespace detail
+} // namespace transenc
+} // namespace protoc
 
 #endif /* PROTOC_TRANSENC_DECODER_HPP */

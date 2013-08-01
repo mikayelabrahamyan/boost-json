@@ -1,5 +1,5 @@
-#ifndef PROTOC_TRANSENC_TOKEN_HPP
-#define PROTOC_TRANSENC_TOKEN_HPP
+#ifndef PROTOC_READER_HPP
+#define PROTOC_READER_HPP
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -18,50 +18,30 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
+#include <string>
+#include <protoc/token.hpp>
+
 namespace protoc
 {
-namespace transenc
+
+class reader
 {
-namespace detail
-{
+public:
+    virtual ~reader() {}
 
-enum token
-{
-    token_eof,
-    token_error,
+    virtual token::value type() const = 0;
+    virtual void next() = 0;
+    virtual void next(token::value) = 0;
+    virtual void next_sibling() = 0;
 
-    token_null,
-    token_true,
-    token_false,
-
-    token_int8,
-    token_int16,
-    token_int32,
-    token_int64,
-    token_int128,
-
-    token_float32,
-    token_float64,
-
-    token_tag8,
-    token_tag16,
-    token_tag32,
-    token_tag64,
-
-    token_string,
-    token_binary,
-    token_name,
-
-    token_record_begin,
-    token_record_end,
-    token_array_begin,
-    token_array_end,
-    token_map_begin,
-    token_map_end
+    // FIXME: Consider a visitor instead (and standalone get() function ala variant::get)
+    virtual bool get_bool() const = 0;
+    virtual int get_int() const = 0;
+    virtual long long get_long_long() const = 0;
+    virtual double get_double() const = 0;
+    virtual std::string get_string() const = 0;
 };
 
-} // namespace detail
-} // namespace transenc
 } // namespace protoc
 
-#endif /* PROTOC_TRANSENC_TOKEN_HPP */
+#endif // PROTOC_READER_HPP

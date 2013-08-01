@@ -23,6 +23,7 @@
 #include <boost/optional.hpp>
 #include <boost/archive/detail/common_iarchive.hpp>
 #include <boost/archive/detail/register_archive.hpp>
+#include <protoc/token.hpp>
 
 namespace protoc
 {
@@ -32,6 +33,7 @@ class basic_iarchive : public boost::archive::detail::common_iarchive<basic_iarc
     friend class boost::archive::load_access;
 
 public:
+    virtual void load() = 0;
     virtual void load(bool&) = 0;
     virtual void load(int&) = 0;
     virtual void load(long long&) = 0;
@@ -50,13 +52,13 @@ public:
     virtual void load_map_end() = 0;
     virtual bool at_map_end() const = 0;
 
-    virtual bool load_null() = 0; // FIXME: Change to templated load_null_override() ?
-
     template<typename value_type>
     void load_override(value_type& data, long /*version*/)
     {
         boost::archive::load(*this->This(), data);
     }
+
+    virtual token::value type() const = 0;
 
     // Ignore these
     void load_override(boost::archive::version_type, int) {}

@@ -1,5 +1,5 @@
-#ifndef PROTOC_TRANSENC_TOKEN_HPP
-#define PROTOC_TRANSENC_TOKEN_HPP
+#ifndef PROTOC_TOKEN_HPP
+#define PROTOC_TOKEN_HPP
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -20,48 +20,28 @@
 
 namespace protoc
 {
-namespace transenc
+
+struct token
 {
-namespace detail
-{
+    enum value
+    {
+        token_eof,
+        token_null,
+        token_boolean,
+        token_integer,
+        token_floating,
+        token_string,
+        token_binary,
 
-enum token
-{
-    token_eof,
-    token_error,
-
-    token_null,
-    token_true,
-    token_false,
-
-    token_int8,
-    token_int16,
-    token_int32,
-    token_int64,
-    token_int128,
-
-    token_float32,
-    token_float64,
-
-    token_tag8,
-    token_tag16,
-    token_tag32,
-    token_tag64,
-
-    token_string,
-    token_binary,
-    token_name,
-
-    token_record_begin,
-    token_record_end,
-    token_array_begin,
-    token_array_end,
-    token_map_begin,
-    token_map_end
+        token_record_begin,
+        token_record_end,
+        token_array_begin,
+        token_array_end,
+        token_map_begin,
+        token_map_end
+    };
 };
 
-} // namespace detail
-} // namespace transenc
 } // namespace protoc
 
-#endif /* PROTOC_TRANSENC_TOKEN_HPP */
+#endif // PROTOC_TOKEN_HPP
