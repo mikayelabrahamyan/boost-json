@@ -21,7 +21,6 @@
 #include <cstddef> // std::size_t
 #include <string>
 #include <boost/archive/detail/common_oarchive.hpp>
-#include <boost/archive/detail/register_archive.hpp>
 
 namespace protoc
 {
