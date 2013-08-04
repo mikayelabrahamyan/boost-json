@@ -304,7 +304,7 @@ BOOST_AUTO_TEST_CASE(test_pair)
     transenc::stream_oarchive ar(result);
     std::pair<std::string, bool> value("A", true);
     ar << value;
-    BOOST_REQUIRE_EQUAL(result.str().data(), "\x90" "\xA9\x01" "A" "\x81" "\x98");
+    BOOST_REQUIRE_EQUAL(result.str().data(), "\x90" "\xA9\x01" "A" "\x81" "\x91");
 }
 
 BOOST_AUTO_TEST_CASE(test_const_pair)
@@ -313,7 +313,7 @@ BOOST_AUTO_TEST_CASE(test_const_pair)
     transenc::stream_oarchive ar(result);
     const std::pair<std::string, bool> value("A", true);
     ar << value;
-    BOOST_REQUIRE_EQUAL(result.str().data(), "\x90" "\xA9\x01" "A" "\x81" "\x98");
+    BOOST_REQUIRE_EQUAL(result.str().data(), "\x90" "\xA9\x01" "A" "\x81" "\x91");
 }
 
 //-----------------------------------------------------------------------------
@@ -366,7 +366,7 @@ BOOST_AUTO_TEST_CASE(test_vector_bool_empty)
     transenc::stream_oarchive ar(result);
     std::vector<bool> value;
     ar << value;
-    BOOST_REQUIRE_EQUAL(result.str().data(), "\x91\x00\x99");
+    BOOST_REQUIRE_EQUAL(result.str().data(), "\x92\x00\x93");
 }
 
 BOOST_AUTO_TEST_CASE(test_vector_bool_one)
@@ -376,7 +376,7 @@ BOOST_AUTO_TEST_CASE(test_vector_bool_one)
     std::vector<bool> value;
     value.push_back(true);
     ar << value;
-    BOOST_REQUIRE_EQUAL(result.str().data(), "\x91\x01\x81\x99");
+    BOOST_REQUIRE_EQUAL(result.str().data(), "\x92\x01\x81\x93");
 }
 
 BOOST_AUTO_TEST_CASE(test_vector_bool_two)
@@ -387,7 +387,7 @@ BOOST_AUTO_TEST_CASE(test_vector_bool_two)
     value.push_back(true);
     value.push_back(false);
     ar << value;
-    BOOST_REQUIRE_EQUAL(result.str().data(), "\x91\x02\x81\x80\x99");
+    BOOST_REQUIRE_EQUAL(result.str().data(), "\x92\x02\x81\x80\x93");
 }
 
 BOOST_AUTO_TEST_CASE(test_set_int_empty)
@@ -396,7 +396,7 @@ BOOST_AUTO_TEST_CASE(test_set_int_empty)
     transenc::stream_oarchive ar(result);
     std::set<int> value;
     ar << value;
-    BOOST_REQUIRE_EQUAL(result.str().data(), "\x91\x82\x99");
+    BOOST_REQUIRE_EQUAL(result.str().data(), "\x92\x82\x93");
 }
 
 BOOST_AUTO_TEST_CASE(test_set_int_one)
@@ -406,7 +406,7 @@ BOOST_AUTO_TEST_CASE(test_set_int_one)
     std::set<int> value;
     value.insert(1);
     ar << value;
-    BOOST_REQUIRE_EQUAL(result.str().data(), "\x91\x82\x01\x99");
+    BOOST_REQUIRE_EQUAL(result.str().data(), "\x92\x82\x01\x93");
 }
 
 BOOST_AUTO_TEST_CASE(test_set_int_two)
@@ -417,7 +417,7 @@ BOOST_AUTO_TEST_CASE(test_set_int_two)
     value.insert(1);
     value.insert(2);
     ar << value;
-    BOOST_REQUIRE_EQUAL(result.str().data(), "\x91\x82\x01\x02\x99");
+    BOOST_REQUIRE_EQUAL(result.str().data(), "\x92\x82\x01\x02\x93");
 }
 
 BOOST_AUTO_TEST_CASE(test_map_bool_empty)
@@ -426,7 +426,7 @@ BOOST_AUTO_TEST_CASE(test_map_bool_empty)
     transenc::stream_oarchive ar(result);
     std::map<std::string, bool> value;
     ar << value;
-    BOOST_REQUIRE_EQUAL(result.str().data(), "\x92\x82\x9A");
+    BOOST_REQUIRE_EQUAL(result.str().data(), "\x9C\x82\x9D");
 }
 
 BOOST_AUTO_TEST_CASE(test_map_bool_one)
@@ -436,7 +436,7 @@ BOOST_AUTO_TEST_CASE(test_map_bool_one)
     std::map<std::string, bool> value;
     value["A"] = true;
     ar << value;
-    BOOST_REQUIRE_EQUAL(result.str().data(), "\x92\x82\x90" "\xA9\x01" "A" "\x81" "\x98\x9A");
+    BOOST_REQUIRE_EQUAL(result.str().data(), "\x9C\x82\x90" "\xA9\x01" "A" "\x81" "\x91\x9D");
 }
 
 BOOST_AUTO_TEST_CASE(test_map_bool_two)
@@ -447,7 +447,7 @@ BOOST_AUTO_TEST_CASE(test_map_bool_two)
     value["A"] = true;
     value["B"] = false;
     ar << value;
-    BOOST_REQUIRE_EQUAL(result.str().data(), "\x92\x82\x90" "\xA9\x01" "A" "\x81" "\x98\x90" "\xA9\x01" "B" "\x80" "\x98\x9A");
+    BOOST_REQUIRE_EQUAL(result.str().data(), "\x9C\x82\x90" "\xA9\x01" "A" "\x81" "\x91\x90" "\xA9\x01" "B" "\x80" "\x91\x9D");
 }
 
 //-----------------------------------------------------------------------------
@@ -498,7 +498,7 @@ BOOST_AUTO_TEST_CASE(test_struct_person)
     transenc::stream_oarchive ar(result);
     person value("Kant", 127);
     ar << value;
-    BOOST_REQUIRE_EQUAL(result.str().data(), "\x90" "\xA9\x04" "Kant" "\x7F" "\x98");
+    BOOST_REQUIRE_EQUAL(result.str().data(), "\x90" "\xA9\x04" "Kant" "\x7F" "\x91");
 }
 
 //-----------------------------------------------------------------------------
