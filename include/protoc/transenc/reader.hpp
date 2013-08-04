@@ -18,12 +18,7 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-#include <cassert>
 #include <stack>
-#include <boost/utility/enable_if.hpp>
-#include <boost/type_traits/is_same.hpp>
-#include <boost/type_traits/is_integral.hpp>
-#include <boost/type_traits/is_floating_point.hpp>
 #include <protoc/reader.hpp>
 #include <protoc/transenc/token.hpp>
 #include <protoc/transenc/decoder.hpp>
