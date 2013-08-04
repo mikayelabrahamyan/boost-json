@@ -19,13 +19,9 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 #include <string>
-#include <limits>
 #include <ostream>
-#include <istream>
 #include <boost/optional.hpp>
 #include <boost/ref.hpp>
-#include <boost/serialization/nvp.hpp>
-#include <boost/archive/detail/common_oarchive.hpp>
 #include <boost/archive/detail/register_archive.hpp>
 #include <boost/utility/base_from_member.hpp>
 #include <protoc/types.hpp>
