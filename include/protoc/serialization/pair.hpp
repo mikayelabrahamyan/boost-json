@@ -1,5 +1,5 @@
-#ifndef PROTOC_PAIR_HPP
-#define PROTOC_PAIR_HPP
+#ifndef PROTOC_SERIALIZATION_PAIR_HPP
+#define PROTOC_SERIALIZATION_PAIR_HPP
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -78,4 +78,4 @@ struct serialize_functor< typename std::pair<T1, T2> >
 } // namespace serialization
 } // namespace boost
 
-#endif // PROTOC_PAIR_HPP
+#endif // PROTOC_SERIALIZATION_PAIR_HPP

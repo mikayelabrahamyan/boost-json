@@ -1,5 +1,5 @@
-#ifndef PROTOC_SET_HPP
-#define PROTOC_SET_HPP
+#ifndef PROTOC_SERIALIZATION_SET_HPP
+#define PROTOC_SERIALIZATION_SET_HPP
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -86,4 +86,4 @@ struct serialize_functor< typename std::set<Key, Compare, Allocator> >
 } // namespace serialization
 } // namespace boost
 
-#endif // PROTOC_SET_HPP
+#endif // PROTOC_SERIALIZATION_SET_HPP

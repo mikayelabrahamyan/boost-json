@@ -1,5 +1,5 @@
-#ifndef PROTOC_OPTIONAL_HPP
-#define PROTOC_OPTIONAL_HPP
+#ifndef PROTOC_SERIALIZATION_OPTIONAL_HPP
+#define PROTOC_SERIALIZATION_OPTIONAL_HPP
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -90,4 +90,4 @@ struct serialize_functor< typename boost::optional<T> >
 } // namespace serialization
 } // namespace boost
 
-#endif // PROTOC_OPTIONAL_HPP
+#endif // PROTOC_SERIALIZATION_OPTIONAL_HPP

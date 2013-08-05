@@ -1,5 +1,5 @@
-#ifndef PROTOC_STRING_HPP
-#define PROTOC_STRING_HPP
+#ifndef PROTOC_SERIALIZATION_STRING_HPP
+#define PROTOC_SERIALIZATION_STRING_HPP
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -72,4 +72,4 @@ struct serialize_functor< typename std::basic_string<CharT, Traits, Allocator> >
 } // namespace serialization
 } // namespace boost
 
-#endif // PROTOC_STRING_HPP
+#endif // PROTOC_SERIALIZATION_STRING_HPP

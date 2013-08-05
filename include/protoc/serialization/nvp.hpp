@@ -1,5 +1,5 @@
-#ifndef PROTOC_NVP_HPP
-#define PROTOC_NVP_HPP
+#ifndef PROTOC_SERIALIZATION_NVP_HPP
+#define PROTOC_SERIALIZATION_NVP_HPP
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -54,4 +54,4 @@ struct serialize_functor< typename boost::serialization::nvp<T> >
 } // namespace serialization
 } // namespace boost
 
-#endif // PROTOC_NVP_HPP
+#endif // PROTOC_SERIALIZATION_NVP_HPP

@@ -1,5 +1,5 @@
-#ifndef PROTOC_SERIALIZATION_HPP
-#define PROTOC_SERIALIZATION_HPP
+#ifndef PROTOC_SERIALIZATION_SERIALIZATION_HPP
+#define PROTOC_SERIALIZATION_SERIALIZATION_HPP
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -131,4 +131,4 @@ inline void serialize(protoc::basic_iarchive& ar,
 } // namespace serialization
 } // namespace boost
 
-#endif // PROTOC_SERIALIZATION_HPP
+#endif // PROTOC_SERIALIZATION_SERIALIZATION_HPP
