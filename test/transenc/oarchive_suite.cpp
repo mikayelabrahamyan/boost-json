@@ -167,7 +167,7 @@ BOOST_AUTO_TEST_CASE(test_int64)
 {
     std::ostringstream result;
     transenc::stream_oarchive ar(result);
-    protoc::int64_t value = 1LL << 32;
+    long long value = 1LL << 32;
     ar << value;
     BOOST_REQUIRE_EQUAL(result.str().data(), "\xD0\x00\x00\x00\x00\x00\x00\x00\x01");
 }
@@ -176,7 +176,7 @@ BOOST_AUTO_TEST_CASE(test_const_int64)
 {
     std::ostringstream result;
     transenc::stream_oarchive ar(result);
-    const protoc::int64_t value = 1LL << 32;
+    const long long value = 1LL << 32;
     ar << value;
     BOOST_REQUIRE_EQUAL(result.str().data(), "\xD0\x00\x00\x00\x00\x00\x00\x00\x01");
 }
