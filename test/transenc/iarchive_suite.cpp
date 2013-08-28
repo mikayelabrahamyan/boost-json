@@ -18,9 +18,9 @@
 #include <boost/test/unit_test.hpp>
 
 #include <sstream>
+#include <boost/serialization/split_member.hpp>
 #include <protoc/exceptions.hpp>
 #include <protoc/transenc/codes.hpp>
-#include <protoc/transenc/oarchive.hpp> // FIXME: Remove
 #include <protoc/transenc/iarchive.hpp>
 #include <protoc/serialization/string.hpp>
 #include <protoc/serialization/vector.hpp>
@@ -538,11 +538,48 @@ struct person
     int age;
 };
 
+struct split_person
+{
+    split_person(const std::string& name, int age)
+        : name(name),
+          age(age)
+    {}
+
+    template<typename T>
+    void load(T& archive, const unsigned int)
+    {
+        archive >> name;
+        archive >> age;
+    }
+
+    template<typename T>
+    void save(T& archive, const unsigned int) const
+    {
+        archive << name;
+        archive << age;
+    }
+
+    std::string name;
+    int age;
+
+    BOOST_SERIALIZATION_SPLIT_MEMBER()
+};
+
 BOOST_AUTO_TEST_CASE(test_struct_person)
 {
     const protoc::uint8_t input[] = { transenc::code_record_begin, transenc::code_string_int8, 0x04, 'K', 'A', 'N', 'T', transenc::code_int16, 0x7F, 0x00, transenc::code_record_end };
     transenc::iarchive in(input, input + sizeof(input));
     person value("", 99);
+    BOOST_REQUIRE_NO_THROW(in >> value);
+    BOOST_REQUIRE_EQUAL(value.name, "KANT");
+    BOOST_REQUIRE_EQUAL(value.age, 127);
+}
+
+BOOST_AUTO_TEST_CASE(test_struct_split_person)
+{
+    const protoc::uint8_t input[] = { transenc::code_record_begin, transenc::code_string_int8, 0x04, 'K', 'A', 'N', 'T', transenc::code_int16, 0x7F, 0x00, transenc::code_record_end };
+    transenc::iarchive in(input, input + sizeof(input));
+    split_person value("", 99);
     BOOST_REQUIRE_NO_THROW(in >> value);
     BOOST_REQUIRE_EQUAL(value.name, "KANT");
     BOOST_REQUIRE_EQUAL(value.age, 127);

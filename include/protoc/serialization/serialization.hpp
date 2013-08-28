@@ -68,7 +68,7 @@ struct serialize_functor
     }
 
     void operator () (protoc::basic_oarchive& ar,
-                      const T& data,
+                      T& data,
                       const unsigned int version)
     {
         ar.save_record_begin(); // basic_oarchive can only save

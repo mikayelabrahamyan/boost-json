@@ -18,6 +18,7 @@
 #include <boost/test/unit_test.hpp>
 
 #include <sstream>
+#include <boost/serialization/split_member.hpp>
 #include <protoc/exceptions.hpp>
 #include <protoc/transenc/oarchive.hpp>
 #include <protoc/serialization/string.hpp>
@@ -482,7 +483,7 @@ struct person
     {}
 
     template<typename T>
-    void serialize(T& archive, const unsigned int) const
+    void serialize(T& archive, const unsigned int)
     {
         archive & name;
         archive & age;
@@ -492,11 +493,47 @@ struct person
     int age;
 };
 
+struct split_person
+{
+    split_person(const std::string& name, int age)
+        : name(name),
+          age(age)
+    {}
+
+    template<typename T>
+    void load(T& archive, const unsigned int)
+    {
+        archive >> name;
+        archive >> age;
+    }
+
+    template<typename T>
+    void save(T& archive, const unsigned int) const
+    {
+        archive << name;
+        archive << age;
+    }
+
+    std::string name;
+    int age;
+
+    BOOST_SERIALIZATION_SPLIT_MEMBER()
+};
+
 BOOST_AUTO_TEST_CASE(test_struct_person)
 {
     std::ostringstream result;
     transenc::stream_oarchive ar(result);
     person value("Kant", 127);
+    ar << value;
+    BOOST_REQUIRE_EQUAL(result.str().data(), "\x90" "\xA9\x04" "Kant" "\x7F" "\x91");
+}
+
+BOOST_AUTO_TEST_CASE(test_struct_split_person)
+{
+    std::ostringstream result;
+    transenc::stream_oarchive ar(result);
+    split_person value("Kant", 127);
     ar << value;
     BOOST_REQUIRE_EQUAL(result.str().data(), "\x90" "\xA9\x04" "Kant" "\x7F" "\x91");
 }
