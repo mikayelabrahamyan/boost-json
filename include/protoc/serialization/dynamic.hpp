@@ -23,6 +23,7 @@
 #include <protoc/serialization/basic_iarchive.hpp>
 #include <protoc/serialization/basic_oarchive.hpp>
 #include <protoc/serialization/serialization.hpp>
+#include <protoc/serialization/pair.hpp>
 
 namespace boost
 {
