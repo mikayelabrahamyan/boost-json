@@ -36,9 +36,10 @@ public:
     reader(const reader&);
 
     virtual protoc::token::value type() const;
+    virtual size_type size() const;
 
-    virtual void next();
-    virtual void next(protoc::token::value);
+    virtual bool next();
+    virtual bool next(protoc::token::value);
     virtual void next_sibling();
 
     virtual bool get_bool() const;
@@ -133,7 +134,12 @@ inline protoc::token::value reader::type() const
     }
 }
 
-inline void reader::next()
+inline reader::size_type reader::size() const
+{
+    return stack.size();
+}
+
+inline bool reader::next()
 {
     const transenc::detail::token current = decoder.type();
     switch (current)
@@ -185,9 +191,11 @@ inline void reader::next()
     default:
         break;
     }
+
+    return (type() != protoc::token::token_eof);
 }
 
-inline void reader::next(protoc::token::value expect)
+inline bool reader::next(protoc::token::value expect)
 {
     const protoc::token::value current = type();
     if (current != expect)
@@ -196,7 +204,7 @@ inline void reader::next(protoc::token::value expect)
         error << current;
         throw unexpected_token(error.str());
     }
-    next();
+    return next();
 }
 
 inline void reader::next_sibling()

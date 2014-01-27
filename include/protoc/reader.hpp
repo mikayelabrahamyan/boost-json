@@ -18,6 +18,7 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
+#include <cstddef> // std::size_t
 #include <string>
 #include <protoc/token.hpp>
 
@@ -27,11 +28,14 @@ namespace protoc
 class reader
 {
 public:
+    typedef std::size_t size_type;
+
     virtual ~reader() {}
 
     virtual token::value type() const = 0;
-    virtual void next() = 0;
-    virtual void next(token::value) = 0;
+    virtual size_type size() const = 0;
+    virtual bool next() = 0;
+    virtual bool next(token::value) = 0;
     virtual void next_sibling() = 0;
 
     // FIXME: Consider a visitor instead (and standalone get() function ala variant::get)
