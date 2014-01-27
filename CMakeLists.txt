@@ -81,6 +81,7 @@ add_executable(protoctest
   test/msgpack/encoder_suite.cpp
   test/transenc/decoder_suite.cpp
   test/transenc/encoder_suite.cpp
+  test/transenc/reader_suite.cpp
   test/transenc/iarchive_suite.cpp
   test/transenc/oarchive_suite.cpp
   test/ubjson/decoder_suite.cpp
