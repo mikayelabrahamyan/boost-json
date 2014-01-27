@@ -161,22 +161,6 @@ void decoder::next()
             current.type = next_float64();
             break;
 
-        case code_tag8:
-            current.type = next_tag8();
-            break;
-
-        case code_tag16:
-            current.type = next_tag16();
-            break;
-
-        case code_tag32:
-            current.type = next_tag32();
-            break;
-
-        case code_tag64:
-            current.type = next_tag64();
-            break;
-
         case code_binary_int8:
             current.type = next_binary();
             break;
@@ -207,22 +191,6 @@ void decoder::next()
 
         case code_string_int64:
             current.type = next_string();
-            break;
-
-        case code_name_int8:
-            current.type = next_name();
-            break;
-
-        case code_name_int16:
-            current.type = next_name();
-            break;
-
-        case code_name_int32:
-            current.type = next_name();
-            break;
-
-        case code_name_int64:
-            current.type = next_name();
             break;
 
         default:
@@ -323,61 +291,6 @@ protoc::float64_t decoder::get_float64() const
     return result;
 }
 
-protoc::int8_t decoder::get_tag8() const
-{
-    assert(current.type == token_tag8);
-    assert(current.range.size() == sizeof(protoc::int8_t));
-
-    return static_cast<protoc::int8_t>(*current.range);
-}
-
-protoc::int16_t decoder::get_tag16() const
-{
-    assert(current.type == token_tag16);
-    assert(current.range.size() == sizeof(protoc::int16_t));
-
-    const protoc::int16_t endian = 0x0100;
-    const input_range::const_iterator data = current.range.begin();
-    protoc::int16_t result;
-    ((volatile protoc::int8_t *)&result)[((protoc::int8_t *)&endian)[0]] = static_cast<protoc::int8_t>(data[0]);
-    ((volatile protoc::int8_t *)&result)[((protoc::int8_t *)&endian)[1]] = static_cast<protoc::int8_t>(data[1]);
-    return result;
-}
-
-protoc::int32_t decoder::get_tag32() const
-{
-    assert(current.type == token_tag32);
-    assert(current.range.size() == sizeof(protoc::int32_t));
-
-    const protoc::int32_t endian = 0x03020100;
-    const input_range::const_iterator data = current.range.begin();
-    protoc::int32_t result;
-    ((volatile protoc::int8_t *)&result)[((protoc::int8_t *)&endian)[0]] = static_cast<protoc::int8_t>(data[0]);
-    ((volatile protoc::int8_t *)&result)[((protoc::int8_t *)&endian)[1]] = static_cast<protoc::int8_t>(data[1]);
-    ((volatile protoc::int8_t *)&result)[((protoc::int8_t *)&endian)[2]] = static_cast<protoc::int8_t>(data[2]);
-    ((volatile protoc::int8_t *)&result)[((protoc::int8_t *)&endian)[3]] = static_cast<protoc::int8_t>(data[3]);
-    return result;
-}
-
-protoc::int64_t decoder::get_tag64() const
-{
-    assert(current.type == token_tag64);
-    assert(current.range.size() == sizeof(protoc::int64_t));
-
-    const protoc::int64_t endian = 0x0706050403020100;
-    const input_range::const_iterator data = current.range.begin();
-    protoc::int64_t result;
-    ((volatile protoc::int8_t *)&result)[((protoc::int8_t *)&endian)[0]] = static_cast<protoc::int8_t>(data[0]);
-    ((volatile protoc::int8_t *)&result)[((protoc::int8_t *)&endian)[1]] = static_cast<protoc::int8_t>(data[1]);
-    ((volatile protoc::int8_t *)&result)[((protoc::int8_t *)&endian)[2]] = static_cast<protoc::int8_t>(data[2]);
-    ((volatile protoc::int8_t *)&result)[((protoc::int8_t *)&endian)[3]] = static_cast<protoc::int8_t>(data[3]);
-    ((volatile protoc::int8_t *)&result)[((protoc::int8_t *)&endian)[4]] = static_cast<protoc::int8_t>(data[4]);
-    ((volatile protoc::int8_t *)&result)[((protoc::int8_t *)&endian)[5]] = static_cast<protoc::int8_t>(data[5]);
-    ((volatile protoc::int8_t *)&result)[((protoc::int8_t *)&endian)[6]] = static_cast<protoc::int8_t>(data[6]);
-    ((volatile protoc::int8_t *)&result)[((protoc::int8_t *)&endian)[7]] = static_cast<protoc::int8_t>(data[7]);
-    return result;
-}
-
 std::string decoder::get_binary() const
 {
     assert(current.type == token_binary);
@@ -391,14 +304,6 @@ std::string decoder::get_string() const
     assert(current.type == token_string);
 
     // FIXME: Validate string [ http://www.w3.org/International/questions/qa-forms-utf-8 ]
-    return std::string(reinterpret_cast<const std::string::value_type *>(current.range.begin()),
-                       current.range.size());
-}
-
-std::string decoder::get_name() const
-{
-    assert(current.type == token_name);
-
     return std::string(reinterpret_cast<const std::string::value_type *>(current.range.begin()),
                        current.range.size());
 }
@@ -484,48 +389,15 @@ token decoder::next_float64()
     return next(token_float64, sizeof(protoc::float64_t));
 }
 
-token decoder::next_tag8()
-{
-    ++input; // Skip token
-
-    return next(token_tag8, sizeof(protoc::int8_t));
-}
-
-token decoder::next_tag16()
-{
-    ++input; // Skip token
-
-    return next(token_tag16, sizeof(protoc::int16_t));
-}
-
-token decoder::next_tag32()
-{
-    ++input; // Skip token
-
-    return next(token_tag32, sizeof(protoc::int32_t));
-}
-
-token decoder::next_tag64()
-{
-    ++input; // Skip token
-
-    return next(token_tag64, sizeof(protoc::int64_t));
-}
-
 token decoder::next_string()
 {
     token type = next_binary();
     return (type == token_binary) ? token_string : type;
 }
 
-token decoder::next_name()
-{
-    token type = next_binary();
-    return (type == token_binary) ? token_name : type;
-}
-
 token decoder::next_binary()
 {
+    // Used to parse both binary and string
     const input_range::value_type value = *input & 0xF8;
 
     ++input; // Skip token
@@ -537,11 +409,9 @@ token decoder::next_binary()
 
     protoc::int64_t length;
 
-    assert(value & 0x08);
-
     switch (value)
     {
-    case code_binary_int8:
+    case code_pattern_length8:
         // current.type must be set to make get_int8() work
         current.type = next(token_int8, sizeof(protoc::int8_t));
         if (current.type == token_eof)
@@ -551,7 +421,7 @@ token decoder::next_binary()
         length = static_cast<protoc::uint8_t>(get_int8());
         break;
 
-    case code_binary_int16:
+    case code_pattern_length16:
         current.type = next(token_int16, sizeof(protoc::int16_t));
         if (current.type == token_eof)
         {
@@ -560,7 +430,7 @@ token decoder::next_binary()
         length = static_cast<protoc::uint16_t>(get_int16());
         break;
 
-    case code_binary_int32:
+    case code_pattern_length32:
         current.type = next(token_int32, sizeof(protoc::int32_t));
         if (current.type == token_eof)
         {
@@ -569,7 +439,7 @@ token decoder::next_binary()
         length = static_cast<protoc::uint32_t>(get_int32());
         break;
 
-    case code_binary_int64:
+    case code_pattern_length64:
         current.type = next(token_int64, sizeof(protoc::int64_t));
         if (current.type == token_eof)
         {

@@ -47,13 +47,8 @@ public:
     protoc::int64_t get_int64() const;
     protoc::float32_t get_float32() const;
     protoc::float64_t get_float64() const;
-    protoc::int8_t get_tag8() const;
-    protoc::int16_t get_tag16() const;
-    protoc::int32_t get_tag32() const;
-    protoc::int64_t get_tag64() const;
     std::string get_binary() const;
     std::string get_string() const;
-    std::string get_name() const;
 
 private:
     token next_int8();
@@ -62,13 +57,8 @@ private:
     token next_int64();
     token next_float32();
     token next_float64();
-    token next_tag8();
-    token next_tag16();
-    token next_tag32();
-    token next_tag64();
     token next_binary();
     token next_string();
-    token next_name();
 
     token next_unknown();
 

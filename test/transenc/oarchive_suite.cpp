@@ -548,7 +548,7 @@ BOOST_AUTO_TEST_CASE(test_binary_empty)
     transenc::stream_oarchive ar(result);
     std::vector<char> value;
     ar << value;
-    BOOST_REQUIRE_EQUAL(result.str().data(), "\xA8\x00");
+    BOOST_REQUIRE_EQUAL(result.str().data(), "\xAB\x00");
 }
 
 BOOST_AUTO_TEST_SUITE_END()

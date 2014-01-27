@@ -34,27 +34,19 @@ const protoc::uint8_t code_array_end = 0x93;
 const protoc::uint8_t code_map_begin = 0x9C;
 const protoc::uint8_t code_map_end = 0x9D;
 const protoc::uint8_t code_int8 = 0xA0;
-const protoc::uint8_t code_tag8 = 0xA3;
-const protoc::uint8_t code_binary_int8 = 0xA8;
 const protoc::uint8_t code_string_int8 = 0xA9;
-const protoc::uint8_t code_name_int8 = 0xAB;
+const protoc::uint8_t code_binary_int8 = 0xAB;
 const protoc::uint8_t code_int16 = 0xB0;
-const protoc::uint8_t code_tag16 = 0xB3;
-const protoc::uint8_t code_binary_int16 = 0xB8;
 const protoc::uint8_t code_string_int16 = 0xB9;
-const protoc::uint8_t code_name_int16 = 0xBB;
+const protoc::uint8_t code_binary_int16 = 0xBB;
 const protoc::uint8_t code_int32 = 0xC0;
 const protoc::uint8_t code_float32 = 0xC2;
-const protoc::uint8_t code_tag32 = 0xC3;
-const protoc::uint8_t code_binary_int32 = 0xC8;
 const protoc::uint8_t code_string_int32 = 0xC9;
-const protoc::uint8_t code_name_int32 = 0xCB;
+const protoc::uint8_t code_binary_int32 = 0xCB;
 const protoc::uint8_t code_int64 = 0xD0;
 const protoc::uint8_t code_float64 = 0xD2;
-const protoc::uint8_t code_tag64 = 0xD3;
-const protoc::uint8_t code_binary_int64 = 0xD8;
 const protoc::uint8_t code_string_int64 = 0xD9;
-const protoc::uint8_t code_name_int64 = 0xDB;
+const protoc::uint8_t code_binary_int64 = 0xDB;
 
 } // namespace transenc
 } // namespace protoc
