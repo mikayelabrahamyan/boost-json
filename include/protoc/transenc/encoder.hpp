@@ -20,7 +20,6 @@
 
 #include <cstdlib>
 #include <string>
-#include <vector>
 #include <protoc/types.hpp>
 #include <protoc/output.hpp>
 #include <protoc/encoder_base.hpp>
