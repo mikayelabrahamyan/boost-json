@@ -75,6 +75,7 @@ add_executable(protoctest
   test/runner.cpp
   test/json/decoder_suite.cpp
   test/json/encoder_suite.cpp
+  test/json/reader_suite.cpp
   test/json/iarchive_suite.cpp
   test/json/oarchive_suite.cpp
   test/msgpack/decoder_suite.cpp
