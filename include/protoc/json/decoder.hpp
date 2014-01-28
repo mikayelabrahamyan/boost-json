@@ -27,6 +27,8 @@ namespace protoc
 {
 namespace json
 {
+namespace detail
+{
 
 class decoder
 {
@@ -67,7 +69,8 @@ private:
     } current;
 };
 
-}
-}
+} // namespace detail
+} // namespace json
+} // namespace protoc
 
 #endif /* PROTOC_JSON_DECODER_HPP */

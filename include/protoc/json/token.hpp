@@ -22,6 +22,8 @@ namespace protoc
 {
 namespace json
 {
+namespace detail
+{
 
 enum token
 {
@@ -45,7 +47,8 @@ enum token
     token_colon
 };
 
-}
-}
+} // namespace detail
+} // namespace json
+} // namespace protoc
 
 #endif /* PROTOC_JSON_TOKEN_HPP */

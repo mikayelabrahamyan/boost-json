@@ -177,27 +177,27 @@ const unsigned char lookup[256] =
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
 };
 
-inline bool is_whitespace(const protoc::json::decoder::value_type& value)
+inline bool is_whitespace(const protoc::json::detail::decoder::value_type& value)
 {
     return ((lookup[static_cast<int>(value)] & lookup_whitespace) == lookup_whitespace);
 }
 
-inline bool is_digit(const protoc::json::decoder::value_type& value)
+inline bool is_digit(const protoc::json::detail::decoder::value_type& value)
 {
     return ((lookup[static_cast<int>(value)] & lookup_digit) == lookup_digit);
 }
 
-inline bool is_hex(const protoc::json::decoder::value_type& value)
+inline bool is_hex(const protoc::json::detail::decoder::value_type& value)
 {
     return ((lookup[static_cast<int>(value)] & lookup_hex) == lookup_hex);
 }
 
-inline bool is_hexdigit(const protoc::json::decoder::value_type& value)
+inline bool is_hexdigit(const protoc::json::detail::decoder::value_type& value)
 {
     return (lookup[static_cast<int>(value)] & (lookup_digit | lookup_hex));
 }
 
-inline bool is_keyword(const protoc::json::decoder::value_type& value)
+inline bool is_keyword(const protoc::json::detail::decoder::value_type& value)
 {
     return ((lookup[static_cast<int>(value)] & lookup_keyword) == lookup_keyword);
 }
@@ -209,6 +209,8 @@ inline bool is_keyword(const protoc::json::decoder::value_type& value)
 namespace protoc
 {
 namespace json
+{
+namespace detail
 {
 
 decoder::decoder(const char *begin,
@@ -637,5 +639,6 @@ bool decoder::at_keyword_end() const
     return !is_keyword(*input);
 }
 
-}
-}
+} // namespace detail
+} // namespace json
+} // namespace protoc

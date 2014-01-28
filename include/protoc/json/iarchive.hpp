@@ -60,8 +60,8 @@ public:
     template<typename value_type>
     void load_override(const boost::serialization::nvp< boost::optional<value_type> >& data, int)
     {
-        const token type = input.type();
-        if (type == token_null)
+        const detail::token type = input.type();
+        if (type == detail::token_null)
         {
             data.value() = boost::optional<value_type>();
         }
@@ -137,22 +137,22 @@ private:
     class frame
     {
     public:
-        frame(decoder&);
+        frame(detail::decoder&);
         virtual ~frame();
 
         virtual void get_separator() = 0;
         virtual bool at_end() const = 0;
 
-        void throw_unexpected_token(const token);
+        void throw_unexpected_token(const detail::token);
 
     protected:
-        decoder& input;
+        detail::decoder& input;
     };
 
     class array_frame : public frame
     {
     public:
-        array_frame(decoder&);
+        array_frame(detail::decoder&);
         ~array_frame();
 
         void get_separator();
@@ -162,7 +162,7 @@ private:
     class object_frame : public frame
     {
     public:
-        object_frame(decoder&);
+        object_frame(detail::decoder&);
         ~object_frame();
 
         void get_separator();
@@ -203,7 +203,7 @@ private:
     };
 
 private:
-    decoder input;
+    detail::decoder input;
     std::stack< boost::shared_ptr<frame> > stack;
 };
 
