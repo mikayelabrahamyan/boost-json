@@ -65,7 +65,7 @@ namespace transenc
 {
 
 template <typename ForwardIterator>
-inline reader::reader(ForwardIterator begin, ForwardIterator end)
+reader::reader(ForwardIterator begin, ForwardIterator end)
     : decoder(begin, end)
 {
 }
