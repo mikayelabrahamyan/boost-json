@@ -1,5 +1,5 @@
-#ifndef PROTOC_MAP_HPP
-#define PROTOC_MAP_HPP
+#ifndef PROTOC_SERIALIZATION_MAP_HPP
+#define PROTOC_SERIALIZATION_MAP_HPP
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -88,4 +88,4 @@ struct serialize_functor< typename std::map<Key, T, Compare, Allocator> >
 } // namespace serialization
 } // namespace boost
 
-#endif // PROTOC_MAP_HPP
+#endif // PROTOC_SERIALIZATION_MAP_HPP
