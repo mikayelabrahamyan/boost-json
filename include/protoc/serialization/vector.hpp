@@ -20,8 +20,6 @@
 
 #include <vector>
 #include <boost/serialization/split_free.hpp>
-#include <protoc/serialization/basic_iarchive.hpp>
-#include <protoc/serialization/basic_oarchive.hpp>
 #include <protoc/serialization/serialization.hpp>
 
 namespace boost
@@ -29,10 +27,10 @@ namespace boost
 namespace serialization
 {
 
-template <typename T, typename Allocator>
-struct save_functor< typename std::vector<T, Allocator> >
+template <typename Archive, typename T, typename Allocator>
+struct save_functor< Archive, typename std::vector<T, Allocator> >
 {
-    void operator () (protoc::basic_oarchive& ar,
+    void operator () (Archive& ar,
                       const std::vector<T, Allocator>& data,
                       const unsigned int version)
     {
@@ -47,10 +45,10 @@ struct save_functor< typename std::vector<T, Allocator> >
     }
 };
 
-template <typename T, typename Allocator>
-struct load_functor< typename std::vector<T, Allocator> >
+template <typename Archive, typename T, typename Allocator>
+struct load_functor< Archive, typename std::vector<T, Allocator> >
 {
-    void operator () (protoc::basic_iarchive& ar,
+    void operator () (Archive& ar,
                       std::vector<T, Allocator>& data,
                       const unsigned int version)
     {
@@ -72,10 +70,10 @@ struct load_functor< typename std::vector<T, Allocator> >
 
 // Specialization of std::vector<char> for binary data
 
-template <typename Allocator>
-struct save_functor< typename std::vector<char, Allocator> >
+template <typename Archive, typename Allocator>
+struct save_functor< Archive, typename std::vector<char, Allocator> >
 {
-    void operator () (protoc::basic_oarchive& ar,
+    void operator () (Archive& ar,
                       const std::vector<char, Allocator>& data,
                       const unsigned int version)
     {
@@ -83,10 +81,10 @@ struct save_functor< typename std::vector<char, Allocator> >
     }
 };
 
-template <typename Allocator>
-struct load_functor< typename std::vector<char, Allocator> >
+template <typename Archive, typename Allocator>
+struct load_functor< Archive, typename std::vector<char, Allocator> >
 {
-    void operator () (protoc::basic_iarchive& ar,
+    void operator () (Archive& ar,
                       std::vector<char, Allocator>& data,
                       const unsigned int version)
     {
@@ -97,16 +95,20 @@ struct load_functor< typename std::vector<char, Allocator> >
 template <typename T, typename Allocator>
 struct serialize_functor< typename std::vector<T, Allocator> >
 {
-    void operator () (protoc::basic_iarchive& ar,
-                      std::vector<T, Allocator>& data,
-                      const unsigned int version)
+    template <typename Archive>
+    typename boost::enable_if<typename Archive::is_loading, void>::type
+    operator () (Archive& ar,
+                 std::vector<T, Allocator>& data,
+                 const unsigned int version)
     {
         split_free(ar, data, version);
     }
 
-    void operator () (protoc::basic_oarchive& ar,
-                      const std::vector<T, Allocator>& data,
-                      const unsigned int version)
+    template <typename Archive>
+    typename boost::enable_if<typename Archive::is_saving, void>::type
+    operator () (Archive& ar,
+                 const std::vector<T, Allocator>& data,
+                 const unsigned int version)
     {
         split_free(ar, data, version);
     }

@@ -22,11 +22,12 @@
 #include <protoc/exceptions.hpp>
 #include <protoc/transenc/codes.hpp>
 #include <protoc/transenc/iarchive.hpp>
-#include <protoc/serialization/string.hpp>
-#include <protoc/serialization/vector.hpp>
-#include <protoc/serialization/set.hpp>
-#include <protoc/serialization/map.hpp>
-#include <protoc/serialization/optional.hpp>
+#include <protoc/transenc/serialization.hpp>
+#include <protoc/transenc/string.hpp>
+#include <protoc/transenc/vector.hpp>
+#include <protoc/transenc/set.hpp>
+#include <protoc/transenc/map.hpp>
+#include <protoc/transenc/optional.hpp>
 #include <protoc/serialization/nvp.hpp>
 
 using namespace protoc;
@@ -357,6 +358,19 @@ BOOST_AUTO_TEST_CASE(test_optional_wrong_type)
     boost::optional<std::string> value;
     BOOST_REQUIRE_THROW(in >> value,
                         invalid_value);
+}
+
+//-----------------------------------------------------------------------------
+// Named value pair
+//-----------------------------------------------------------------------------
+
+BOOST_AUTO_TEST_CASE(test_nvp)
+{
+    const protoc::uint8_t input[] = { transenc::code_false };
+    transenc::iarchive in(input, input + sizeof(input));
+    bool value = true;
+    BOOST_REQUIRE_NO_THROW(in >> boost::serialization::make_nvp("value", value));
+    BOOST_REQUIRE_EQUAL(value, false);
 }
 
 //-----------------------------------------------------------------------------

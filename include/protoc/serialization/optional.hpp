@@ -21,8 +21,6 @@
 #include <boost/optional.hpp>
 #include <boost/none.hpp>
 #include <boost/serialization/split_free.hpp>
-#include <protoc/serialization/basic_iarchive.hpp>
-#include <protoc/serialization/basic_oarchive.hpp>
 #include <protoc/serialization/serialization.hpp>
 
 namespace boost
@@ -30,10 +28,10 @@ namespace boost
 namespace serialization
 {
 
-template <typename T>
-struct save_functor< typename boost::optional<T> >
+template <typename Archive, typename T>
+struct save_functor< Archive, typename boost::optional<T> >
 {
-    void operator () (protoc::basic_oarchive& ar,
+    void operator () (Archive& ar,
                       const boost::optional<T>& data,
                       const unsigned int version)
     {
@@ -48,10 +46,10 @@ struct save_functor< typename boost::optional<T> >
     }
 };
 
-template <typename T>
-struct load_functor< typename boost::optional<T> >
+template <typename Archive, typename T>
+struct load_functor< Archive, typename boost::optional<T> >
 {
-    void operator () (protoc::basic_iarchive& ar,
+    void operator () (Archive& ar,
                       boost::optional<T>& data,
                       const unsigned int version)
     {
@@ -72,16 +70,20 @@ struct load_functor< typename boost::optional<T> >
 template <typename T>
 struct serialize_functor< typename boost::optional<T> >
 {
-    void operator () (protoc::basic_iarchive& ar,
-                      boost::optional<T>& data,
-                      const unsigned int version)
+    template <typename Archive>
+    typename boost::enable_if<typename Archive::is_loading, void>::type
+    operator () (Archive& ar,
+                 boost::optional<T>& data,
+                 const unsigned int version)
     {
         split_free(ar, data, version);
     }
 
-    void operator () (protoc::basic_oarchive& ar,
-                      const boost::optional<T>& data,
-                      const unsigned int version)
+    template <typename Archive>
+    typename boost::enable_if<typename Archive::is_saving, void>::type
+    operator () (Archive& ar,
+                 const boost::optional<T>& data,
+                 const unsigned int version)
     {
         split_free(ar, data, version);
     }

@@ -20,7 +20,6 @@
 
 #include <boost/serialization/nvp.hpp>
 #include <boost/serialization/split_free.hpp>
-#include <protoc/serialization/basic_oarchive.hpp>
 #include <protoc/serialization/serialization.hpp>
 
 namespace boost
@@ -28,24 +27,47 @@ namespace boost
 namespace serialization
 {
 
-template <typename T>
-struct save_functor< typename boost::serialization::nvp<T> >
+template <typename Archive, typename T>
+struct save_functor< Archive, typename boost::serialization::nvp<T> >
 {
-    void operator () (protoc::basic_oarchive& ar,
+    void operator () (Archive& ar,
                       const boost::serialization::nvp<T>& data,
                       const unsigned int version)
     {
         // Drop the name
-        ar.save_override(data.value(), version);
+        ar << data.value();
+    }
+};
+
+template <typename Archive, typename T>
+struct load_functor< Archive, typename boost::serialization::nvp<T> >
+{
+    void operator () (Archive& ar,
+                      boost::serialization::nvp<T>& data,
+                      const unsigned int version)
+    {
+        // There is no the name
+        ar >> data.value();
     }
 };
 
 template <typename T>
 struct serialize_functor< typename boost::serialization::nvp<T> >
 {
-    void operator () (protoc::basic_oarchive& ar,
-                      const boost::serialization::nvp<T>& data,
-                      const unsigned int version)
+    template <typename Archive>
+    typename boost::enable_if<typename Archive::is_loading, void>::type
+    operator () (Archive& ar,
+                 boost::serialization::nvp<T>& data,
+                 const unsigned int version)
+    {
+        split_free(ar, data, version);
+    }
+
+    template <typename Archive>
+    typename boost::enable_if<typename Archive::is_saving, void>::type
+    operator () (Archive& ar,
+                 const boost::serialization::nvp<T>& data,
+                 const unsigned int version)
     {
         split_free(ar, data, version);
     }

@@ -18,22 +18,21 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
+#include <boost/utility/enable_if.hpp>
 #include <boost/serialization/split_free.hpp>
 
-namespace protoc { class basic_iarchive; }
-namespace protoc { class basic_oarchive; }
-
 // Non-intrusive serialization
+
 namespace boost
 {
 namespace serialization
 {
 
-template <typename T>
+template <typename Archive, typename Value>
 struct save_functor
 {
-    void operator () (protoc::basic_oarchive& ar,
-                      const T& data,
+    void operator () (Archive& ar,
+                      const Value& data,
                       const unsigned int)
     {
         ar.save_record_begin();
@@ -42,11 +41,11 @@ struct save_functor
     }
 };
 
-template <typename T>
+template <typename Archive, typename Value>
 struct load_functor
 {
-    void operator () (protoc::basic_iarchive& ar,
-                      const T& data,
+    void operator () (Archive& ar,
+                      const Value& data,
                       const unsigned int)
     {
         ar.load_record_begin();
@@ -55,78 +54,31 @@ struct load_functor
     }
 };
 
-template <typename T>
+template <typename Value>
 struct serialize_functor
 {
-    void operator () (protoc::basic_iarchive& ar,
-                      T& data,
-                      const unsigned int version)
+    template <typename Archive>
+    typename boost::enable_if<typename Archive::is_loading, void>::type
+    operator () (Archive& ar,
+                 Value& data,
+                 const unsigned int version)
     {
-        ar.load_record_begin(); // basic_iarchive can only load
+        ar.load_record_begin();
         data.serialize(ar, version);
         ar.load_record_end();
     }
 
-    void operator () (protoc::basic_oarchive& ar,
-                      T& data,
-                      const unsigned int version)
+    template <typename Archive>
+    typename boost::enable_if<typename Archive::is_saving, void>::type
+    operator () (Archive& ar,
+                 Value& data,
+                 const unsigned int version)
     {
-        ar.save_record_begin(); // basic_oarchive can only save
+        ar.save_record_begin();
         data.serialize(ar, version);
         ar.save_record_end();
     }
 };
-
-//-----------------------------------------------------------------------------
-// basic_oarchive
-//-----------------------------------------------------------------------------
-
-// C++ does not have partial specialization of template functions so we use
-// functors to achieve the same effect.
-
-template <typename value_type>
-inline void save(protoc::basic_oarchive& ar,
-                 const value_type& data,
-                 const unsigned int version)
-{
-    save_functor<value_type>()(ar, data, version);
-}
-
-template <typename value_type>
-inline void serialize(protoc::basic_oarchive& ar,
-                      const value_type& data,
-                      const unsigned int version)
-{
-    serialize_functor<value_type>()(ar, data, version);
-}
-
-template <typename value_type>
-inline void serialize(protoc::basic_oarchive& ar,
-                      value_type& data,
-                      const unsigned int version)
-{
-    serialize_functor<value_type>()(ar, data, version);
-}
-
-//-----------------------------------------------------------------------------
-// basic_iarchive
-//-----------------------------------------------------------------------------
-
-template <typename value_type>
-inline void load(protoc::basic_iarchive& ar,
-                 value_type& data,
-                 const unsigned int version)
-{
-    load_functor<value_type>()(ar, data, version);
-}
-
-template <typename value_type>
-inline void serialize(protoc::basic_iarchive& ar,
-                      value_type& data,
-                      const unsigned int version)
-{
-    serialize_functor<value_type>()(ar, data, version);
-}
 
 } // namespace serialization
 } // namespace boost

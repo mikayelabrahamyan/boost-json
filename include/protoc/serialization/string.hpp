@@ -19,9 +19,9 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 #include <string>
+#include <boost/utility/enable_if.hpp>
+#include <boost/type_traits/is_base_of.hpp>
 #include <boost/serialization/split_free.hpp>
-#include <protoc/serialization/basic_iarchive.hpp>
-#include <protoc/serialization/basic_oarchive.hpp>
 #include <protoc/serialization/serialization.hpp>
 
 namespace boost
@@ -29,10 +29,10 @@ namespace boost
 namespace serialization
 {
 
-template <typename CharT, typename Traits, typename Allocator>
-struct save_functor< typename std::basic_string<CharT, Traits, Allocator> >
+template <typename Archive, typename CharT, typename Traits, typename Allocator>
+struct save_functor< Archive, typename std::basic_string<CharT, Traits, Allocator> >
 {
-    void operator () (protoc::basic_oarchive& ar,
+    void operator () (Archive& ar,
                       const std::basic_string<CharT, Traits, Allocator>& data,
                       const unsigned int)
     {
@@ -40,10 +40,10 @@ struct save_functor< typename std::basic_string<CharT, Traits, Allocator> >
     }
 };
 
-template <typename CharT, typename Traits, typename Allocator>
-struct load_functor< typename std::basic_string<CharT, Traits, Allocator> >
+template <typename Archive, typename CharT, typename Traits, typename Allocator>
+struct load_functor< Archive, typename std::basic_string<CharT, Traits, Allocator> >
 {
-    void operator () (protoc::basic_iarchive& ar,
+    void operator () (Archive& ar,
                       std::basic_string<CharT, Traits, Allocator>& data,
                       const unsigned int)
     {
@@ -54,16 +54,20 @@ struct load_functor< typename std::basic_string<CharT, Traits, Allocator> >
 template <typename CharT, typename Traits, typename Allocator>
 struct serialize_functor< typename std::basic_string<CharT, Traits, Allocator> >
 {
-    void operator () (protoc::basic_iarchive& ar,
-                      std::basic_string<CharT, Traits, Allocator>& data,
-                      const unsigned int version)
+    template <typename Archive>
+    typename boost::enable_if<typename Archive::is_loading, void>::type
+    operator () (Archive& ar,
+                 std::basic_string<CharT, Traits, Allocator>& data,
+                 const unsigned int version)
     {
         split_free(ar, data, version);
     }
 
-    void operator () (protoc::basic_oarchive& ar,
-                      const std::basic_string<CharT, Traits, Allocator>& data,
-                      const unsigned int version)
+    template <typename Archive>
+    typename boost::enable_if<typename Archive::is_saving, void>::type
+    operator () (Archive& ar,
+                 const std::basic_string<CharT, Traits, Allocator>& data,
+                 const unsigned int version)
     {
         split_free(ar, data, version);
     }

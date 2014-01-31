@@ -20,8 +20,6 @@
 
 #include <dynamic/var.hpp> // http://dynamic-cpp.googlecode.com/
 #include <boost/serialization/split_free.hpp>
-#include <protoc/serialization/basic_iarchive.hpp>
-#include <protoc/serialization/basic_oarchive.hpp>
 #include <protoc/serialization/serialization.hpp>
 #include <protoc/serialization/pair.hpp>
 
@@ -30,10 +28,10 @@ namespace boost
 namespace serialization
 {
 
-template <>
-struct save_functor<dynamic::var>
+template <typename Archive>
+struct save_functor<Archive, dynamic::var>
 {
-    void operator () (protoc::basic_oarchive& ar,
+    void operator () (Archive& ar,
                       const dynamic::var& data,
                       const unsigned int version)
     {
@@ -85,10 +83,10 @@ struct save_functor<dynamic::var>
     }
 };
 
-template <>
-struct load_functor<dynamic::var>
+template <typename Archive>
+struct load_functor<Archive, dynamic::var>
 {
-    void operator () (protoc::basic_iarchive& ar,
+    void operator () (Archive& ar,
                       dynamic::var& data,
                       const unsigned int version)
     {
@@ -154,16 +152,20 @@ struct load_functor<dynamic::var>
 template <>
 struct serialize_functor<dynamic::var>
 {
-    void operator () (protoc::basic_iarchive& ar,
-                      dynamic::var& data,
-                      const unsigned int version)
+    template <typename Archive>
+    typename boost::enable_if<typename Archive::is_loading, void>::type
+    operator () (Archive& ar,
+                 dynamic::var& data,
+                 const unsigned int version)
     {
         split_free(ar, data, version);
     }
 
-    void operator () (protoc::basic_oarchive& ar,
-                      const dynamic::var& data,
-                      const unsigned int version)
+    template <typename Archive>
+    typename boost::enable_if<typename Archive::is_saving, void>::type
+    operator () (Archive& ar,
+                 const dynamic::var& data,
+                 const unsigned int version)
     {
         split_free(ar, data, version);
     }

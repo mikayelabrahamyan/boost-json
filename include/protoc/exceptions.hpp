@@ -45,6 +45,17 @@ public:
     {}
 };
 
+class invalid_scope : public std::runtime_error
+{
+public:
+    explicit invalid_scope(const std::string& message)
+        : std::runtime_error(message)
+    {}
+
+    ~invalid_scope() throw()
+    {}
+};
+
 }
 
 #endif // PROTOC_EXCEPTIONS_HPP

@@ -19,43 +19,55 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 #include <string>
-#include <protoc/types.hpp>
 #include <protoc/output.hpp>
+#include <protoc/encoder_base.hpp>
 
 namespace protoc
 {
 namespace json
 {
+namespace detail
+{
 
-class encoder
+class encoder : protoc::encoder_base
 {
 public:
-    typedef protoc::output<char> output;
+    typedef protoc::output<char> output_type;
 
-    encoder(output&);
+    encoder(output_type&);
 
     std::size_t put(); // Null
     std::size_t put(bool);
-    std::size_t put(protoc::int64_t);
-    std::size_t put(protoc::float64_t);
+    std::size_t put(int);
+    std::size_t put(long long);
+    std::size_t put(float);
+    std::size_t put(double);
     std::size_t put(const char *);
     std::size_t put(const std::string&);
 
-    std::size_t put_object_begin();
-    std::size_t put_object_end();
+    std::size_t put_record_begin();
+    std::size_t put_record_end();
     std::size_t put_array_begin();
+    std::size_t put_array_begin(std::size_t);
     std::size_t put_array_end();
+    std::size_t put_map_begin();
+    std::size_t put_map_begin(std::size_t);
+    std::size_t put_map_end();
+
+    std::size_t put(const char *, std::size_t);
+
     std::size_t put_comma();
     std::size_t put_colon();
 
 private:
     std::size_t put_text(const char *, std::size_t);
-    std::size_t put_value(output::value_type);
+    std::size_t put_value(output_type::value_type);
 
 private:
-    output& buffer;
+    output_type& buffer;
 };
 
+} // namespace detail
 } // namespace json
 } // namespace protoc
 

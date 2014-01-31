@@ -21,11 +21,12 @@
 #include <boost/serialization/split_member.hpp>
 #include <protoc/exceptions.hpp>
 #include <protoc/transenc/oarchive.hpp>
-#include <protoc/serialization/string.hpp>
-#include <protoc/serialization/vector.hpp>
-#include <protoc/serialization/set.hpp>
-#include <protoc/serialization/map.hpp>
-#include <protoc/serialization/optional.hpp>
+#include <protoc/transenc/serialization.hpp>
+#include <protoc/transenc/string.hpp>
+#include <protoc/transenc/vector.hpp>
+#include <protoc/transenc/set.hpp>
+#include <protoc/transenc/map.hpp>
+#include <protoc/transenc/optional.hpp>
 #include <protoc/serialization/nvp.hpp>
 
 using namespace protoc;
@@ -355,6 +356,19 @@ BOOST_AUTO_TEST_CASE(test_const_optional_null)
     const boost::optional<std::string> value;
     ar << value;
     BOOST_REQUIRE_EQUAL(result.str().data(), "\x82");
+}
+
+//-----------------------------------------------------------------------------
+// Named value pair
+//-----------------------------------------------------------------------------
+
+BOOST_AUTO_TEST_CASE(test_nvp)
+{
+    std::ostringstream result;
+    transenc::stream_oarchive out(result);
+    bool value = false;
+    out << boost::serialization::make_nvp("value", value);
+    BOOST_REQUIRE_EQUAL(result.str().data(), "\x80");
 }
 
 //-----------------------------------------------------------------------------

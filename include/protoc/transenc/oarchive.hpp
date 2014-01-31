@@ -20,14 +20,12 @@
 
 #include <string>
 #include <ostream>
-#include <boost/optional.hpp>
-#include <boost/ref.hpp>
+#include <boost/archive/detail/common_oarchive.hpp>
 #include <boost/archive/detail/register_archive.hpp>
 #include <boost/utility/base_from_member.hpp>
 #include <protoc/types.hpp>
 #include <protoc/output_stream.hpp>
 #include <protoc/transenc/encoder.hpp>
-#include <protoc/serialization/basic_oarchive.hpp>
 
 namespace protoc
 {
@@ -35,8 +33,10 @@ namespace transenc
 {
 
 class oarchive
-    : public protoc::basic_oarchive
+    : public boost::archive::detail::common_oarchive<oarchive>
 {
+    friend class boost::archive::save_access;
+
 public:
     oarchive(transenc::encoder&);
 
@@ -58,6 +58,28 @@ public:
     virtual void save_map_begin();
     virtual void save_map_begin(std::size_t);
     virtual void save_map_end();
+
+    template<typename T>
+    void save_override(const T& data, long /*version*/)
+    {
+        boost::archive::save(*this->This(), data);
+    }
+
+    // String literal
+    void save_override(const char *data, int /*version*/)
+    {
+        save(data);
+    }
+
+    // Ignore these
+    void save_override(const boost::archive::version_type, int) {}
+    void save_override(const boost::archive::object_id_type, int) {}
+    void save_override(const boost::archive::object_reference_type, int) {}
+    void save_override(const boost::archive::class_id_type, int) {}
+    void save_override(const boost::archive::class_id_optional_type, int) {}
+    void save_override(const boost::archive::class_id_reference_type, int) {}
+    void save_override(const boost::archive::tracking_type, int) {}
+    void save_override(const boost::archive::class_name_type&, int) {}
 
 protected:
     transenc::encoder& encoder;
@@ -96,8 +118,7 @@ namespace transenc
 {
 
 inline oarchive::oarchive(transenc::encoder& encoder)
-    : protoc::basic_oarchive(),
-      encoder(encoder)
+    : encoder(encoder)
 {
 }
 

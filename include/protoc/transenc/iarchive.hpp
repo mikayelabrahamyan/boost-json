@@ -20,8 +20,9 @@
 
 #include <string>
 #include <boost/optional.hpp>
+#include <boost/archive/detail/common_iarchive.hpp>
+#include <boost/archive/detail/register_archive.hpp>
 #include <protoc/transenc/reader.hpp>
-#include <protoc/serialization/basic_iarchive.hpp>
 
 namespace protoc
 {
@@ -29,12 +30,20 @@ namespace transenc
 {
 
 class iarchive
-    : public protoc::basic_iarchive
+    : public boost::archive::detail::common_iarchive<iarchive>
 {
+    friend class boost::archive::load_access;
+
 public:
     iarchive(const transenc::reader&);
     template <typename Iterator>
     iarchive(Iterator begin, Iterator end);
+
+    template<typename value_type>
+    void load_override(value_type& data, long /*version*/)
+    {
+        boost::archive::load(*this->This(), data);
+    }
 
     virtual void load();
     virtual void load(bool&);
@@ -56,6 +65,16 @@ public:
     virtual bool at_map_end() const;
 
     virtual protoc::token::value type() const;
+
+    // Ignore these
+    void load(boost::archive::version_type&) {}
+    void load(boost::archive::object_id_type) {}
+    void load(boost::archive::object_reference_type) {}
+    void load(boost::archive::class_id_type) {}
+    void load(boost::archive::class_id_optional_type) {}
+    void load(boost::archive::class_id_reference_type) {}
+    void load(boost::archive::tracking_type) {}
+    void load(boost::archive::class_name_type&) {}
 
 private:
     transenc::reader reader;

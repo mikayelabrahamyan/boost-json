@@ -33,8 +33,10 @@ namespace protoc
 {
 namespace json
 {
+namespace detail
+{
 
-encoder::encoder(output& buffer)
+encoder::encoder(output_type& buffer)
     : buffer(buffer)
 {
 };
@@ -56,7 +58,7 @@ std::size_t encoder::put(bool value)
     }
 }
 
-std::size_t encoder::put(protoc::int64_t value)
+std::size_t encoder::put(int value)
 {
     std::string work = boost::lexical_cast<std::string>(value);
     const std::string::size_type size = work.size();
@@ -76,7 +78,32 @@ std::size_t encoder::put(protoc::int64_t value)
     return size;
 }
 
-std::size_t encoder::put(protoc::float64_t value)
+std::size_t encoder::put(long long value)
+{
+    std::string work = boost::lexical_cast<std::string>(value);
+    const std::string::size_type size = work.size();
+
+    if (!buffer.grow(size))
+    {
+        return 0;
+    }
+
+    for (std::string::const_iterator it = work.begin();
+         it != work.end();
+         ++it)
+    {
+        buffer.write(*it);
+    }
+
+    return size;
+}
+
+std::size_t encoder::put(float value)
+{
+    return put(double(value));
+}
+
+std::size_t encoder::put(double value)
 {
     const int fpclass = boost::math::fpclassify(value);
     if ((fpclass == FP_INFINITE) || (fpclass == FP_NAN))
@@ -194,14 +221,14 @@ std::size_t encoder::put(const std::string& value)
     return size;
 }
 
-std::size_t encoder::put_object_begin()
+std::size_t encoder::put_record_begin()
 {
-    return put_value('{');
+    return put_value('[');
 }
 
-std::size_t encoder::put_object_end()
+std::size_t encoder::put_record_end()
 {
-    return put_value('}');
+    return put_value(']');
 }
 
 std::size_t encoder::put_array_begin()
@@ -209,9 +236,29 @@ std::size_t encoder::put_array_begin()
     return put_value('[');
 }
 
+std::size_t encoder::put_array_begin(std::size_t)
+{
+    return put_array_begin();
+}
+
 std::size_t encoder::put_array_end()
 {
     return put_value(']');
+}
+
+std::size_t encoder::put_map_begin()
+{
+    return put_value('{');
+}
+
+std::size_t encoder::put_map_begin(std::size_t)
+{
+    return put_map_begin();
+}
+
+std::size_t encoder::put_map_end()
+{
+    return put_value('}');
 }
 
 std::size_t encoder::put_comma()
@@ -222,6 +269,12 @@ std::size_t encoder::put_comma()
 std::size_t encoder::put_colon()
 {
     return put_value(':');
+}
+
+std::size_t encoder::put(const char *, std::size_t)
+{
+    assert(false);
+    return 0;
 }
 
 std::size_t encoder::put_text(const char *value, std::size_t size)
@@ -239,7 +292,7 @@ std::size_t encoder::put_text(const char *value, std::size_t size)
     return size;
 }
 
-std::size_t encoder::put_value(output::value_type value)
+std::size_t encoder::put_value(output_type::value_type value)
 {
     const std::size_t size = sizeof(value);
 
@@ -253,5 +306,6 @@ std::size_t encoder::put_value(output::value_type value)
     return size;
 }
 
+} // namespace detail
 } // namespace json
 } // namespace protoc

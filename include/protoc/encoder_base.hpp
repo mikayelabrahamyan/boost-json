@@ -50,6 +50,7 @@ public:
     virtual std::size_t put_map_end() = 0;
     // FIXME: put_separator(const char *) ?
 
+    // Binary data
     virtual std::size_t put(const char *, std::size_t) = 0;
 };
 
