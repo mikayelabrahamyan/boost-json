@@ -21,7 +21,6 @@
 #include <string>
 #include <boost/archive/detail/common_oarchive.hpp>
 #include <boost/archive/detail/register_archive.hpp>
-#include <boost/utility/base_from_member.hpp>
 #include <protoc/types.hpp>
 #include <protoc/transenc/encoder.hpp>
 
