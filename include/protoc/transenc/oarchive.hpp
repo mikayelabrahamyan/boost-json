@@ -19,12 +19,10 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 #include <string>
-#include <ostream>
 #include <boost/archive/detail/common_oarchive.hpp>
 #include <boost/archive/detail/register_archive.hpp>
 #include <boost/utility/base_from_member.hpp>
 #include <protoc/types.hpp>
-#include <protoc/output_stream.hpp>
 #include <protoc/transenc/encoder.hpp>
 
 namespace protoc
@@ -85,32 +83,10 @@ protected:
     transenc::encoder& encoder;
 };
 
-// base_from_member is needed because we want to add a member that must be
-// initialized before oarchive because it is passed as an argument to its
-// constructor
-class stream_oarchive
-    : private boost::base_from_member< protoc::output_stream<protoc::uint8_t> >,
-      private boost::base_from_member<transenc::encoder>,
-      public oarchive
-{
-    typedef protoc::output_stream<protoc::uint8_t> member1_type;
-    typedef transenc::encoder member2_type;
-    typedef boost::base_from_member<member1_type> base_member1_type;
-    typedef boost::base_from_member<member2_type> base_member2_type;
-
-public:
-    stream_oarchive(std::ostream& stream)
-        : base_member1_type(member1_type(stream)),
-          base_member2_type(boost::ref(base_member1_type::member)),
-          oarchive(base_member2_type::member)
-    {}
-};
-
 } // namespace transenc
 } // namespace protoc
 
 BOOST_SERIALIZATION_REGISTER_ARCHIVE(protoc::transenc::oarchive);
-BOOST_SERIALIZATION_REGISTER_ARCHIVE(protoc::transenc::stream_oarchive);
 
 namespace protoc
 {
