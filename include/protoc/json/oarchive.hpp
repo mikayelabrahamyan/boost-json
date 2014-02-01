@@ -14,11 +14,8 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 #include <string>
-#include <ostream>
 #include <boost/archive/detail/common_oarchive.hpp>
 #include <boost/archive/detail/register_archive.hpp>
-#include <boost/utility/base_from_member.hpp>
-#include <protoc/output_stream.hpp>
 #include <protoc/json/writer.hpp>
 
 namespace protoc
@@ -79,25 +76,10 @@ protected:
     json::writer writer;
 };
 
-class stream_oarchive
-    : private boost::base_from_member< protoc::output_stream<char> >,
-      public oarchive
-{
-    typedef protoc::output_stream<char> member1_type;
-    typedef boost::base_from_member<member1_type> base_member1_type;
-
-public:
-    stream_oarchive(std::ostream& stream)
-        : base_member1_type(member1_type(stream)),
-          oarchive(base_member1_type::member)
-    {}
-};
-
 } // namespace json
 } // namespace protoc
 
 BOOST_SERIALIZATION_REGISTER_ARCHIVE(protoc::json::oarchive);
-BOOST_SERIALIZATION_REGISTER_ARCHIVE(protoc::json::stream_oarchive);
 
 namespace protoc
 {

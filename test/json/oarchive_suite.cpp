@@ -15,7 +15,7 @@
 #include <sstream>
 #include <limits>
 #include <protoc/exceptions.hpp>
-#include <protoc/json/oarchive.hpp>
+#include <protoc/json/stream_oarchive.hpp>
 #include <protoc/json/serialization.hpp>
 #include <protoc/json/pair.hpp>
 #include <protoc/json/string.hpp>
