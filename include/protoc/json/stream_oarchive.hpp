@@ -13,6 +13,7 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
+#include <ostream>
 #include <boost/utility/base_from_member.hpp>
 #include <protoc/output_stream.hpp>
 #include <protoc/json/oarchive.hpp>
