@@ -45,26 +45,26 @@ public:
         boost::archive::load(*this->This(), data);
     }
 
-    virtual void load();
-    virtual void load(bool&);
-    virtual void load(int&);
-    virtual void load(long long&);
-    virtual void load(float&);
-    virtual void load(double&);
-    virtual void load(std::string&);
+    void load();
+    void load(bool&);
+    void load(int&);
+    void load(long long&);
+    void load(float&);
+    void load(double&);
+    void load(std::string&);
 
-    virtual void load_record_begin();
-    virtual void load_record_end();
+    void load_record_begin();
+    void load_record_end();
 
-    virtual boost::optional<std::size_t> load_array_begin();
-    virtual void load_array_end();
-    virtual bool at_array_end() const;
+    boost::optional<std::size_t> load_array_begin();
+    void load_array_end();
+    bool at_array_end() const;
 
-    virtual boost::optional<std::size_t> load_map_begin();
-    virtual void load_map_end();
-    virtual bool at_map_end() const;
+    boost::optional<std::size_t> load_map_begin();
+    void load_map_end();
+    bool at_map_end() const;
 
-    virtual protoc::token::value type() const;
+    protoc::token::value type() const;
 
     // Ignore these
     void load(boost::archive::version_type&) {}

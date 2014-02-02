@@ -31,24 +31,24 @@ class oarchive
 public:
     oarchive(json::writer::output_type&);
 
-    virtual void save();
-    virtual void save(bool);
-    virtual void save(int);
-    virtual void save(long long);
-    virtual void save(float);
-    virtual void save(double);
-    virtual void save(const char *);
-    virtual void save(const std::string&);
-    virtual void save_binary(const char *, std::size_t);
+    void save();
+    void save(bool);
+    void save(int);
+    void save(long long);
+    void save(float);
+    void save(double);
+    void save(const char *);
+    void save(const std::string&);
+    void save_binary(const char *, std::size_t);
 
-    virtual void save_record_begin();
-    virtual void save_record_end();
-    virtual void save_array_begin();
-    virtual void save_array_begin(std::size_t);
-    virtual void save_array_end();
-    virtual void save_map_begin();
-    virtual void save_map_begin(std::size_t);
-    virtual void save_map_end();
+    void save_record_begin();
+    void save_record_end();
+    void save_array_begin();
+    void save_array_begin(std::size_t);
+    void save_array_end();
+    void save_map_begin();
+    void save_map_begin(std::size_t);
+    void save_map_end();
 
     template<typename T>
     void save_override(const T& data, long /*version*/)
