@@ -20,7 +20,6 @@
 
 #include <string>
 #include <boost/utility/enable_if.hpp>
-#include <boost/type_traits/is_base_of.hpp>
 #include <boost/serialization/split_free.hpp>
 #include <protoc/serialization/serialization.hpp>
 
