@@ -18,6 +18,7 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
+#include <protoc/transenc/serialization.hpp>
 #include <protoc/serialization/set.hpp>
 
 #endif // PROTOC_TRANSENC_SET_HPP

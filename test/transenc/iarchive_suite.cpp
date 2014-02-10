@@ -22,7 +22,6 @@
 #include <protoc/exceptions.hpp>
 #include <protoc/transenc/codes.hpp>
 #include <protoc/transenc/iarchive.hpp>
-#include <protoc/transenc/serialization.hpp>
 #include <protoc/transenc/string.hpp>
 #include <protoc/transenc/vector.hpp>
 #include <protoc/transenc/set.hpp>

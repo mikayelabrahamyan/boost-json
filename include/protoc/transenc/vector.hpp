@@ -18,6 +18,7 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
+#include <protoc/transenc/serialization.hpp>
 #include <protoc/serialization/vector.hpp>
 
 #endif // PROTOC_TRANSENC_VECTOR_HPP

@@ -18,6 +18,7 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
+#include <protoc/transenc/serialization.hpp>
 #include <protoc/serialization/map.hpp>
 
 #endif // PROTOC_TRANSENC_MAP_HPP

@@ -18,6 +18,7 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
+#include <protoc/transenc/serialization.hpp>
 #include <protoc/serialization/dynamic.hpp>
 
 #endif // PROTOC_TRANSENC_DYNAMIC_HPP

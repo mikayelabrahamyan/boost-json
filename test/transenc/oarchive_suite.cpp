@@ -21,7 +21,6 @@
 #include <boost/serialization/split_member.hpp>
 #include <protoc/exceptions.hpp>
 #include <protoc/transenc/stream_oarchive.hpp>
-#include <protoc/transenc/serialization.hpp>
 #include <protoc/transenc/string.hpp>
 #include <protoc/transenc/vector.hpp>
 #include <protoc/transenc/set.hpp>

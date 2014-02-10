@@ -18,6 +18,7 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
+#include <protoc/transenc/serialization.hpp>
 #include <protoc/serialization/optional.hpp>
 
 #endif // PROTOC_TRANSENC_OPTIONAL_HPP
