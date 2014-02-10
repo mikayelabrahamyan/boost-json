@@ -18,6 +18,7 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
+#include <protoc/json/serialization.hpp>
 #include <protoc/serialization/vector.hpp>
 
 #endif // PROTOC_JSON_VECTOR_HPP

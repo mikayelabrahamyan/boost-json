@@ -18,6 +18,7 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
+#include <protoc/json/serialization.hpp>
 #include <protoc/serialization/set.hpp>
 
 #endif // PROTOC_JSON_SET_HPP

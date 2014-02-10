@@ -15,7 +15,6 @@
 #include <sstream>
 #include <protoc/exceptions.hpp>
 #include <protoc/json/iarchive.hpp>
-#include <protoc/json/serialization.hpp>
 #include <protoc/json/pair.hpp>
 #include <protoc/json/string.hpp>
 #include <protoc/json/vector.hpp>

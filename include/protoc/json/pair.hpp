@@ -18,6 +18,7 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
+#include <protoc/json/serialization.hpp>
 #include <protoc/serialization/pair.hpp>
 
 namespace boost

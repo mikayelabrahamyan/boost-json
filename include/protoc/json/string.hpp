@@ -18,6 +18,7 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
+#include <protoc/json/serialization.hpp>
 #include <protoc/serialization/string.hpp>
 
 #endif // PROTOC_JSON_STRING_HPP

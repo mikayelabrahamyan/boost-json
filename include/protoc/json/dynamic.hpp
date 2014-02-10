@@ -18,6 +18,7 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
+#include <protoc/json/serialization.hpp>
 #include <protoc/serialization/dynamic.hpp>
 
 #endif // PROTOC_JSON_DYNAMIC_HPP

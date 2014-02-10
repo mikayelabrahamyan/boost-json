@@ -18,6 +18,7 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
+#include <protoc/json/serialization.hpp>
 #include <protoc/serialization/optional.hpp>
 
 #endif // PROTOC_JSON_OPTIONAL_HPP
