@@ -48,7 +48,7 @@ public:
 
     const value_type& operator * () const;
 
-    input_range operator ++ ();
+    input_range& operator ++ ();
     input_range operator ++ (int);
 
     const_iterator begin() const;

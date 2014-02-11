@@ -83,7 +83,7 @@ const typename input_range<Value>::value_type& input_range<Value>::operator * ()
 }
 
 template<typename Value>
-input_range<Value> input_range<Value>::operator ++ ()
+input_range<Value>& input_range<Value>::operator ++ ()
 {
     ++current;
     return *this;
