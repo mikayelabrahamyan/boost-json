@@ -32,11 +32,13 @@ const char false_text[] = "false";
 const char true_text[] = "true";
 const char null_text[] = "null";
 
-const unsigned int lookup_invalid = 0x01;
-const unsigned int lookup_whitespace = 0x02;
-const unsigned int lookup_keyword = 0x04;
-const unsigned int lookup_digit = 0x08;
-const unsigned int lookup_hex = 0x10;
+const unsigned int lookup_invalid = 0x08;
+const unsigned int lookup_whitespace = 0x10;
+const unsigned int lookup_keyword = 0x20;
+const unsigned int lookup_digit = 0x40;
+const unsigned int lookup_hex = 0x80;
+
+const unsigned int lookup_count_mask = 0x07;
 
 const unsigned char lookup[256] =
 {
@@ -128,12 +130,12 @@ const unsigned char lookup[256] =
     0x00, 0x00, 0x00, 0x00, 0x00,
     /* 96 - 103 */
     0x00,
-    lookup_keyword,
-    lookup_keyword,
-    lookup_keyword,
-    lookup_keyword,
-    lookup_keyword,
-    lookup_keyword,
+    lookup_keyword | lookup_hex,
+    lookup_keyword | lookup_hex,
+    lookup_keyword | lookup_hex,
+    lookup_keyword | lookup_hex,
+    lookup_keyword | lookup_hex,
+    lookup_keyword | lookup_hex,
     lookup_keyword,
     /* 104 - 111 */
     lookup_keyword,
@@ -167,39 +169,51 @@ const unsigned char lookup[256] =
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+    /* 192 */
+    0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01,
+    0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01,
+    0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01,
+    0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01,
+    0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02,
+    0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02,
+    0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03,
+    0x04, 0x04, 0x04, 0x04, 0x05, 0x05, 0x05, 0x05
 };
+
+inline unsigned char lookup_at(const protoc::json::detail::decoder::value_type& value)
+{
+    const int index = static_cast<int>(static_cast<unsigned char>(value));
+    return lookup[index];
+}
 
 inline bool is_whitespace(const protoc::json::detail::decoder::value_type& value)
 {
-    return ((lookup[static_cast<int>(value)] & lookup_whitespace) == lookup_whitespace);
+    return ((lookup_at(value) & lookup_whitespace) == lookup_whitespace);
 }
 
 inline bool is_digit(const protoc::json::detail::decoder::value_type& value)
 {
-    return ((lookup[static_cast<int>(value)] & lookup_digit) == lookup_digit);
+    return ((lookup_at(value) & lookup_digit) == lookup_digit);
 }
 
 inline bool is_hex(const protoc::json::detail::decoder::value_type& value)
 {
-    return ((lookup[static_cast<int>(value)] & lookup_hex) == lookup_hex);
+    return ((lookup_at(value) & lookup_hex) == lookup_hex);
 }
 
 inline bool is_hexdigit(const protoc::json::detail::decoder::value_type& value)
 {
-    return (lookup[static_cast<int>(value)] & (lookup_digit | lookup_hex));
+    return (lookup_at(value) & (lookup_digit | lookup_hex));
 }
 
 inline bool is_keyword(const protoc::json::detail::decoder::value_type& value)
 {
-    return ((lookup[static_cast<int>(value)] & lookup_keyword) == lookup_keyword);
+    return ((lookup_at(value) & lookup_keyword) == lookup_keyword);
+}
+
+inline int extra_bytes(const protoc::json::detail::decoder::value_type& value)
+{
+    return (lookup_at(value) & lookup_count_mask);
 }
 
 } // anonymous namespace
@@ -565,59 +579,81 @@ token decoder::next_string()
     input_range::const_iterator begin = input.begin();
     while (!input.empty())
     {
-        if (*input == '\\')
+        const int amount = extra_bytes(*input);
+
+        if (amount > 0)
         {
-            // Handle escaped character
-            ++input;
-            if (input.empty())
-                return token_eof;
-            switch (*input)
-            {
-            case '"':
-            case '\\':
-            case '/':
-            case 'b':
-            case 'f':
-            case 'n':
-            case 'r':
-            case 't':
-                break;
+            // Skip UTF-8 characters
 
-            case 'u':
-                ++input;
-                if (input.empty())
-                    return token_eof;
-                if (!is_hexdigit(*input))
-                    return token_error;
-                ++input;
-                if (input.empty())
-                    return token_eof;
-                if (!is_hexdigit(*input))
-                    return token_error;
-                ++input;
-                if (input.empty())
-                    return token_eof;
-                if (!is_hexdigit(*input))
-                    return token_error;
-                ++input;
-                if (input.empty())
-                    return token_eof;
-                if (!is_hexdigit(*input))
-                    return token_error;
-                break;
-
-            default:
+            if (input.size() <= amount)
                 return token_error;
+
+            ++input;
+
+            for (int i = 0; i < amount; ++i)
+            {
+                // Check for 10xxxxxx pattern of subsequent bytes
+                if ((*input & 0xC0) != 0x80)
+                    return token_error;
+                ++input;
             }
         }
-        else if (*input == '"')
+        else
         {
-            // Handle end of string
-            current.range = input_range(begin, input.begin());
-            ++input; // Skip terminating '"'
-            return token_string;
+            if (*input == '\\')
+            {
+                // Handle escaped character
+                ++input;
+                if (input.empty())
+                    return token_eof;
+                switch (*input)
+                {
+                case '"':
+                case '\\':
+                case '/':
+                case 'b':
+                case 'f':
+                case 'n':
+                case 'r':
+                case 't':
+                    break;
+
+                case 'u':
+                    ++input;
+                    if (input.empty())
+                        return token_eof;
+                    if (!is_hexdigit(*input))
+                        return token_error;
+                    ++input;
+                    if (input.empty())
+                        return token_eof;
+                    if (!is_hexdigit(*input))
+                        return token_error;
+                    ++input;
+                    if (input.empty())
+                        return token_eof;
+                    if (!is_hexdigit(*input))
+                        return token_error;
+                    ++input;
+                    if (input.empty())
+                        return token_eof;
+                    if (!is_hexdigit(*input))
+                        return token_error;
+                    break;
+
+                default:
+                    return token_error;
+                }
+            }
+            else if (*input == '"')
+            {
+                // Handle end of string
+                current.range = input_range(begin, input.begin());
+                ++input; // Skip terminating '"'
+                return token_string;
+            }
+            ++input;
         }
-        ++input;
     }
     return token_eof;
 }
