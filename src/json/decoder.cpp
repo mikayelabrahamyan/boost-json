@@ -25,6 +25,12 @@
 
 //-----------------------------------------------------------------------------
 
+#if defined(_MSC_VER) && (_MSC_VER < 1200)
+#define PROTOC_ATOLL(x) std::atol((x))
+#else
+#define PROTOC_ATOLL(x) std::atoll((x))
+#endif
+
 namespace
 {
 
@@ -424,7 +430,7 @@ protoc::int64_t decoder::get_integer() const
 {
     assert(current.type == token_integer);
 
-    return std::atoll(current.range.begin());
+    return PROTOC_ATOLL(current.range.begin());
 }
 
 protoc::float64_t decoder::get_float() const
