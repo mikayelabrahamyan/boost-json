@@ -26,7 +26,7 @@
 //-----------------------------------------------------------------------------
 
 #if defined(_MSC_VER) && (_MSC_VER < 1200)
-#define PROTOC_ATOLL(x) std::atol((x))
+#define PROTOC_ATOLL(x) _atoi64((x))
 #else
 #define PROTOC_ATOLL(x) std::atoll((x))
 #endif
