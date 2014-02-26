@@ -559,9 +559,27 @@ BOOST_AUTO_TEST_CASE(test_binary_empty)
 {
     std::ostringstream result;
     transenc::stream_oarchive ar(result);
-    std::vector<char> value;
+    std::vector<unsigned char> value;
     ar << value;
     BOOST_REQUIRE_EQUAL(result.str().data(), "\xAB\x00");
+}
+
+BOOST_AUTO_TEST_CASE(test_binary_one)
+{
+    std::ostringstream result;
+    transenc::stream_oarchive ar(result);
+    std::vector<unsigned char> value(1, 0xFF);
+    ar << value;
+    BOOST_REQUIRE_EQUAL(result.str().data(), "\xAB\x01\xFF");
+}
+
+BOOST_AUTO_TEST_CASE(test_binary_two)
+{
+    std::ostringstream result;
+    transenc::stream_oarchive ar(result);
+    std::vector<unsigned char> value(2, 0xFF);
+    ar << value;
+    BOOST_REQUIRE_EQUAL(result.str().data(), "\xAB\x02\xFF\xFF");
 }
 
 BOOST_AUTO_TEST_SUITE_END()

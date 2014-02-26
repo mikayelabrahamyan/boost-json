@@ -44,8 +44,6 @@ public:
     template <typename T>
     void write(BOOST_FWD_REF(T) value);
 
-    void write(const output_type::value_type *data, size_type size);
-
     void write_array_begin();
     void write_array_begin(size_type);
     void write_array_end();
@@ -114,13 +112,6 @@ void writer::write(BOOST_FWD_REF(T) value)
     validate();
     stack.top().write_separator();
     encoder.put(boost::forward<T>(value));
-}
-
-inline void writer::write(const output_type::value_type *data, size_type size)
-{
-    validate();
-    stack.top().write_separator();
-    encoder.put(data, size);
 }
 
 inline void writer::write_array_begin()

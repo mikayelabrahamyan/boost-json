@@ -67,7 +67,7 @@ std::size_t encoder::put(int value)
     }
 }
 
-std::size_t encoder::put(long long value)
+std::size_t encoder::put(protoc::int64_t value)
 {
     if ((value <= std::numeric_limits<protoc::int8_t>::max()) &&
         (value >= std::numeric_limits<protoc::int8_t>::min()))
@@ -276,7 +276,7 @@ std::size_t encoder::put(const std::string& value)
     return sizeof(output::value_type) + size + length;
 }
 
-std::size_t encoder::put(const char *value, std::size_t length)
+std::size_t encoder::put(const unsigned char * value, std::size_t length)
 {
     std::size_t size = 0;
 
@@ -498,7 +498,7 @@ std::size_t encoder::write(protoc::int64_t value)
     buffer.write(static_cast<output::value_type>((value >> 32) & 0xFF));
     buffer.write(static_cast<output::value_type>((value >> 40) & 0xFF));
     buffer.write(static_cast<output::value_type>((value >> 48) & 0xFF));
-    buffer.write(static_cast<output::value_type>((value >> 54) & 0xFF));
+    buffer.write(static_cast<output::value_type>((value >> 56) & 0xFF));
     return sizeof(protoc::int64_t);
 }
 

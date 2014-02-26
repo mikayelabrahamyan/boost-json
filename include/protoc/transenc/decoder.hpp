@@ -33,7 +33,8 @@ namespace detail
 class decoder
 {
 public:
-    typedef protoc::input_range<protoc::uint8_t> input_range;
+    typedef const unsigned char value_type;
+    typedef protoc::input_range<value_type> input_range;
 
     decoder(input_range::const_iterator begin, input_range::const_iterator end);
     decoder(const decoder&);
@@ -47,8 +48,8 @@ public:
     protoc::int64_t get_int64() const;
     protoc::float32_t get_float32() const;
     protoc::float64_t get_float64() const;
-    std::string get_binary() const;
     std::string get_string() const;
+    input_range get_range() const;
 
 private:
     token next_int8();

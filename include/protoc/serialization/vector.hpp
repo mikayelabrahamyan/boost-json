@@ -68,30 +68,6 @@ struct load_functor< Archive, typename std::vector<T, Allocator> >
     }
 };
 
-// Specialization of std::vector<char> for binary data
-
-template <typename Archive, typename Allocator>
-struct save_functor< Archive, typename std::vector<char, Allocator> >
-{
-    void operator () (Archive& ar,
-                      const std::vector<char, Allocator>& data,
-                      const unsigned int version)
-    {
-        ar.save_binary(data.data(), data.size());
-    }
-};
-
-template <typename Archive, typename Allocator>
-struct load_functor< Archive, typename std::vector<char, Allocator> >
-{
-    void operator () (Archive& ar,
-                      std::vector<char, Allocator>& data,
-                      const unsigned int version)
-    {
-        // FIXME: load_binary
-    }
-};
-
 template <typename T, typename Allocator>
 struct serialize_functor< typename std::vector<T, Allocator> >
 {

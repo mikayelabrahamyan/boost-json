@@ -35,6 +35,8 @@ class iarchive
     friend class boost::archive::load_access;
 
 public:
+    typedef transenc::reader::value_type value_type;
+
     iarchive(const transenc::reader&);
     template <typename Iterator>
     iarchive(Iterator begin, Iterator end);
@@ -52,6 +54,9 @@ public:
     void load(float&);
     void load(double&);
     void load(std::string&);
+
+    std::size_t load_binary_begin();
+    void load(void *, std::size_t);
 
     void load_record_begin();
     void load_record_end();
@@ -85,6 +90,7 @@ private:
 
 BOOST_SERIALIZATION_REGISTER_ARCHIVE(protoc::transenc::iarchive);
 
+#include <cstring> // std::memcpy
 #include <sstream>
 #include <protoc/exceptions.hpp>
 
@@ -147,6 +153,20 @@ inline void iarchive::load(std::string& value)
 {
     value = reader.get_string();
     reader.next();
+}
+
+inline std::size_t iarchive::load_binary_begin()
+{
+    reader::range_type range = reader.get_range();
+    return range.size();
+}
+
+inline void iarchive::load(void *destination, std::size_t size)
+{
+    reader::range_type range = reader.get_range();
+    assert(range.size() == size);
+    std::memcpy(destination, range.begin(), size);
+    reader.next(protoc::token::token_binary);
 }
 
 inline void iarchive::load_record_begin()

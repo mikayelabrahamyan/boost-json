@@ -45,7 +45,7 @@ public:
     void save(double);
     void save(const char *);
     void save(const std::string&);
-    void save_binary(const char *, std::size_t);
+    void save(const unsigned char *, std::size_t);
 
     void save_record_begin();
     void save_record_end();
@@ -137,7 +137,7 @@ inline void oarchive::save(const std::string& value)
     encoder.put(value);
 }
 
-inline void oarchive::save_binary(const char *data, std::size_t size)
+inline void oarchive::save(const unsigned char *data, std::size_t size)
 {
     encoder.put(data, size);
 }

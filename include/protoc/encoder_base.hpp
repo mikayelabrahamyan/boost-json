@@ -20,6 +20,7 @@
 
 #include <cstddef> // std::size_t
 #include <string>
+#include <protoc/types.hpp>
 
 namespace protoc
 {
@@ -33,9 +34,9 @@ public:
     virtual std::size_t put() = 0; // Null
     virtual std::size_t put(bool) = 0;
     virtual std::size_t put(int) = 0;
-    virtual std::size_t put(long long) = 0;
-    virtual std::size_t put(float) = 0;
-    virtual std::size_t put(double) = 0;
+    virtual std::size_t put(protoc::int64_t) = 0;
+    virtual std::size_t put(protoc::float32_t) = 0;
+    virtual std::size_t put(protoc::float64_t) = 0;
     virtual std::size_t put(const char *) = 0;
     virtual std::size_t put(const std::string&) = 0;
 
@@ -48,10 +49,6 @@ public:
     virtual std::size_t put_map_begin() = 0;
     virtual std::size_t put_map_begin(std::size_t) = 0;
     virtual std::size_t put_map_end() = 0;
-    // FIXME: put_separator(const char *) ?
-
-    // Binary data
-    virtual std::size_t put(const char *, std::size_t) = 0;
 };
 
 } // namespace protoc

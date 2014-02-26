@@ -39,7 +39,6 @@ public:
     void save(double);
     void save(const char *);
     void save(const std::string&);
-    void save_binary(const char *, std::size_t);
 
     void save_record_begin();
     void save_record_end();
@@ -129,11 +128,6 @@ inline void oarchive::save(const char *value)
 inline void oarchive::save(const std::string& value)
 {
     writer.write(value);
-}
-
-inline void oarchive::save_binary(const char *data, std::size_t size)
-{
-    writer.write(data, size);
 }
 
 inline void oarchive::save_record_begin()

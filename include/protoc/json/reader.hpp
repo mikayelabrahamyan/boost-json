@@ -47,6 +47,7 @@ public:
     virtual long long get_long_long() const;
     virtual double get_double() const;
     virtual std::string get_string() const;
+    virtual range_type get_range() const;
 
 private:
     detail::decoder decoder;
@@ -286,6 +287,12 @@ inline std::string reader::get_string() const
         error << current;
         throw invalid_value(error.str());
     }
+}
+
+inline reader::range_type reader::get_range() const
+{
+    assert(false); // FIXME
+    return range_type();
 }
 
 inline reader::frame::frame(detail::token token)

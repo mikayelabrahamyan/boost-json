@@ -78,7 +78,7 @@ std::size_t encoder::put(int value)
     return size;
 }
 
-std::size_t encoder::put(long long value)
+std::size_t encoder::put(protoc::int64_t value)
 {
     std::string work = boost::lexical_cast<std::string>(value);
     const std::string::size_type size = work.size();
@@ -98,12 +98,12 @@ std::size_t encoder::put(long long value)
     return size;
 }
 
-std::size_t encoder::put(float value)
+std::size_t encoder::put(protoc::float32_t value)
 {
     return put(double(value));
 }
 
-std::size_t encoder::put(double value)
+std::size_t encoder::put(protoc::float64_t value)
 {
     const int fpclass = boost::math::fpclassify(value);
     if ((fpclass == FP_INFINITE) || (fpclass == FP_NAN))
@@ -269,12 +269,6 @@ std::size_t encoder::put_comma()
 std::size_t encoder::put_colon()
 {
     return put_value(':');
-}
-
-std::size_t encoder::put(const char *, std::size_t)
-{
-    assert(false);
-    return 0;
 }
 
 std::size_t encoder::put_text(const char *value, std::size_t size)

@@ -22,14 +22,14 @@
 namespace
 {
 // Code patterns (masked by 1111 10000)
-const protoc::uint8_t code_pattern8 = 0xA0;
-const protoc::uint8_t code_pattern_length8 = 0xA8;
-const protoc::uint8_t code_pattern16 = 0xB0;
-const protoc::uint8_t code_pattern_length16 = 0xB8;
-const protoc::uint8_t code_pattern32 = 0xC0;
-const protoc::uint8_t code_pattern_length32 = 0xC8;
-const protoc::uint8_t code_pattern64 = 0xD0;
-const protoc::uint8_t code_pattern_length64 = 0xD8;
+const protoc::transenc::value_type code_pattern8 = 0xA0;
+const protoc::transenc::value_type code_pattern_length8 = 0xA8;
+const protoc::transenc::value_type code_pattern16 = 0xB0;
+const protoc::transenc::value_type code_pattern_length16 = 0xB8;
+const protoc::transenc::value_type code_pattern32 = 0xC0;
+const protoc::transenc::value_type code_pattern_length32 = 0xC8;
+const protoc::transenc::value_type code_pattern64 = 0xD0;
+const protoc::transenc::value_type code_pattern_length64 = 0xD8;
 } // anonymous namespace
 
 namespace protoc
@@ -291,12 +291,11 @@ protoc::float64_t decoder::get_float64() const
     return result;
 }
 
-std::string decoder::get_binary() const
+decoder::input_range decoder::get_range() const
 {
     assert(current.type == token_binary);
 
-    return std::string(reinterpret_cast<const std::string::value_type *>(current.range.begin()),
-                       current.range.size());
+    return current.range;
 }
 
 std::string decoder::get_string() const

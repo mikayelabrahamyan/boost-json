@@ -32,7 +32,8 @@ namespace transenc
 class encoder : public protoc::encoder_base
 {
 public:
-    typedef protoc::output<protoc::uint8_t> output;
+    typedef unsigned char value_type;
+    typedef protoc::output<value_type> output;
 
     encoder(output&);
     encoder(const encoder&);
@@ -40,12 +41,12 @@ public:
     std::size_t put(); // Null
     std::size_t put(bool);
     std::size_t put(int);
-    std::size_t put(long long);
+    std::size_t put(protoc::int64_t);
     std::size_t put(protoc::float32_t);
     std::size_t put(protoc::float64_t);
     std::size_t put(const char *);
     std::size_t put(const std::string&);
-    std::size_t put(const char *, std::size_t);
+    std::size_t put(const unsigned char *, std::size_t);
 
     std::size_t put_record_begin();
     std::size_t put_record_end();

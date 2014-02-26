@@ -20,6 +20,7 @@
 
 #include <cstddef> // std::size_t
 #include <string>
+#include <boost/range/iterator_range.hpp>
 #include <protoc/token.hpp>
 
 namespace protoc
@@ -28,7 +29,10 @@ namespace protoc
 class reader
 {
 public:
+    typedef const unsigned char value_type;
+    typedef value_type * pointer;
     typedef std::size_t size_type;
+    typedef boost::iterator_range<pointer> range_type;
 
     virtual ~reader() {}
 
@@ -44,6 +48,7 @@ public:
     virtual long long get_long_long() const = 0;
     virtual double get_double() const = 0;
     virtual std::string get_string() const = 0;
+    virtual range_type get_range() const = 0;
 };
 
 } // namespace protoc
