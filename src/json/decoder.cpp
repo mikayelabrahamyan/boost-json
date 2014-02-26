@@ -585,7 +585,7 @@ token decoder::next_string()
     input_range::const_iterator begin = input.begin();
     while (!input.empty())
     {
-        const int amount = extra_bytes(*input);
+        const input_range::size_type amount = extra_bytes(*input);
 
         if (amount > 0)
         {
@@ -596,7 +596,7 @@ token decoder::next_string()
 
             ++input;
 
-            for (int i = 0; i < amount; ++i)
+            for (input_range::size_type i = 0; i < amount; ++i)
             {
                 // Check for 10xxxxxx pattern of subsequent bytes
                 if ((*input & 0xC0) != 0x80)
