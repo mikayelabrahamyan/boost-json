@@ -1,5 +1,5 @@
-#ifndef PROTOC_MSGPACK_DECODER_HPP
-#define PROTOC_MSGPACK_DECODER_HPP
+#ifndef PROTOC_MSGPACK_DETAIL_DECODER_HPP
+#define PROTOC_MSGPACK_DETAIL_DECODER_HPP
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -28,15 +28,20 @@ namespace protoc
 {
 namespace msgpack
 {
+namespace detail
+{
 
 class decoder
 {
-    typedef protoc::input_range<char> input_range;
-
 public:
-    decoder(const char *begin, const char *end);
+    typedef const unsigned char value_type;
+    typedef protoc::input_range<value_type> input_range;
 
-    token next();
+    decoder(input_range::const_iterator begin, input_range::const_iterator end);
+    decoder(const decoder&);
+
+    token type() const;
+    void next();
 
     protoc::int8_t get_int8() const;
     protoc::int16_t get_int16() const;
@@ -50,6 +55,7 @@ public:
     protoc::float64_t get_float64() const;
     std::vector<protoc::uint8_t> get_raw() const;
     protoc::uint32_t get_count() const;
+    input_range get_range() const;
 
 private:
     token next_int8();
@@ -62,6 +68,7 @@ private:
     token next_uint64();
     token next_float32();
     token next_float64();
+    token next_fixraw();
     token next_raw8();
     token next_raw16();
     token next_raw32();
@@ -78,7 +85,8 @@ private:
     } current;
 };
 
-}
-}
+} // namespace detail
+} // namespace msgpack
+} // namespace protoc
 
-#endif /* PROTOC_MSGPACK_DECODER_HPP */
+#endif /* PROTOC_MSGPACK_DETAIL_DECODER_HPP */

@@ -1,5 +1,5 @@
-#ifndef PROTOC_MSGPACK_ENCODER_HPP
-#define PROTOC_MSGPACK_ENCODER_HPP
+#ifndef PROTOC_MSGPACK_DETAIL_ENCODER_HPP
+#define PROTOC_MSGPACK_DETAIL_ENCODER_HPP
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -26,11 +26,14 @@ namespace protoc
 {
 namespace msgpack
 {
+namespace detail
+{
 
 class encoder
 {
 public:
-    typedef protoc::output<char> output;
+    typedef unsigned char value_type;
+    typedef protoc::output<value_type> output;
 
     encoder(output&);
 
@@ -53,7 +56,8 @@ private:
     output& buffer;
 };
 
-}
-}
+} // namespace detail
+} // namespace msgpack
+} // namespace protoc
 
-#endif /* PROTOC_MSGPACK_ENCODER_HPP */
+#endif /* PROTOC_MSGPACK_DETAIL_ENCODER_HPP */

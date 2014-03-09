@@ -22,6 +22,8 @@ namespace protoc
 {
 namespace msgpack
 {
+namespace detail
+{
 
 enum token
 {
@@ -54,7 +56,8 @@ enum token
     token_array32
 };
 
-}
-}
+} // namespace detail
+} // namespace msgpack
+} // namespace protoc
 
 #endif /* PROTOC_MSGPACK_TOKEN_HPP */

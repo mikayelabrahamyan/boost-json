@@ -15,11 +15,13 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-#include <protoc/msgpack/encoder.hpp>
+#include <protoc/msgpack/detail/encoder.hpp>
 
 namespace protoc
 {
 namespace msgpack
+{
+namespace detail
 {
 
 encoder::encoder(output& buffer)
@@ -72,5 +74,6 @@ std::size_t encoder::put(protoc::int8_t value)
     return size;
 }
 
-}
-}
+} // namespace detail
+} // namespace msgpack
+} // namespace protoc

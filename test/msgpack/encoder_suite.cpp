@@ -21,16 +21,17 @@
 #include <protoc/output.hpp>
 #include <protoc/output_array.hpp>
 #include <protoc/output_vector.hpp>
-#include <protoc/msgpack/encoder.hpp>
+#include <protoc/msgpack/detail/codes.hpp>
+#include <protoc/msgpack/detail/encoder.hpp>
 
-using namespace protoc;
+namespace format = protoc::msgpack::detail;
 
 template<std::size_t N>
-struct test_array : public output_array<char, N>
+struct test_array : public protoc::output_array<unsigned char, N>
 {
 };
 
-struct test_vector : public output_vector<char>
+struct test_vector : public protoc::output_vector<unsigned char>
 {
 };
 
@@ -43,7 +44,7 @@ BOOST_AUTO_TEST_SUITE(msgpack_encoder_suite)
 BOOST_AUTO_TEST_CASE(test_null_empty)
 {
     test_array<0> buffer;
-    msgpack::encoder encoder(buffer);
+    format::encoder encoder(buffer);
     BOOST_REQUIRE_EQUAL(encoder.put(), 0);
     BOOST_REQUIRE_EQUAL(buffer.size(), 0);
 }
@@ -51,16 +52,16 @@ BOOST_AUTO_TEST_CASE(test_null_empty)
 BOOST_AUTO_TEST_CASE(test_null)
 {
     test_array<1> buffer;
-    msgpack::encoder encoder(buffer);
+    format::encoder encoder(buffer);
     BOOST_REQUIRE_EQUAL(encoder.put(), 1);
     BOOST_REQUIRE_EQUAL(buffer.size(), 1);
-    BOOST_REQUIRE_EQUAL(buffer[0], '\xC0');
+    BOOST_REQUIRE_EQUAL(buffer[0], format::code_null);
 }
 
 BOOST_AUTO_TEST_CASE(test_true_empty)
 {
     test_array<0> buffer;
-    msgpack::encoder encoder(buffer);
+    format::encoder encoder(buffer);
     BOOST_REQUIRE_EQUAL(encoder.put(true), 0);
     BOOST_REQUIRE_EQUAL(buffer.size(), 0);
 }
@@ -68,16 +69,16 @@ BOOST_AUTO_TEST_CASE(test_true_empty)
 BOOST_AUTO_TEST_CASE(test_true)
 {
     test_array<1> buffer;
-    msgpack::encoder encoder(buffer);
+    format::encoder encoder(buffer);
     BOOST_REQUIRE_EQUAL(encoder.put(true), 1);
-    BOOST_REQUIRE_EQUAL(buffer[0], '\xC3');
+    BOOST_REQUIRE_EQUAL(buffer[0], format::code_true);
     BOOST_REQUIRE_EQUAL(buffer.size(), 1);
 }
 
 BOOST_AUTO_TEST_CASE(test_false_empty)
 {
     test_array<0> buffer;
-    msgpack::encoder encoder(buffer);
+    format::encoder encoder(buffer);
     BOOST_REQUIRE_EQUAL(encoder.put(false), 0);
     BOOST_REQUIRE_EQUAL(buffer.size(), 0);
 }
@@ -85,18 +86,18 @@ BOOST_AUTO_TEST_CASE(test_false_empty)
 BOOST_AUTO_TEST_CASE(test_false)
 {
     test_array<1> buffer;
-    msgpack::encoder encoder(buffer);
+    format::encoder encoder(buffer);
     BOOST_REQUIRE_EQUAL(encoder.put(false), 1);
-    BOOST_REQUIRE_EQUAL(buffer[0], '\xC2');
+    BOOST_REQUIRE_EQUAL(buffer[0], format::code_false);
     BOOST_REQUIRE_EQUAL(buffer.size(), 1);
 }
 
 BOOST_AUTO_TEST_CASE(test_vector_null)
 {
     test_vector buffer;
-    msgpack::encoder encoder(buffer);
+    format::encoder encoder(buffer);
     BOOST_REQUIRE_EQUAL(encoder.put(), 1);
-    BOOST_REQUIRE_EQUAL(buffer[0], '\xC0');
+    BOOST_REQUIRE_EQUAL(buffer[0], format::code_null);
     BOOST_REQUIRE_EQUAL(buffer.size(), 1);
 }
 
@@ -107,21 +108,21 @@ BOOST_AUTO_TEST_CASE(test_vector_null)
 BOOST_AUTO_TEST_CASE(test_int8_zero)
 {
     test_vector buffer;
-    msgpack::encoder encoder(buffer);
+    format::encoder encoder(buffer);
     BOOST_REQUIRE_EQUAL(encoder.put(protoc::int8_t(0)), 2);
     BOOST_REQUIRE_EQUAL(buffer.size(), 2);
-    BOOST_REQUIRE_EQUAL(buffer[0], '\xD0');
-    BOOST_REQUIRE_EQUAL(buffer[1], '\x00');
+    BOOST_REQUIRE_EQUAL(buffer[0], format::code_int8);
+    BOOST_REQUIRE_EQUAL(buffer[1], 0x00);
 }
 
 BOOST_AUTO_TEST_CASE(test_int8_one)
 {
     test_vector buffer;
-    msgpack::encoder encoder(buffer);
+    format::encoder encoder(buffer);
     BOOST_REQUIRE_EQUAL(encoder.put(protoc::int8_t(1)), 2);
     BOOST_REQUIRE_EQUAL(buffer.size(), 2);
-    BOOST_REQUIRE_EQUAL(buffer[0], '\xD0');
-    BOOST_REQUIRE_EQUAL(buffer[1], '\x01');
+    BOOST_REQUIRE_EQUAL(buffer[0], format::code_int8);
+    BOOST_REQUIRE_EQUAL(buffer[1], 0x01);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

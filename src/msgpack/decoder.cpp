@@ -16,32 +16,48 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 #include <cassert>
-#include <protoc/msgpack/decoder.hpp>
+#include <protoc/msgpack/detail/codes.hpp>
+#include <protoc/msgpack/detail/decoder.hpp>
 
-// http://wiki.msgpack.org/display/MSGPACK/Format+specification
+// https://github.com/msgpack/msgpack/blob/master/spec.md
 
 namespace protoc
 {
 namespace msgpack
 {
+namespace detail
+{
 
-decoder::decoder(const char *begin,
-                 const char *end)
+decoder::decoder(input_range::const_iterator begin,
+                 input_range::const_iterator end)
     : input(begin, end)
 {
     current.type = token_eof;
+    next();
 }
 
-token decoder::next()
+decoder::decoder(const decoder& other)
+    : input(other.input)
+{
+    current.type = other.current.type;
+    current.range = other.current.range;
+}
+
+token decoder::type() const
+{
+    return current.type;
+}
+
+void decoder::next()
 {
     if (current.type == token_error)
     {
-        return current.type;
+        return;
     }
     if (input.empty())
     {
         current.type = token_eof;
-        return current.type;
+        return;
     }
 
     input_range::value_type value = *input;
@@ -62,7 +78,7 @@ token decoder::next()
     else if ((value & 0xE0) == 0xA0)
     {
         // Fix raw
-        current.type = next_raw8();
+        current.type = next_fixraw();
     }
     else if ((value & 0xF0) == 0x90)
     {
@@ -73,74 +89,78 @@ token decoder::next()
     {
         switch (value)
         {
-        case '\xC0':
+        case code_null:
             current.type = token_null;
             ++input;
             break;
 
-        case '\xC2':
+        case code_false:
             current.type = token_false;
             ++input;
             break;
 
-        case '\xC3':
+        case code_true:
             current.type = token_true;
             ++input;
             break;
 
-        case '\xCA':
+        case code_float32:
             current.type = next_float32();
             break;
 
-        case '\xCB':
+        case code_float64:
             current.type = next_float64();
             break;
 
-        case '\xCC':
+        case code_uint8:
             current.type = next_uint8();
             break;
 
-        case '\xCD':
+        case code_uint16:
             current.type = next_uint16();
             break;
 
-        case '\xCE':
+        case code_uint32:
             current.type = next_uint32();
             break;
 
-        case '\xCF':
+        case code_uint64:
             current.type = next_uint64();
             break;
 
-        case '\xD0':
+        case code_int8:
             current.type = next_int8();
             break;
 
-        case '\xD1':
+        case code_int16:
             current.type = next_int16();
             break;
 
-        case '\xD2':
+        case code_int32:
             current.type = next_int32();
             break;
 
-        case '\xD3':
+        case code_int64:
             current.type = next_int64();
             break;
 
-        case '\xDA':
+        case code_str8:
+            current.type = next_raw8();
+            break;
+
+        case code_str16:
             current.type = next_raw16();
             break;
 
-        case '\xDB':
+        case code_str32:
             current.type = next_raw32();
             break;
 
-        case '\xDC':
+        case code_array16:
             current.type = next_array16();
             break;
 
-        case '\xDD':
+        case code_array32:
             current.type = next_array32();
             break;
 
@@ -149,8 +169,6 @@ token decoder::next()
             break;
         }
     }
-
-    return current.type;
 }
 
 protoc::int8_t decoder::get_int8() const
@@ -494,9 +512,12 @@ token decoder::next_float64()
     return token_float64;
 }
 
-token decoder::next_raw8()
+token decoder::next_fixraw()
 {
-    const std::size_t size = *input & 0x1F;
+    assert(*input >= code_fixstr_0);
+    assert(*input <= code_fixstr_31);
+
+    const std::size_t size = *input - code_fixstr_0;
 
     ++input; // Skip token
 
@@ -507,6 +528,33 @@ token decoder::next_raw8()
 
     current.range = input_range(input.begin(), input.begin() + size);
     input += size;
+
+    return token_raw8;
+}
+
+token decoder::next_raw8()
+{
+    ++input; // Skip token
+
+    const std::size_t size = sizeof(protoc::uint8_t);
+    if (input.size() < size)
+    {
+        return token_eof;
+    }
+
+    current.type = token_uint8;
+    current.range = input_range(input.begin(), input.begin() + size);
+
+    protoc::uint8_t length = get_uint8();
+    input += size;
+
+    if (input.size() < length)
+    {
+        return token_eof;
+    }
+
+    current.range = input_range(input.begin(), input.begin() + length);
+    input += length;
 
     return token_raw8;
 }
@@ -606,5 +654,6 @@ token decoder::next_array32()
     return token_array32;
 }
 
-}
-}
+} // namespace detail
+} // namespace msgpack
+} // namespace protoc
