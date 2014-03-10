@@ -1,5 +1,5 @@
-#ifndef PROTOC_MSGPACK_TOKEN_HPP
-#define PROTOC_MSGPACK_TOKEN_HPP
+#ifndef PROTOC_MSGPACK_DETAIL_TOKEN_HPP
+#define PROTOC_MSGPACK_DETAIL_TOKEN_HPP
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -60,4 +60,4 @@ enum token
 } // namespace msgpack
 } // namespace protoc
 
-#endif /* PROTOC_MSGPACK_TOKEN_HPP */
+#endif /* PROTOC_MSGPACK_DETAIL_TOKEN_HPP */

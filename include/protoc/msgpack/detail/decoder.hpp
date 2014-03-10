@@ -22,7 +22,7 @@
 #include <vector>
 #include <protoc/types.hpp>
 #include <protoc/input_range.hpp>
-#include <protoc/msgpack/token.hpp>
+#include <protoc/msgpack/detail/token.hpp>
 
 namespace protoc
 {
