@@ -21,6 +21,7 @@
 #include <stack>
 #include <protoc/reader.hpp>
 #include <protoc/token.hpp>
+#include <protoc/transenc/token.hpp>
 #include <protoc/transenc/decoder.hpp>
 
 namespace protoc
@@ -59,7 +60,6 @@ private:
 
 #include <sstream>
 #include <protoc/exceptions.hpp>
-#include <protoc/transenc/token.hpp>
 
 namespace protoc
 {
