@@ -72,7 +72,8 @@ reader::reader(ForwardIterator begin, ForwardIterator end)
 }
 
 inline reader::reader(const reader& other)
-    : decoder(other.decoder)
+    : decoder(other.decoder),
+      stack(other.stack)
 {
 }
 
