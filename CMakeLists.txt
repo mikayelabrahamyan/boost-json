@@ -78,6 +78,7 @@ add_executable(protoctest
   test/json/oarchive_suite.cpp
   test/msgpack/decoder_suite.cpp
   test/msgpack/encoder_suite.cpp
+  test/msgpack/reader_suite.cpp
   test/transenc/decoder_suite.cpp
   test/transenc/encoder_suite.cpp
   test/transenc/reader_suite.cpp

@@ -932,21 +932,18 @@ BOOST_AUTO_TEST_CASE(test_fixstr_0)
 {
     format::decoder::value_type input[] = { format::code_fixstr_0 };
     format::decoder decoder(input, input + sizeof(input));
-    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_raw8);
-    std::vector<protoc::uint8_t> container = decoder.get_raw();
-    BOOST_REQUIRE_EQUAL(container.size(), 0U);
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_str8);
+    BOOST_REQUIRE_EQUAL(decoder.get_string(), "");
     decoder.next();
     BOOST_REQUIRE_EQUAL(decoder.type(), format::token_eof);
 }
 
 BOOST_AUTO_TEST_CASE(test_fixstr_1)
 {
-    format::decoder::value_type input[] = { format::code_fixstr_1, 0x12 };
+    format::decoder::value_type input[] = { format::code_fixstr_1, 0x41 };
     format::decoder decoder(input, input + sizeof(input));
-    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_raw8);
-    std::vector<protoc::uint8_t> container = decoder.get_raw();
-    BOOST_REQUIRE_EQUAL(container.size(), 1U);
-    BOOST_REQUIRE_EQUAL(container[0], 0x12);
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_str8);
+    BOOST_REQUIRE_EQUAL(decoder.get_string(), "A");
     decoder.next();
     BOOST_REQUIRE_EQUAL(decoder.type(), format::token_eof);
 }
@@ -960,50 +957,37 @@ BOOST_AUTO_TEST_CASE(fail_fixstr_1_missing_one)
 
 BOOST_AUTO_TEST_CASE(test_fixstr_2)
 {
-    format::decoder::value_type input[] = { format::code_fixstr_2, 0x12, 0x34 };
+    format::decoder::value_type input[] = { format::code_fixstr_2, 0x41, 0x42 };
     format::decoder decoder(input, input + sizeof(input));
-    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_raw8);
-    std::vector<protoc::uint8_t> container = decoder.get_raw();
-    BOOST_REQUIRE_EQUAL(container.size(), 2U);
-    BOOST_REQUIRE_EQUAL(container[0], 0x12);
-    BOOST_REQUIRE_EQUAL(container[1], 0x34);
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_str8);
+    BOOST_REQUIRE_EQUAL(decoder.get_string(), "AB");
     decoder.next();
     BOOST_REQUIRE_EQUAL(decoder.type(), format::token_eof);
 }
 
 BOOST_AUTO_TEST_CASE(test_fixstr_15)
 {
-    format::decoder::value_type input[] = { format::code_fixstr_15, 0x12, 0x34, 0x12, 0x34, 0x12, 0x34, 0x12, 0x34, 0x12, 0x34, 0x12, 0x34, 0x12, 0x34, 0x12 };
+    format::decoder::value_type input[] = { format::code_fixstr_15, 0x41, 0x42, 0x43, 0x44, 0x45, 0x46, 0x47, 0x48, 0x49, 0x4A, 0x4B, 0x4C, 0x4D, 0x4E, 0x4F };
     format::decoder decoder(input, input + sizeof(input));
-    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_raw8);
-    std::vector<protoc::uint8_t> container = decoder.get_raw();
-    BOOST_REQUIRE_EQUAL(container.size(), 15U);
-    BOOST_REQUIRE_EQUAL(container[0], 0x12);
-    BOOST_REQUIRE_EQUAL(container[1], 0x34);
-    // Assume inbetween are ok
-    BOOST_REQUIRE_EQUAL(container[14], 0x12);
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_str8);
+    BOOST_REQUIRE_EQUAL(decoder.get_string(), "ABCDEFGHIJKLMNO");
     decoder.next();
     BOOST_REQUIRE_EQUAL(decoder.type(), format::token_eof);
 }
 
 BOOST_AUTO_TEST_CASE(fail_fixstr_15_missing_one)
 {
-    format::decoder::value_type input[] = { format::code_fixstr_15, 0x12, 0x34, 0x12, 0x34, 0x12, 0x34, 0x12, 0x34, 0x12, 0x34, 0x12, 0x34, 0x12, 0x34 };
+    format::decoder::value_type input[] = { format::code_fixstr_15, 0x41, 0x42, 0x43, 0x44, 0x45, 0x46, 0x47, 0x48, 0x49, 0x4A, 0x4B, 0x4C, 0x4D, 0x4E };
     format::decoder decoder(input, input + sizeof(input) - 1);
     BOOST_REQUIRE_EQUAL(decoder.type(), format::token_eof);
 }
 
 BOOST_AUTO_TEST_CASE(test_fixstr_max)
 {
-    format::decoder::value_type input[] = { format::code_fixstr_31, 0x12, 0x34, 0x12, 0x34, 0x12, 0x34, 0x12, 0x34, 0x12, 0x34, 0x12, 0x34, 0x12, 0x34, 0x12, 0x34, 0x12, 0x34, 0x12, 0x34, 0x12, 0x34, 0x12, 0x34, 0x12, 0x34, 0x12, 0x34, 0x12, 0x34, 0x12 };
+    format::decoder::value_type input[] = { format::code_fixstr_31, 0x41, 0x42, 0x43, 0x44, 0x45, 0x46, 0x47, 0x48, 0x49, 0x4A, 0x4B, 0x4C, 0x4D, 0x4E, 0x4F, 0x50, 0x51, 0x52, 0x53, 0x54, 0x55, 0x56, 0x57, 0x58, 0x59, 0x5A, 0x61, 0x62, 0x63, 0x64, 0x65 };
     format::decoder decoder(input, input + sizeof(input));
-    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_raw8);
-    std::vector<protoc::uint8_t> container = decoder.get_raw();
-    BOOST_REQUIRE_EQUAL(container.size(), 31U);
-    BOOST_REQUIRE_EQUAL(container[0], 0x12);
-    BOOST_REQUIRE_EQUAL(container[1], 0x34);
-    // Assume inbetween are ok
-    BOOST_REQUIRE_EQUAL(container[30], 0x12);
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_str8);
+    BOOST_REQUIRE_EQUAL(decoder.get_string(), "ABCDEFGHIJKLMNOPQRSTUVWXYZabcde");
     decoder.next();
     BOOST_REQUIRE_EQUAL(decoder.type(), format::token_eof);
 }
@@ -1016,9 +1000,8 @@ BOOST_AUTO_TEST_CASE(test_str8_empty)
 {
     format::decoder::value_type input[] = { format::code_str8, 0x00 };
     format::decoder decoder(input, input + sizeof(input));
-    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_raw8);
-    std::vector<protoc::uint8_t> container = decoder.get_raw();
-    BOOST_REQUIRE_EQUAL(container.size(), 0U);
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_str8);
+    BOOST_REQUIRE_EQUAL(decoder.get_string(), "");
     decoder.next();
     BOOST_REQUIRE_EQUAL(decoder.type(), format::token_eof);
 }
@@ -1027,10 +1010,8 @@ BOOST_AUTO_TEST_CASE(test_str8_one)
 {
     format::decoder::value_type input[] = { format::code_str8, 0x01, 0x41 };
     format::decoder decoder(input, input + sizeof(input));
-    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_raw8);
-    std::vector<protoc::uint8_t> container = decoder.get_raw();
-    BOOST_REQUIRE_EQUAL(container.size(), 1U);
-    BOOST_REQUIRE_EQUAL(container[0], 0x41);
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_str8);
+    BOOST_REQUIRE_EQUAL(decoder.get_string(), "A");
     decoder.next();
     BOOST_REQUIRE_EQUAL(decoder.type(), format::token_eof);
 }
@@ -1039,11 +1020,8 @@ BOOST_AUTO_TEST_CASE(test_str8_two)
 {
     format::decoder::value_type input[] = { format::code_str8, 0x02, 0x41, 0x42 };
     format::decoder decoder(input, input + sizeof(input));
-    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_raw8);
-    std::vector<protoc::uint8_t> container = decoder.get_raw();
-    BOOST_REQUIRE_EQUAL(container.size(), 2U);
-    BOOST_REQUIRE_EQUAL(container[0], 0x41);
-    BOOST_REQUIRE_EQUAL(container[1], 0x42);
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_str8);
+    BOOST_REQUIRE_EQUAL(decoder.get_string(), "AB");
     decoder.next();
     BOOST_REQUIRE_EQUAL(decoder.type(), format::token_eof);
 }
@@ -1059,9 +1037,8 @@ BOOST_AUTO_TEST_CASE(test_str16_empty)
 {
     format::decoder::value_type input[] = { format::code_str16, 0x00, 0x00 };
     format::decoder decoder(input, input + sizeof(input));
-    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_raw16);
-    std::vector<protoc::uint8_t> container = decoder.get_raw();
-    BOOST_REQUIRE_EQUAL(container.size(), 0U);
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_str16);
+    BOOST_REQUIRE_EQUAL(decoder.get_string(), "");
     decoder.next();
     BOOST_REQUIRE_EQUAL(decoder.type(), format::token_eof);
 }
@@ -1070,10 +1047,8 @@ BOOST_AUTO_TEST_CASE(test_str16_one)
 {
     format::decoder::value_type input[] = { format::code_str16, 0x00, 0x01, 0x41 };
     format::decoder decoder(input, input + sizeof(input));
-    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_raw16);
-    std::vector<protoc::uint8_t> container = decoder.get_raw();
-    BOOST_REQUIRE_EQUAL(container.size(), 1U);
-    BOOST_REQUIRE_EQUAL(container[0], 0x41);
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_str16);
+    BOOST_REQUIRE_EQUAL(decoder.get_string(), "A");
     decoder.next();
     BOOST_REQUIRE_EQUAL(decoder.type(), format::token_eof);
 }
@@ -1096,9 +1071,8 @@ BOOST_AUTO_TEST_CASE(test_str32_empty)
 {
     format::decoder::value_type input[] = { format::code_str32, 0x00, 0x00, 0x00, 0x00 };
     format::decoder decoder(input, input + sizeof(input));
-    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_raw32);
-    std::vector<protoc::uint8_t> container = decoder.get_raw();
-    BOOST_REQUIRE_EQUAL(container.size(), 0U);
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_str32);
+    BOOST_REQUIRE_EQUAL(decoder.get_string(), "");
     decoder.next();
     BOOST_REQUIRE_EQUAL(decoder.type(), format::token_eof);
 }
@@ -1107,10 +1081,8 @@ BOOST_AUTO_TEST_CASE(test_str32_one)
 {
     format::decoder::value_type input[] = { format::code_str32, 0x00, 0x00, 0x00, 0x01, 0x41 };
     format::decoder decoder(input, input + sizeof(input));
-    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_raw32);
-    std::vector<protoc::uint8_t> container = decoder.get_raw();
-    BOOST_REQUIRE_EQUAL(container.size(), 1U);
-    BOOST_REQUIRE_EQUAL(container[0], 0x41);
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_str32);
+    BOOST_REQUIRE_EQUAL(decoder.get_string(), "A");
     decoder.next();
     BOOST_REQUIRE_EQUAL(decoder.type(), format::token_eof);
 }
@@ -1140,6 +1112,23 @@ BOOST_AUTO_TEST_CASE(fail_str32_missing_four)
 {
     format::decoder::value_type input[] = { format::code_str32 };
     format::decoder decoder(input, input + sizeof(input));
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_eof);
+}
+
+//-----------------------------------------------------------------------------
+// Binary
+//-----------------------------------------------------------------------------
+
+BOOST_AUTO_TEST_CASE(test_bin8_empty)
+{
+    format::decoder::value_type input[] = { format::code_bin8, 0x00 };
+    format::decoder decoder(input, input + sizeof(input));
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_bin8);
+    format::decoder::value_type expected[] = {};
+    format::decoder::input_range range = decoder.get_range();
+    BOOST_REQUIRE_EQUAL_COLLECTIONS(range.begin(), range.end(),
+                                    expected, expected + sizeof(expected));
+    decoder.next();
     BOOST_REQUIRE_EQUAL(decoder.type(), format::token_eof);
 }
 

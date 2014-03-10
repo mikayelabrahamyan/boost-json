@@ -53,7 +53,7 @@ public:
     protoc::uint64_t get_uint64() const;
     protoc::float32_t get_float32() const;
     protoc::float64_t get_float64() const;
-    std::vector<protoc::uint8_t> get_raw() const;
+    std::string get_string() const;
     protoc::uint32_t get_count() const;
     input_range get_range() const;
 
@@ -68,10 +68,13 @@ private:
     token next_uint64();
     token next_float32();
     token next_float64();
-    token next_fixraw();
-    token next_raw8();
-    token next_raw16();
-    token next_raw32();
+    token next_fixstr();
+    token next_str8();
+    token next_str16();
+    token next_str32();
+    token next_bin8();
+    token next_bin16();
+    token next_bin32();
     token next_array8();
     token next_array16();
     token next_array32();

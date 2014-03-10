@@ -75,16 +75,6 @@ void decoder::next()
         current.range = input_range(input.begin(), input.begin() + 1);
         ++input;
     }
-    else if ((value & 0xE0) == 0xA0)
-    {
-        // Fix raw
-        current.type = next_fixraw();
-    }
-    else if ((value & 0xF0) == 0x90)
-    {
-        // Fix array
-        current.type = next_array8();
-    }
     else
     {
         switch (value)
@@ -144,16 +134,82 @@ void decoder::next()
             current.type = next_int64();
             break;
 
+        case code_fixstr_0:
+        case code_fixstr_1:
+        case code_fixstr_2:
+        case code_fixstr_3:
+        case code_fixstr_4:
+        case code_fixstr_5:
+        case code_fixstr_6:
+        case code_fixstr_7:
+        case code_fixstr_8:
+        case code_fixstr_9:
+        case code_fixstr_10:
+        case code_fixstr_11:
+        case code_fixstr_12:
+        case code_fixstr_13:
+        case code_fixstr_14:
+        case code_fixstr_15:
+        case code_fixstr_16:
+        case code_fixstr_17:
+        case code_fixstr_18:
+        case code_fixstr_19:
+        case code_fixstr_20:
+        case code_fixstr_21:
+        case code_fixstr_22:
+        case code_fixstr_23:
+        case code_fixstr_24:
+        case code_fixstr_25:
+        case code_fixstr_26:
+        case code_fixstr_27:
+        case code_fixstr_28:
+        case code_fixstr_29:
+        case code_fixstr_30:
+        case code_fixstr_31:
+            current.type = next_fixstr();
+            break;
+
         case code_str8:
-            current.type = next_raw8();
+            current.type = next_str8();
             break;
 
         case code_str16:
-            current.type = next_raw16();
+            current.type = next_str16();
             break;
 
         case code_str32:
-            current.type = next_raw32();
+            current.type = next_str32();
+            break;
+
+        case code_bin8:
+            current.type = next_bin8();
+            break;
+
+        case code_bin16:
+            current.type = next_bin16();
+            break;
+
+        case code_bin32:
+            current.type = next_bin32();
+            break;
+
+        case code_fixarray_0:
+        case code_fixarray_1:
+        case code_fixarray_2:
+        case code_fixarray_3:
+        case code_fixarray_4:
+        case code_fixarray_5:
+        case code_fixarray_6:
+        case code_fixarray_7:
+        case code_fixarray_8:
+        case code_fixarray_9:
+        case code_fixarray_10:
+        case code_fixarray_11:
+        case code_fixarray_12:
+        case code_fixarray_13:
+        case code_fixarray_14:
+        case code_fixarray_15:
+            current.type = next_array8();
             break;
 
         case code_array16:
@@ -319,14 +375,14 @@ protoc::float64_t decoder::get_float64() const
     return result;
 }
 
-std::vector<protoc::uint8_t> decoder::get_raw() const
+std::string decoder::get_string() const
 {
-    assert((current.type == token_raw8) ||
-           (current.type == token_raw16) ||
-           (current.type == token_raw32));
+    assert((current.type == token_str8) ||
+           (current.type == token_str16) ||
+           (current.type == token_str32));
 
-    std::vector<protoc::uint8_t> result(current.range.begin(), current.range.end());
-    return result;
+    return std::string(reinterpret_cast<const std::string::value_type *>(current.range.begin()),
+                       current.range.size());
 }
 
 protoc::uint32_t decoder::get_count() const
@@ -350,6 +406,11 @@ protoc::uint32_t decoder::get_count() const
         assert(false);
         return 0;
     }
+}
+
+decoder::input_range decoder::get_range() const
+{
+    return current.range;
 }
 
 token decoder::next_int8()
@@ -512,7 +573,7 @@ token decoder::next_float64()
     return token_float64;
 }
 
-token decoder::next_fixraw()
+token decoder::next_fixstr()
 {
     assert(*input >= code_fixstr_0);
     assert(*input <= code_fixstr_31);
@@ -529,10 +590,28 @@ token decoder::next_fixraw()
     current.range = input_range(input.begin(), input.begin() + size);
     input += size;
 
-    return token_raw8;
+    return token_str8;
 }
 
-token decoder::next_raw8()
+token decoder::next_str8()
+{
+    token result = next_bin8();
+    return (result == token_bin8) ? token_str8 : result;
+}
+
+token decoder::next_str16()
+{
+    token result = next_bin16();
+    return (result == token_bin16) ? token_str16 : result;
+}
+
+token decoder::next_str32()
+{
+    token result = next_bin32();
+    return (result == token_bin32) ? token_str32 : result;
+}
+
+token decoder::next_bin8()
 {
     ++input; // Skip token
 
@@ -556,10 +635,10 @@ token decoder::next_raw8()
     current.range = input_range(input.begin(), input.begin() + length);
     input += length;
 
-    return token_raw8;
+    return token_bin8;
 }
 
-token decoder::next_raw16()
+token decoder::next_bin16()
 {
     ++input; // Skip token
 
@@ -583,10 +662,10 @@ token decoder::next_raw16()
     current.range = input_range(input.begin(), input.begin() + length);
     input += length;
 
-    return token_raw16;
+    return token_bin16;
 }
 
-token decoder::next_raw32()
+token decoder::next_bin32()
 {
     ++input; // Skip token
 
@@ -610,7 +689,7 @@ token decoder::next_raw32()
     current.range = input_range(input.begin(), input.begin() + length);
     input += length;
 
-    return token_raw32;
+    return token_bin32;
 }
 
 token decoder::next_array8()

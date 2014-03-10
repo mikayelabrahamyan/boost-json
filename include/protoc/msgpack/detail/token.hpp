@@ -47,9 +47,13 @@ enum token
     token_float32,
     token_float64,
 
-    token_raw8,
-    token_raw16,
-    token_raw32,
+    token_str8,
+    token_str16,
+    token_str32,
+
+    token_bin8,
+    token_bin16,
+    token_bin32,
 
     token_array8,
     token_array16,
