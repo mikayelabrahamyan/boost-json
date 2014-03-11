@@ -99,8 +99,20 @@ BOOST_AUTO_TEST_CASE(test_fixstring)
 }
 
 //-----------------------------------------------------------------------------
-// Containers
+// Array
 //-----------------------------------------------------------------------------
+
+BOOST_AUTO_TEST_CASE(test_array8_empty)
+{
+    format::reader::value_type input[] = { detail::code_fixarray_0 };
+    format::reader reader(input, input + sizeof(input));
+    BOOST_REQUIRE_EQUAL(reader.type(), protoc::token::token_array_begin);
+    BOOST_REQUIRE_EQUAL(reader.size(), 0U);
+    BOOST_REQUIRE_EQUAL(reader.next(), true);
+    BOOST_REQUIRE_EQUAL(reader.type(), protoc::token::token_array_end);
+    BOOST_REQUIRE_EQUAL(reader.size(), 1U);
+    BOOST_REQUIRE_EQUAL(reader.next(), false);
+}
 
 BOOST_AUTO_TEST_CASE(test_array16_empty)
 {
@@ -145,6 +157,88 @@ BOOST_AUTO_TEST_CASE(test_array16_nested_one)
     BOOST_REQUIRE_EQUAL(reader.next(), true);
     BOOST_REQUIRE_EQUAL(reader.size(), 1U);
     BOOST_REQUIRE_EQUAL(reader.type(), protoc::token::token_array_end);
+    BOOST_REQUIRE_EQUAL(reader.next(), false);
+}
+
+//-----------------------------------------------------------------------------
+// Map
+//-----------------------------------------------------------------------------
+
+BOOST_AUTO_TEST_CASE(test_map8_empty)
+{
+    format::reader::value_type input[] = { detail::code_fixmap_0 };
+    format::reader reader(input, input + sizeof(input));
+    BOOST_REQUIRE_EQUAL(reader.type(), protoc::token::token_map_begin);
+    BOOST_REQUIRE_EQUAL(reader.size(), 0U);
+    BOOST_REQUIRE_EQUAL(reader.next(), true);
+    BOOST_REQUIRE_EQUAL(reader.type(), protoc::token::token_map_end);
+    BOOST_REQUIRE_EQUAL(reader.size(), 1U);
+    BOOST_REQUIRE_EQUAL(reader.next(), false);
+}
+
+BOOST_AUTO_TEST_CASE(test_map16_empty)
+{
+    format::reader::value_type input[] = { detail::code_map16, 0x00, 0x00 };
+    format::reader reader(input, input + sizeof(input));
+    BOOST_REQUIRE_EQUAL(reader.type(), protoc::token::token_map_begin);
+    BOOST_REQUIRE_EQUAL(reader.size(), 0U);
+    BOOST_REQUIRE_EQUAL(reader.next(), true);
+    BOOST_REQUIRE_EQUAL(reader.type(), protoc::token::token_map_end);
+    BOOST_REQUIRE_EQUAL(reader.size(), 1U);
+    BOOST_REQUIRE_EQUAL(reader.next(), false);
+}
+
+BOOST_AUTO_TEST_CASE(test_map16_one)
+{
+    format::reader::value_type input[] = { detail::code_map16, 0x00, 0x01, detail::code_null, detail::code_null };
+    format::reader reader(input, input + sizeof(input));
+    BOOST_REQUIRE_EQUAL(reader.type(), protoc::token::token_map_begin);
+    BOOST_REQUIRE_EQUAL(reader.size(), 0U);
+    BOOST_REQUIRE_EQUAL(reader.next(), true);
+    BOOST_REQUIRE_EQUAL(reader.size(), 1U);
+    BOOST_REQUIRE_EQUAL(reader.type(), protoc::token::token_null);
+    BOOST_REQUIRE_EQUAL(reader.next(), true);
+    BOOST_REQUIRE_EQUAL(reader.type(), protoc::token::token_null);
+    BOOST_REQUIRE_EQUAL(reader.next(), true);
+    BOOST_REQUIRE_EQUAL(reader.type(), protoc::token::token_map_end);
+    BOOST_REQUIRE_EQUAL(reader.next(), false);
+}
+
+BOOST_AUTO_TEST_CASE(fail_map16_one_missing_one)
+{
+    // There must be N pairs (N*2 objects) in the map
+    format::reader::value_type input[] = { detail::code_map16, 0x00, 0x01, detail::code_null };
+    format::reader reader(input, input + sizeof(input));
+    BOOST_REQUIRE_EQUAL(reader.type(), protoc::token::token_map_begin);
+    BOOST_REQUIRE_EQUAL(reader.size(), 0U);
+    BOOST_REQUIRE_EQUAL(reader.next(), true);
+    BOOST_REQUIRE_EQUAL(reader.size(), 1U);
+    BOOST_REQUIRE_EQUAL(reader.type(), protoc::token::token_null);
+    BOOST_REQUIRE_EQUAL(reader.next(), false);
+    BOOST_REQUIRE_EQUAL(reader.type(), protoc::token::token_eof);
+}
+
+BOOST_AUTO_TEST_CASE(test_map16_nested_one)
+{
+    format::reader::value_type input[] = { detail::code_map16, 0x00, 0x01, detail::code_null, detail::code_map16, 0x00, 0x01, detail::code_null, detail::code_null };
+    format::reader reader(input, input + sizeof(input));
+    BOOST_REQUIRE_EQUAL(reader.type(), protoc::token::token_map_begin);
+    BOOST_REQUIRE_EQUAL(reader.size(), 0U);
+    BOOST_REQUIRE_EQUAL(reader.next(), true);
+    BOOST_REQUIRE_EQUAL(reader.size(), 1U);
+    BOOST_REQUIRE_EQUAL(reader.type(), protoc::token::token_null);
+    BOOST_REQUIRE_EQUAL(reader.next(), true);
+    BOOST_REQUIRE_EQUAL(reader.type(), protoc::token::token_map_begin);
+    BOOST_REQUIRE_EQUAL(reader.next(), true);
+    BOOST_REQUIRE_EQUAL(reader.size(), 2U);
+    BOOST_REQUIRE_EQUAL(reader.type(), protoc::token::token_null);
+    BOOST_REQUIRE_EQUAL(reader.next(), true);
+    BOOST_REQUIRE_EQUAL(reader.type(), protoc::token::token_null);
+    BOOST_REQUIRE_EQUAL(reader.next(), true);
+    BOOST_REQUIRE_EQUAL(reader.type(), protoc::token::token_map_end);
+    BOOST_REQUIRE_EQUAL(reader.next(), true);
+    BOOST_REQUIRE_EQUAL(reader.size(), 1U);
+    BOOST_REQUIRE_EQUAL(reader.type(), protoc::token::token_map_end);
     BOOST_REQUIRE_EQUAL(reader.next(), false);
 }
 

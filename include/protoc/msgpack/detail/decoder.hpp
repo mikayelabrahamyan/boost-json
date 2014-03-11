@@ -54,6 +54,7 @@ public:
     protoc::float32_t get_float32() const;
     protoc::float64_t get_float64() const;
     std::string get_string() const;
+    // Decoder does not enforces that maps must have a even number of objects
     protoc::uint32_t get_count() const;
     input_range get_range() const;
 
@@ -78,6 +79,9 @@ private:
     token next_array8();
     token next_array16();
     token next_array32();
+    token next_map8();
+    token next_map16();
+    token next_map32();
  
 private:
     input_range input;

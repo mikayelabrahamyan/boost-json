@@ -92,9 +92,17 @@ inline protoc::token::value reader::type() const
     {
         // Handle end of containers
         stack_type::const_reference top = stack.top();
-        if ((top.count == 0) && (top.token == protoc::token::token_array_end))
+        if (top.count == 0)
         {
-            return top.token;
+            switch (top.token)
+            {
+            case protoc::token::token_array_end:
+            case protoc::token::token_map_end:
+                return top.token;
+
+            default:
+                break;
+            }
         }
     }
 
@@ -135,7 +143,10 @@ inline protoc::token::value reader::type() const
     case detail::token_array32:
         return protoc::token::token_array_begin;
 
-    // FIXME: etc.
+    case detail::token_map8:
+    case detail::token_map16:
+    case detail::token_map32:
+        return protoc::token::token_map_begin;
 
     default:
         std::ostringstream error;
@@ -155,18 +166,16 @@ inline bool reader::next()
     switch (current)
     {
     case detail::token_array8:
-        stack.push(element(protoc::token::token_array_begin, decoder.get_uint8()));
-        break;
-
     case detail::token_array16:
-        stack.push(element(protoc::token::token_array_begin, decoder.get_uint16()));
-        break;
-
     case detail::token_array32:
-        stack.push(element(protoc::token::token_array_begin, decoder.get_uint32()));
+        stack.push(element(protoc::token::token_array_begin, decoder.get_count()));
         break;
 
-    // FIXME: map
+    case detail::token_map8:
+    case detail::token_map16:
+    case detail::token_map32:
+        stack.push(element(protoc::token::token_map_begin, 2 * decoder.get_count()));
+        break;
 
     default:
         break;
@@ -183,6 +192,7 @@ inline bool reader::next()
             if (top.count == 0)
             {
                 top.token = protoc::token::token_array_end;
+                return true;
             }
             else
             {
@@ -198,6 +208,29 @@ inline bool reader::next()
                 parent.token = protoc::token::token_array_end;
                 return true;
             }
+            break;
+
+        case protoc::token::token_map_begin:
+            if (top.count == 0)
+            {
+                top.token = protoc::token::token_map_end;
+                return true;
+            }
+            else
+            {
+                --(top.count);
+            }
+            break;
+
+        case protoc::token::token_map_end:
+            stack.pop();
+            if (!stack.empty())
+            {
+                stack_type::reference parent = stack.top();
+                parent.token = protoc::token::token_map_end;
+                return true;
+            }
+            break;
 
         default:
             break;

@@ -220,6 +220,33 @@ void decoder::next()
             current.type = next_array32();
             break;
 
+        case code_fixmap_0:
+        case code_fixmap_1:
+        case code_fixmap_2:
+        case code_fixmap_3:
+        case code_fixmap_4:
+        case code_fixmap_5:
+        case code_fixmap_6:
+        case code_fixmap_7:
+        case code_fixmap_8:
+        case code_fixmap_9:
+        case code_fixmap_10:
+        case code_fixmap_11:
+        case code_fixmap_12:
+        case code_fixmap_13:
+        case code_fixmap_14:
+        case code_fixmap_15:
+            current.type = next_map8();
+            break;
+
+        case code_map16:
+            current.type = next_map16();
+            break;
+
+        case code_map32:
+            current.type = next_map32();
+            break;
+
         default:
             current.type = token_error;
             break;
@@ -284,7 +311,9 @@ protoc::int64_t decoder::get_int64() const
 
 protoc::uint8_t decoder::get_uint8() const
 {
-    assert(current.type == token_uint8);
+    assert((current.type == token_uint8) ||
+           (current.type == token_array8) ||
+           (current.type == token_map8));
     assert(current.range.size() == sizeof(protoc::uint8_t));
 
     return static_cast<protoc::uint8_t>(*current.range);
@@ -293,7 +322,8 @@ protoc::uint8_t decoder::get_uint8() const
 protoc::uint16_t decoder::get_uint16() const
 {
     assert((current.type == token_uint16) ||
-           (current.type == token_array16));
+           (current.type == token_array16) ||
+           (current.type == token_map16));
     assert(current.range.size() == sizeof(protoc::uint16_t));
 
     const protoc::uint16_t endian = 0x0001;
@@ -307,7 +337,8 @@ protoc::uint16_t decoder::get_uint16() const
 protoc::uint32_t decoder::get_uint32() const
 {
     assert((current.type == token_uint32) ||
-           (current.type == token_array32));
+           (current.type == token_array32) ||
+           (current.type == token_map32));
     assert(current.range.size() == sizeof(protoc::uint32_t));
 
     const protoc::uint32_t endian = 0x00010203;
@@ -389,17 +420,23 @@ protoc::uint32_t decoder::get_count() const
 {
     assert((current.type == token_array8) ||
            (current.type == token_array16) ||
-           (current.type == token_array32));
+           (current.type == token_array32) ||
+           (current.type == token_map8) ||
+           (current.type == token_map16) ||
+           (current.type == token_map32));
 
     switch (current.type)
     {
     case token_array8:
+    case token_map8:
         return static_cast<protoc::uint32_t>(*current.range & 0x0F);
 
     case token_array16:
+    case token_map16:
         return get_uint16();
 
     case token_array32:
+    case token_map32:
         return get_uint32();
 
     default:
@@ -731,6 +768,47 @@ token decoder::next_array32()
     input += size;
 
     return token_array32;
+}
+
+token decoder::next_map8()
+{
+    current.range = input_range(input.begin(), input.begin() + 1);
+
+    ++input; // Skip token
+
+    return token_map8;
+}
+
+token decoder::next_map16()
+{
+    ++input; // Skip token
+
+    const std::size_t size = sizeof(protoc::uint16_t);
+    if (input.size() < size)
+    {
+        return token_eof;
+    }
+
+    current.range = input_range(input.begin(), input.begin() + size);
+    input += size;
+
+    return token_map16;
+}
+
+token decoder::next_map32()
+{
+    ++input; // Skip token
+
+    const std::size_t size = sizeof(protoc::uint32_t);
+    if (input.size() < size)
+    {
+        return token_eof;
+    }
+
+    current.range = input_range(input.begin(), input.begin() + size);
+    input += size;
+
+    return token_map32;
 }
 
 } // namespace detail

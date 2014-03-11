@@ -29,6 +29,22 @@ namespace detail
 
 typedef unsigned char value_type;
 
+const value_type code_fixmap_0 = 0x80;
+const value_type code_fixmap_1 = 0x81;
+const value_type code_fixmap_2 = 0x82;
+const value_type code_fixmap_3 = 0x83;
+const value_type code_fixmap_4 = 0x84;
+const value_type code_fixmap_5 = 0x85;
+const value_type code_fixmap_6 = 0x86;
+const value_type code_fixmap_7 = 0x87;
+const value_type code_fixmap_8 = 0x88;
+const value_type code_fixmap_9 = 0x89;
+const value_type code_fixmap_10 = 0x8A;
+const value_type code_fixmap_11 = 0x8B;
+const value_type code_fixmap_12 = 0x8C;
+const value_type code_fixmap_13 = 0x8D;
+const value_type code_fixmap_14 = 0x8E;
+const value_type code_fixmap_15 = 0x8F;
 const value_type code_fixarray_0 = 0x90;
 const value_type code_fixarray_1 = 0x91;
 const value_type code_fixarray_2 = 0x92;
@@ -98,6 +114,8 @@ const value_type code_str16 = 0xDA;
 const value_type code_str32 = 0xDB;
 const value_type code_array16 = 0xDC;
 const value_type code_array32 = 0xDD;
+const value_type code_map16 = 0xDE;
+const value_type code_map32 = 0xDF;
 
 } // namespace detail
 } // namespace msgpack

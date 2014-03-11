@@ -1636,4 +1636,60 @@ BOOST_AUTO_TEST_CASE(fail_array32_missing_four)
     BOOST_REQUIRE_EQUAL(decoder.type(), format::token_eof);
 }
 
+//-----------------------------------------------------------------------------
+// Fixed map
+//-----------------------------------------------------------------------------
+
+BOOST_AUTO_TEST_CASE(test_fixmap_0)
+{
+    format::decoder::value_type input[] = { format::code_fixmap_0 };
+    format::decoder decoder(input, input + sizeof(input));
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_map8);
+    BOOST_REQUIRE_EQUAL(decoder.get_count(), 0U);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_eof);
+}
+
+BOOST_AUTO_TEST_CASE(test_fixmap_1)
+{
+    format::decoder::value_type input[] = { format::code_fixmap_1, format::code_null, format::code_null };
+    format::decoder decoder(input, input + sizeof(input));
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_map8);
+    BOOST_REQUIRE_EQUAL(decoder.get_count(), 1U);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_null);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_null);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_eof);
+}
+
+//-----------------------------------------------------------------------------
+// Map
+//-----------------------------------------------------------------------------
+
+BOOST_AUTO_TEST_CASE(test_map16_empty)
+{
+    format::decoder::value_type input[] = { format::code_map16, 0x00, 0x00 };
+    format::decoder decoder(input, input + sizeof(input));
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_map16);
+    BOOST_REQUIRE_EQUAL(decoder.get_count(), 0U);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_eof);
+}
+
+BOOST_AUTO_TEST_CASE(test_map16_one)
+{
+    format::decoder::value_type input[] = { format::code_map16, 0x00, 0x01, format::code_null, format::code_null };
+    format::decoder decoder(input, input + sizeof(input));
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_map16);
+    BOOST_REQUIRE_EQUAL(decoder.get_count(), 1U);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_null);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_null);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_eof);
+}
+
 BOOST_AUTO_TEST_SUITE_END()

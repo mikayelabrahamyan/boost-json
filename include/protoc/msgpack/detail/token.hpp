@@ -57,7 +57,11 @@ enum token
 
     token_array8,
     token_array16,
-    token_array32
+    token_array32,
+
+    token_map8,
+    token_map16,
+    token_map32
 };
 
 } // namespace detail
