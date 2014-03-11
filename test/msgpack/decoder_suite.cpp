@@ -1182,6 +1182,370 @@ BOOST_AUTO_TEST_CASE(test_fixarray_2)
     BOOST_REQUIRE_EQUAL(decoder.type(), format::token_eof);
 }
 
+BOOST_AUTO_TEST_CASE(test_fixarray_3)
+{
+    format::decoder::value_type input[] = { format::code_fixarray_3, format::code_null, format::code_null, format::code_null };
+    format::decoder decoder(input, input + sizeof(input));
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_array8);
+    BOOST_REQUIRE_EQUAL(decoder.get_count(), 3U);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_null);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_null);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_null);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_eof);
+}
+
+BOOST_AUTO_TEST_CASE(test_fixarray_4)
+{
+    format::decoder::value_type input[] = { format::code_fixarray_4, format::code_null, format::code_null, format::code_null, format::code_null };
+    format::decoder decoder(input, input + sizeof(input));
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_array8);
+    BOOST_REQUIRE_EQUAL(decoder.get_count(), 4U);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_null);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_null);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_null);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_null);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_eof);
+}
+
+BOOST_AUTO_TEST_CASE(test_fixarray_5)
+{
+    format::decoder::value_type input[] = { format::code_fixarray_5, format::code_null, format::code_null, format::code_null, format::code_null, format::code_null };
+    format::decoder decoder(input, input + sizeof(input));
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_array8);
+    BOOST_REQUIRE_EQUAL(decoder.get_count(), 5U);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_null);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_null);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_null);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_null);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_null);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_eof);
+}
+
+BOOST_AUTO_TEST_CASE(test_fixarray_6)
+{
+    format::decoder::value_type input[] = { format::code_fixarray_6, format::code_null, format::code_null, format::code_null, format::code_null, format::code_null, format::code_null };
+    format::decoder decoder(input, input + sizeof(input));
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_array8);
+    BOOST_REQUIRE_EQUAL(decoder.get_count(), 6U);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_null);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_null);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_null);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_null);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_null);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_null);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_eof);
+}
+
+BOOST_AUTO_TEST_CASE(test_fixarray_7)
+{
+    format::decoder::value_type input[] = { format::code_fixarray_7, format::code_null, format::code_null, format::code_null, format::code_null, format::code_null, format::code_null, format::code_null };
+    format::decoder decoder(input, input + sizeof(input));
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_array8);
+    BOOST_REQUIRE_EQUAL(decoder.get_count(), 7U);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_null);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_null);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_null);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_null);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_null);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_null);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_null);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_eof);
+}
+
+BOOST_AUTO_TEST_CASE(test_fixarray_8)
+{
+    format::decoder::value_type input[] = { format::code_fixarray_8, format::code_null, format::code_null, format::code_null, format::code_null, format::code_null, format::code_null, format::code_null, format::code_null };
+    format::decoder decoder(input, input + sizeof(input));
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_array8);
+    BOOST_REQUIRE_EQUAL(decoder.get_count(), 8U);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_null);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_null);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_null);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_null);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_null);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_null);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_null);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_null);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_eof);
+}
+
+BOOST_AUTO_TEST_CASE(test_fixarray_9)
+{
+    format::decoder::value_type input[] = { format::code_fixarray_9, format::code_null, format::code_null, format::code_null, format::code_null, format::code_null, format::code_null, format::code_null, format::code_null, format::code_null };
+    format::decoder decoder(input, input + sizeof(input));
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_array8);
+    BOOST_REQUIRE_EQUAL(decoder.get_count(), 9U);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_null);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_null);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_null);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_null);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_null);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_null);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_null);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_null);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_null);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_eof);
+}
+
+BOOST_AUTO_TEST_CASE(test_fixarray_10)
+{
+    format::decoder::value_type input[] = { format::code_fixarray_10, format::code_null, format::code_null, format::code_null, format::code_null, format::code_null, format::code_null, format::code_null, format::code_null, format::code_null, format::code_null };
+    format::decoder decoder(input, input + sizeof(input));
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_array8);
+    BOOST_REQUIRE_EQUAL(decoder.get_count(), 10U);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_null);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_null);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_null);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_null);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_null);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_null);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_null);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_null);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_null);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_null);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_eof);
+}
+
+BOOST_AUTO_TEST_CASE(test_fixarray_11)
+{
+    format::decoder::value_type input[] = { format::code_fixarray_11, format::code_null, format::code_null, format::code_null, format::code_null, format::code_null, format::code_null, format::code_null, format::code_null, format::code_null, format::code_null, format::code_null };
+    format::decoder decoder(input, input + sizeof(input));
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_array8);
+    BOOST_REQUIRE_EQUAL(decoder.get_count(), 11U);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_null);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_null);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_null);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_null);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_null);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_null);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_null);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_null);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_null);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_null);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_null);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_eof);
+}
+
+BOOST_AUTO_TEST_CASE(test_fixarray_12)
+{
+    format::decoder::value_type input[] = { format::code_fixarray_12, format::code_null, format::code_null, format::code_null, format::code_null, format::code_null, format::code_null, format::code_null, format::code_null, format::code_null, format::code_null, format::code_null, format::code_null };
+    format::decoder decoder(input, input + sizeof(input));
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_array8);
+    BOOST_REQUIRE_EQUAL(decoder.get_count(), 12U);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_null);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_null);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_null);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_null);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_null);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_null);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_null);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_null);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_null);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_null);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_null);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_null);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_eof);
+}
+
+BOOST_AUTO_TEST_CASE(test_fixarray_13)
+{
+    format::decoder::value_type input[] = { format::code_fixarray_13, format::code_null, format::code_null, format::code_null, format::code_null, format::code_null, format::code_null, format::code_null, format::code_null, format::code_null, format::code_null, format::code_null, format::code_null, format::code_null };
+    format::decoder decoder(input, input + sizeof(input));
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_array8);
+    BOOST_REQUIRE_EQUAL(decoder.get_count(), 13U);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_null);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_null);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_null);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_null);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_null);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_null);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_null);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_null);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_null);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_null);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_null);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_null);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_null);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_eof);
+}
+
+BOOST_AUTO_TEST_CASE(test_fixarray_14)
+{
+    format::decoder::value_type input[] = { format::code_fixarray_14, format::code_null, format::code_null, format::code_null, format::code_null, format::code_null, format::code_null, format::code_null, format::code_null, format::code_null, format::code_null, format::code_null, format::code_null, format::code_null, format::code_null };
+    format::decoder decoder(input, input + sizeof(input));
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_array8);
+    BOOST_REQUIRE_EQUAL(decoder.get_count(), 14U);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_null);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_null);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_null);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_null);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_null);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_null);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_null);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_null);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_null);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_null);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_null);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_null);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_null);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_null);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_eof);
+}
+
+BOOST_AUTO_TEST_CASE(test_fixarray_15)
+{
+    format::decoder::value_type input[] = { format::code_fixarray_15, format::code_null, format::code_null, format::code_null, format::code_null, format::code_null, format::code_null, format::code_null, format::code_null, format::code_null, format::code_null, format::code_null, format::code_null, format::code_null, format::code_null, format::code_null };
+    format::decoder decoder(input, input + sizeof(input));
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_array8);
+    BOOST_REQUIRE_EQUAL(decoder.get_count(), 15U);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_null);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_null);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_null);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_null);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_null);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_null);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_null);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_null);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_null);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_null);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_null);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_null);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_null);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_null);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_null);
+    decoder.next();
+    BOOST_REQUIRE_EQUAL(decoder.type(), format::token_eof);
+}
+
 //-----------------------------------------------------------------------------
 // Array
 //-----------------------------------------------------------------------------
