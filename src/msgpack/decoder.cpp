@@ -445,7 +445,7 @@ protoc::uint32_t decoder::get_count() const
     }
 }
 
-decoder::input_range decoder::get_range() const
+const decoder::input_range& decoder::get_range() const
 {
     return current.range;
 }

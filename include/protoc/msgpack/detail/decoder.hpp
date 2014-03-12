@@ -56,7 +56,7 @@ public:
     std::string get_string() const;
     // Decoder does not enforces that maps must have a even number of objects
     protoc::uint32_t get_count() const;
-    input_range get_range() const;
+    const input_range& get_range() const;
 
 private:
     token next_int8();
