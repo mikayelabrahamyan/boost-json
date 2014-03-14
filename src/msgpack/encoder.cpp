@@ -85,8 +85,7 @@ std::size_t encoder::put(int value)
 
 std::size_t encoder::put_int8(protoc::int8_t value)
 {
-    if ( ((value >= 0) && (value <= 127)) ||
-         ((value >= -32) && (value <= -1)) )
+    if (value >= -32)
     {
         const std::size_t size = sizeof(output::value_type);
 
@@ -156,6 +155,54 @@ std::size_t encoder::put_int64(protoc::int64_t value)
 
     buffer.write(type);
     buffer.write(value);
+    return size;
+}
+
+std::size_t encoder::put(protoc::float32_t value)
+{
+    const output::value_type type(code_float32);
+    const std::size_t size = sizeof(type) + sizeof(protoc::float32_t);
+
+    if (!buffer.grow(size))
+    {
+        return 0;
+    }
+
+    buffer.write(type);
+    // IEEE 754 single precision
+    const protoc::int32_t endian = 0x00010203; // Big-endian
+    protoc::int8_t *value_buffer = (protoc::int8_t *)&value;
+    buffer.write(static_cast<output::value_type>(value_buffer[((protoc::int8_t *)&endian)[0]]));
+    buffer.write(static_cast<output::value_type>(value_buffer[((protoc::int8_t *)&endian)[1]]));
+    buffer.write(static_cast<output::value_type>(value_buffer[((protoc::int8_t *)&endian)[2]]));
+    buffer.write(static_cast<output::value_type>(value_buffer[((protoc::int8_t *)&endian)[3]]));
+
+    return size;
+}
+
+std::size_t encoder::put(protoc::float64_t value)
+{
+    const output::value_type type(code_float64);
+    const std::size_t size = sizeof(type) + sizeof(protoc::float64_t);
+
+    if (!buffer.grow(size))
+    {
+        return 0;
+    }
+
+    buffer.write(type);
+    // IEEE 754 double precision
+    const protoc::int64_t endian = 0x0001020304050607; // Big-endian
+    protoc::int8_t *value_buffer = (protoc::int8_t *)&value;
+    buffer.write(static_cast<output::value_type>(value_buffer[((protoc::int8_t *)&endian)[0]]));
+    buffer.write(static_cast<output::value_type>(value_buffer[((protoc::int8_t *)&endian)[1]]));
+    buffer.write(static_cast<output::value_type>(value_buffer[((protoc::int8_t *)&endian)[2]]));
+    buffer.write(static_cast<output::value_type>(value_buffer[((protoc::int8_t *)&endian)[3]]));
+    buffer.write(static_cast<output::value_type>(value_buffer[((protoc::int8_t *)&endian)[4]]));
+    buffer.write(static_cast<output::value_type>(value_buffer[((protoc::int8_t *)&endian)[5]]));
+    buffer.write(static_cast<output::value_type>(value_buffer[((protoc::int8_t *)&endian)[6]]));
+    buffer.write(static_cast<output::value_type>(value_buffer[((protoc::int8_t *)&endian)[7]]));
+
     return size;
 }
 

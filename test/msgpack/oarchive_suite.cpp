@@ -28,7 +28,10 @@ BOOST_AUTO_TEST_CASE(test_empty)
 {
     std::ostringstream result;
     format::stream_oarchive ar(result);
-    BOOST_REQUIRE_EQUAL(result.str().data(), "");
+    char expected[] = { };
+    std::string got = result.str();
+    BOOST_REQUIRE_EQUAL_COLLECTIONS(got.begin(), got.end(),
+                                    expected, expected + sizeof(expected));
 }
 
 BOOST_AUTO_TEST_CASE(test_false)
@@ -37,8 +40,10 @@ BOOST_AUTO_TEST_CASE(test_false)
     format::stream_oarchive out(result);
     bool value = false;
     out << value;
-    char expected[] = { detail::code_false, 0x00 };
-    BOOST_REQUIRE_EQUAL(result.str().data(), expected);
+    char expected[] = { detail::code_false };
+    std::string got = result.str();
+    BOOST_REQUIRE_EQUAL_COLLECTIONS(got.begin(), got.end(),
+                                    expected, expected + sizeof(expected));
 }
 
 BOOST_AUTO_TEST_CASE(test_true)
@@ -47,8 +52,78 @@ BOOST_AUTO_TEST_CASE(test_true)
     format::stream_oarchive ar(result);
     bool value = true;
     ar << value;
-    char expected[] = { detail::code_true, 0x00 };
-    BOOST_REQUIRE_EQUAL(result.str().data(), expected);
+    char expected[] = { detail::code_true };
+    std::string got = result.str();
+    BOOST_REQUIRE_EQUAL_COLLECTIONS(got.begin(), got.end(),
+                                    expected, expected + sizeof(expected));
+}
+
+//-----------------------------------------------------------------------------
+// Integers
+//-----------------------------------------------------------------------------
+
+BOOST_AUTO_TEST_CASE(test_int_zero)
+{
+    std::ostringstream result;
+    format::stream_oarchive ar(result);
+    int value = 0;
+    ar << value;
+    char expected[] = { 0x00 };
+    std::string got = result.str();
+    BOOST_REQUIRE_EQUAL_COLLECTIONS(got.begin(), got.end(),
+                                    expected, expected + sizeof(expected));
+}
+
+//-----------------------------------------------------------------------------
+// Floating-point
+//-----------------------------------------------------------------------------
+
+BOOST_AUTO_TEST_CASE(test_float32_one)
+{
+    std::ostringstream result;
+    format::stream_oarchive ar(result);
+    protoc::float32_t value = 1.0f;
+    ar << value;
+    char expected[] = { detail::code_float32, 0x3F, 0x80, 0x00, 0x00 };
+    std::string got = result.str();
+    BOOST_REQUIRE_EQUAL_COLLECTIONS(got.begin(), got.end(),
+                                    expected, expected + sizeof(expected));
+}
+
+BOOST_AUTO_TEST_CASE(test_const_float32_one)
+{
+    std::ostringstream result;
+    format::stream_oarchive ar(result);
+    const protoc::float32_t value = 1.0f;
+    ar << value;
+    char expected[] = { detail::code_float32, 0x3F, 0x80, 0x00, 0x00 };
+    std::string got = result.str();
+    BOOST_REQUIRE_EQUAL_COLLECTIONS(got.begin(), got.end(),
+                                    expected, expected + sizeof(expected));
+}
+
+BOOST_AUTO_TEST_CASE(test_float64_one)
+{
+    std::ostringstream result;
+    format::stream_oarchive ar(result);
+    protoc::float64_t value = 1.0;
+    ar << value;
+    char expected[] = { detail::code_float64, 0x3F, 0xF0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
+    std::string got = result.str();
+    BOOST_REQUIRE_EQUAL_COLLECTIONS(got.begin(), got.end(),
+                                    expected, expected + sizeof(expected));
+}
+
+BOOST_AUTO_TEST_CASE(test_const_float64_one)
+{
+    std::ostringstream result;
+    format::stream_oarchive ar(result);
+    const protoc::float64_t value = 1.0;
+    ar << value;
+    char expected[] = { detail::code_float64, 0x3F, 0xF0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
+    std::string got = result.str();
+    BOOST_REQUIRE_EQUAL_COLLECTIONS(got.begin(), got.end(),
+                                    expected, expected + sizeof(expected));
 }
 
 BOOST_AUTO_TEST_SUITE_END()
