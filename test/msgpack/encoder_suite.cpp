@@ -109,20 +109,46 @@ BOOST_AUTO_TEST_CASE(test_int8_zero)
 {
     test_vector buffer;
     format::encoder encoder(buffer);
-    BOOST_REQUIRE_EQUAL(encoder.put(protoc::int8_t(0)), 2);
-    BOOST_REQUIRE_EQUAL(buffer.size(), 2);
-    BOOST_REQUIRE_EQUAL(buffer[0], format::code_int8);
-    BOOST_REQUIRE_EQUAL(buffer[1], 0x00);
+    BOOST_REQUIRE_EQUAL(encoder.put(protoc::int8_t(0)), 1);
+    BOOST_REQUIRE_EQUAL(buffer.size(), 1);
+    BOOST_REQUIRE_EQUAL(buffer[0], 0x00);
 }
 
 BOOST_AUTO_TEST_CASE(test_int8_one)
 {
     test_vector buffer;
     format::encoder encoder(buffer);
-    BOOST_REQUIRE_EQUAL(encoder.put(protoc::int8_t(1)), 2);
+    BOOST_REQUIRE_EQUAL(encoder.put(protoc::int8_t(1)), 1);
+    BOOST_REQUIRE_EQUAL(buffer.size(), 1);
+    BOOST_REQUIRE_EQUAL(buffer[0], 0x01);
+}
+
+BOOST_AUTO_TEST_CASE(test_int8_minus_one)
+{
+    test_vector buffer;
+    format::encoder encoder(buffer);
+    BOOST_REQUIRE_EQUAL(encoder.put(protoc::int8_t(-1)), 1);
+    BOOST_REQUIRE_EQUAL(buffer.size(), 1);
+    BOOST_REQUIRE_EQUAL(buffer[0], 0xFF);
+}
+
+BOOST_AUTO_TEST_CASE(test_int8_max_minus)
+{
+    test_vector buffer;
+    format::encoder encoder(buffer);
+    BOOST_REQUIRE_EQUAL(encoder.put(protoc::int8_t(-32)), 1);
+    BOOST_REQUIRE_EQUAL(buffer.size(), 1);
+    BOOST_REQUIRE_EQUAL(buffer[0], 0xE0);
+}
+
+BOOST_AUTO_TEST_CASE(test_int8_below_max_minus)
+{
+    test_vector buffer;
+    format::encoder encoder(buffer);
+    BOOST_REQUIRE_EQUAL(encoder.put(protoc::int8_t(-33)), 2);
     BOOST_REQUIRE_EQUAL(buffer.size(), 2);
     BOOST_REQUIRE_EQUAL(buffer[0], format::code_int8);
-    BOOST_REQUIRE_EQUAL(buffer[1], 0x01);
+    BOOST_REQUIRE_EQUAL(buffer[1], 0xDF);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

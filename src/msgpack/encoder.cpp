@@ -15,6 +15,8 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
+#include <limits>
+#include <protoc/msgpack/detail/codes.hpp>
 #include <protoc/msgpack/detail/encoder.hpp>
 
 namespace protoc
@@ -31,7 +33,7 @@ encoder::encoder(output& buffer)
 
 std::size_t encoder::put()
 {
-    const output::value_type type('\xC0');
+    const output::value_type type(code_null);
     const std::size_t size = sizeof(type);
 
     if (!buffer.grow(size))
@@ -53,15 +55,69 @@ std::size_t encoder::put(bool value)
         return 0;
     }
 
-    buffer.write((value) ? '\xC3' : '\xC2');
+    buffer.write((value) ? code_true : code_false);
 
     return size;
 }
 
-std::size_t encoder::put(protoc::int8_t value)
+std::size_t encoder::put(int value)
 {
-    const output::value_type type('\xD0');
-    const std::size_t size = sizeof(type) + sizeof(protoc::int8_t);
+    if ((value <= std::numeric_limits<protoc::int8_t>::max()) &&
+        (value >= std::numeric_limits<protoc::int8_t>::min()))
+    {
+        return put_int8(value);
+    }
+    else if ((value <= std::numeric_limits<protoc::int16_t>::max()) &&
+             (value >= std::numeric_limits<protoc::int16_t>::min()))
+    {
+        return put_int16(value);
+    }
+    else if ((value <= std::numeric_limits<protoc::int32_t>::max()) &&
+             (value >= std::numeric_limits<protoc::int32_t>::min()))
+    {
+        return put_int32(value);
+    }
+    else
+    {
+        return put_int64(value);
+    }
+}
+
+std::size_t encoder::put_int8(protoc::int8_t value)
+{
+    if ( ((value >= 0) && (value <= 127)) ||
+         ((value >= -32) && (value <= -1)) )
+    {
+        const std::size_t size = sizeof(output::value_type);
+
+        if (!buffer.grow(size))
+        {
+            return 0;
+        }
+
+        buffer.write(value);
+        return size;
+    }
+    else
+    {
+        const output::value_type type(code_int8);
+        const std::size_t size = sizeof(type) + sizeof(protoc::int8_t);
+
+        if (!buffer.grow(size))
+        {
+            return 0;
+        }
+
+        buffer.write(type);
+        buffer.write(value);
+        return size;
+    }
+}
+
+std::size_t encoder::put_int16(protoc::int16_t value)
+{
+    const output::value_type type(code_int16);
+    const std::size_t size = sizeof(type) + sizeof(protoc::int16_t);
 
     if (!buffer.grow(size))
     {
@@ -69,8 +125,37 @@ std::size_t encoder::put(protoc::int8_t value)
     }
 
     buffer.write(type);
-    buffer.write(static_cast<output::value_type>(value));
+    buffer.write(value);
+    return size;
+}
 
+std::size_t encoder::put_int32(protoc::int32_t value)
+{
+    const output::value_type type(code_int32);
+    const std::size_t size = sizeof(type) + sizeof(protoc::int32_t);
+
+    if (!buffer.grow(size))
+    {
+        return 0;
+    }
+
+    buffer.write(type);
+    buffer.write(value);
+    return size;
+}
+
+std::size_t encoder::put_int64(protoc::int64_t value)
+{
+    const output::value_type type(code_int64);
+    const std::size_t size = sizeof(type) + sizeof(protoc::int64_t);
+
+    if (!buffer.grow(size))
+    {
+        return 0;
+    }
+
+    buffer.write(type);
+    buffer.write(value);
     return size;
 }
 
