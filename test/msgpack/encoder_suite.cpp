@@ -438,4 +438,54 @@ BOOST_AUTO_TEST_CASE(test_double_nan)
     BOOST_REQUIRE_EQUAL(buffer[8], 0x00);
 }
 
+//-----------------------------------------------------------------------------
+// String
+//-----------------------------------------------------------------------------
+
+BOOST_AUTO_TEST_CASE(test_string_empty)
+{
+    test_array<1> buffer;
+    format::encoder encoder(buffer);
+    BOOST_REQUIRE_EQUAL(encoder.put(""), buffer.capacity());
+    BOOST_REQUIRE_EQUAL(buffer.size(), 1);
+    BOOST_REQUIRE_EQUAL(buffer[0], format::code_fixstr_0);
+}
+
+BOOST_AUTO_TEST_CASE(test_string_alpha)
+{
+    test_array<1+5> buffer;
+    format::encoder encoder(buffer);
+    BOOST_REQUIRE_EQUAL(encoder.put("alpha"), buffer.capacity());
+    BOOST_REQUIRE_EQUAL(buffer.size(), 6);
+    BOOST_REQUIRE_EQUAL(buffer[0], format::code_fixstr_5);
+    BOOST_REQUIRE_EQUAL(buffer[1], 'a');
+    BOOST_REQUIRE_EQUAL(buffer[2], 'l');
+    BOOST_REQUIRE_EQUAL(buffer[3], 'p');
+    BOOST_REQUIRE_EQUAL(buffer[4], 'h');
+    BOOST_REQUIRE_EQUAL(buffer[5], 'a');
+}
+
+BOOST_AUTO_TEST_CASE(test_string_fixstr_max)
+{
+    test_array<1+31> buffer;
+    format::encoder encoder(buffer);
+    BOOST_REQUIRE_EQUAL(encoder.put("ABCDEFGHIJKLMNOPQRSTUVWXYZ01234"), buffer.capacity());
+    BOOST_REQUIRE_EQUAL(buffer.size(), 32);
+    BOOST_REQUIRE_EQUAL(buffer[0], format::code_fixstr_31);
+    BOOST_REQUIRE_EQUAL(buffer[1], 'A');
+    BOOST_REQUIRE_EQUAL(buffer[31], '4');
+}
+
+BOOST_AUTO_TEST_CASE(test_string_above_fixstr_max)
+{
+    test_array<2+32> buffer;
+    format::encoder encoder(buffer);
+    BOOST_REQUIRE_EQUAL(encoder.put("ABCDEFGHIJKLMNOPQRSTUVWXYZ012345"), buffer.capacity());
+    BOOST_REQUIRE_EQUAL(buffer.size(), 34);
+    BOOST_REQUIRE_EQUAL(buffer[0], format::code_str8);
+    BOOST_REQUIRE_EQUAL(buffer[1], 32);
+    BOOST_REQUIRE_EQUAL(buffer[2], 'A');
+    BOOST_REQUIRE_EQUAL(buffer[33], '5');
+}
+
 BOOST_AUTO_TEST_SUITE_END()

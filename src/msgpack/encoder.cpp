@@ -193,13 +193,14 @@ std::size_t encoder::put(const std::string& value)
 
     std::size_t size = 0;
 
-    if (length < 32)
+    if (length <= (code_fixstr_31 - code_fixstr_0))
     {
-        if (!buffer.grow(sizeof(output::value_type) + length))
+        if (!buffer.grow(sizeof(output::value_type)))
         {
             return 0;
         }
         buffer.write(code_fixstr_0 | length);
+        size = 0;
     }
     else if (length < static_cast<std::string::size_type>(std::numeric_limits<protoc::uint8_t>::max()))
     {
