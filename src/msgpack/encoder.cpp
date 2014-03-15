@@ -242,6 +242,50 @@ std::size_t encoder::put(const std::string& value)
     return sizeof(output::value_type) + size + length;
 }
 
+std::size_t encoder::put(const unsigned char * value, std::size_t length)
+{
+    std::size_t size = 0;
+
+    if (length < static_cast<std::string::size_type>(std::numeric_limits<protoc::uint8_t>::max()))
+    {
+        if (!buffer.grow(sizeof(output::value_type) + sizeof(protoc::uint8_t) + length))
+        {
+            return 0;
+        }
+        buffer.write(code_bin8);
+        size = write(static_cast<uint8_t>(length));
+    }
+    else if (length < static_cast<std::string::size_type>(std::numeric_limits<protoc::uint16_t>::max()))
+    {
+        if (!buffer.grow(sizeof(output::value_type) + sizeof(protoc::uint16_t) + length))
+        {
+            return 0;
+        }
+        buffer.write(code_bin16);
+        size = write(static_cast<uint16_t>(length));
+    }
+    else if (length < static_cast<std::string::size_type>(std::numeric_limits<protoc::uint32_t>::max()))
+    {
+        if (!buffer.grow(sizeof(output::value_type) + sizeof(protoc::uint32_t) + length))
+        {
+            return 0;
+        }
+        buffer.write(code_bin32);
+        size = write(static_cast<uint32_t>(length));
+    }
+    else
+    {
+        return 0;
+    }
+
+    for (std::size_t i = 0; i < length; ++i)
+    {
+        buffer.write(value[i]);
+    }
+
+    return sizeof(output::value_type) + size + length;
+}
+
 std::size_t encoder::put_int8(protoc::int8_t value)
 {
     if (value >= -32)

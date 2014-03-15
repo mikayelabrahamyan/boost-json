@@ -488,4 +488,32 @@ BOOST_AUTO_TEST_CASE(test_string_above_fixstr_max)
     BOOST_REQUIRE_EQUAL(buffer[33], '5');
 }
 
+//-----------------------------------------------------------------------------
+// Binary
+//-----------------------------------------------------------------------------
+
+BOOST_AUTO_TEST_CASE(test_binary_empty)
+{
+    test_array<2> buffer;
+    format::encoder encoder(buffer);
+    std::vector<unsigned char> data;
+    BOOST_REQUIRE_EQUAL(encoder.put(data.data(), data.size()), buffer.capacity());
+    BOOST_REQUIRE_EQUAL(buffer.size(), 2);
+    BOOST_REQUIRE_EQUAL(buffer[0], format::code_bin8);
+    BOOST_REQUIRE_EQUAL(buffer[1], 0x00);
+}
+
+BOOST_AUTO_TEST_CASE(test_binary_one)
+{
+    test_array<2+1> buffer;
+    format::encoder encoder(buffer);
+    std::vector<unsigned char> data;
+    data.push_back(0x12);
+    BOOST_REQUIRE_EQUAL(encoder.put(data.data(), data.size()), buffer.capacity());
+    BOOST_REQUIRE_EQUAL(buffer.size(), 3);
+    BOOST_REQUIRE_EQUAL(buffer[0], format::code_bin8);
+    BOOST_REQUIRE_EQUAL(buffer[1], 0x01);
+    BOOST_REQUIRE_EQUAL(buffer[2], 0x12);
+}
+
 BOOST_AUTO_TEST_SUITE_END()
