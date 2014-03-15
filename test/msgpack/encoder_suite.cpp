@@ -137,12 +137,12 @@ BOOST_AUTO_TEST_CASE(test_int8_max)
 {
     test_vector buffer;
     format::encoder encoder(buffer);
-    BOOST_REQUIRE_EQUAL(encoder.put(protoc::int8_t(127)), 1);
+    BOOST_REQUIRE_EQUAL(encoder.put(std::numeric_limits<protoc::int8_t>::max()), 1);
     BOOST_REQUIRE_EQUAL(buffer.size(), 1);
     BOOST_REQUIRE_EQUAL(buffer[0], 0x7F);
 }
 
-BOOST_AUTO_TEST_CASE(test_int8_max_minus)
+BOOST_AUTO_TEST_CASE(test_int8_fixmin)
 {
     test_vector buffer;
     format::encoder encoder(buffer);
@@ -151,7 +151,7 @@ BOOST_AUTO_TEST_CASE(test_int8_max_minus)
     BOOST_REQUIRE_EQUAL(buffer[0], 0xE0);
 }
 
-BOOST_AUTO_TEST_CASE(test_int8_below_max_minus)
+BOOST_AUTO_TEST_CASE(test_int8_below_fixmin)
 {
     test_vector buffer;
     format::encoder encoder(buffer);
@@ -159,6 +159,98 @@ BOOST_AUTO_TEST_CASE(test_int8_below_max_minus)
     BOOST_REQUIRE_EQUAL(buffer.size(), 2);
     BOOST_REQUIRE_EQUAL(buffer[0], format::code_int8);
     BOOST_REQUIRE_EQUAL(buffer[1], 0xDF);
+}
+
+BOOST_AUTO_TEST_CASE(test_uint8_max)
+{
+    test_vector buffer;
+    format::encoder encoder(buffer);
+    BOOST_REQUIRE_EQUAL(encoder.put((unsigned int)std::numeric_limits<protoc::uint8_t>::max()), 2);
+    BOOST_REQUIRE_EQUAL(buffer.size(), 2);
+    BOOST_REQUIRE_EQUAL(buffer[0], format::code_uint8);
+    BOOST_REQUIRE_EQUAL(buffer[1], 0xFF);
+}
+
+BOOST_AUTO_TEST_CASE(test_int16_max)
+{
+    test_vector buffer;
+    format::encoder encoder(buffer);
+    BOOST_REQUIRE_EQUAL(encoder.put(std::numeric_limits<protoc::int16_t>::max()), 3);
+    BOOST_REQUIRE_EQUAL(buffer.size(), 3);
+    BOOST_REQUIRE_EQUAL(buffer[0], format::code_int16);
+    BOOST_REQUIRE_EQUAL(buffer[1], 0x7F);
+    BOOST_REQUIRE_EQUAL(buffer[2], 0xFF);
+}
+
+BOOST_AUTO_TEST_CASE(test_uint16_max)
+{
+    test_vector buffer;
+    format::encoder encoder(buffer);
+    BOOST_REQUIRE_EQUAL(encoder.put((unsigned int)std::numeric_limits<protoc::uint16_t>::max()), 3);
+    BOOST_REQUIRE_EQUAL(buffer.size(), 3);
+    BOOST_REQUIRE_EQUAL(buffer[0], format::code_uint16);
+    BOOST_REQUIRE_EQUAL(buffer[1], 0xFF);
+    BOOST_REQUIRE_EQUAL(buffer[2], 0xFF);
+}
+
+BOOST_AUTO_TEST_CASE(test_int32_max)
+{
+    test_vector buffer;
+    format::encoder encoder(buffer);
+    BOOST_REQUIRE_EQUAL(encoder.put(std::numeric_limits<protoc::int32_t>::max()), 5);
+    BOOST_REQUIRE_EQUAL(buffer.size(), 5);
+    BOOST_REQUIRE_EQUAL(buffer[0], format::code_int32);
+    BOOST_REQUIRE_EQUAL(buffer[1], 0x7F);
+    BOOST_REQUIRE_EQUAL(buffer[2], 0xFF);
+    BOOST_REQUIRE_EQUAL(buffer[3], 0xFF);
+    BOOST_REQUIRE_EQUAL(buffer[4], 0xFF);
+}
+
+BOOST_AUTO_TEST_CASE(test_uint32_max)
+{
+    test_vector buffer;
+    format::encoder encoder(buffer);
+    BOOST_REQUIRE_EQUAL(encoder.put((unsigned int)std::numeric_limits<protoc::uint32_t>::max()), 5);
+    BOOST_REQUIRE_EQUAL(buffer.size(), 5);
+    BOOST_REQUIRE_EQUAL(buffer[0], format::code_uint32);
+    BOOST_REQUIRE_EQUAL(buffer[1], 0xFF);
+    BOOST_REQUIRE_EQUAL(buffer[2], 0xFF);
+    BOOST_REQUIRE_EQUAL(buffer[3], 0xFF);
+    BOOST_REQUIRE_EQUAL(buffer[4], 0xFF);
+}
+
+BOOST_AUTO_TEST_CASE(test_int64_max)
+{
+    test_vector buffer;
+    format::encoder encoder(buffer);
+    BOOST_REQUIRE_EQUAL(encoder.put(std::numeric_limits<protoc::int64_t>::max()), 9);
+    BOOST_REQUIRE_EQUAL(buffer.size(), 9);
+    BOOST_REQUIRE_EQUAL(buffer[0], format::code_int64);
+    BOOST_REQUIRE_EQUAL(buffer[1], 0x7F);
+    BOOST_REQUIRE_EQUAL(buffer[2], 0xFF);
+    BOOST_REQUIRE_EQUAL(buffer[3], 0xFF);
+    BOOST_REQUIRE_EQUAL(buffer[4], 0xFF);
+    BOOST_REQUIRE_EQUAL(buffer[5], 0xFF);
+    BOOST_REQUIRE_EQUAL(buffer[6], 0xFF);
+    BOOST_REQUIRE_EQUAL(buffer[7], 0xFF);
+    BOOST_REQUIRE_EQUAL(buffer[8], 0xFF);
+}
+
+BOOST_AUTO_TEST_CASE(test_uint64_max)
+{
+    test_vector buffer;
+    format::encoder encoder(buffer);
+    BOOST_REQUIRE_EQUAL(encoder.put((protoc::uint64_t)std::numeric_limits<protoc::uint64_t>::max()), 9);
+    BOOST_REQUIRE_EQUAL(buffer.size(), 9);
+    BOOST_REQUIRE_EQUAL(buffer[0], format::code_uint64);
+    BOOST_REQUIRE_EQUAL(buffer[1], 0xFF);
+    BOOST_REQUIRE_EQUAL(buffer[2], 0xFF);
+    BOOST_REQUIRE_EQUAL(buffer[3], 0xFF);
+    BOOST_REQUIRE_EQUAL(buffer[4], 0xFF);
+    BOOST_REQUIRE_EQUAL(buffer[5], 0xFF);
+    BOOST_REQUIRE_EQUAL(buffer[6], 0xFF);
+    BOOST_REQUIRE_EQUAL(buffer[7], 0xFF);
+    BOOST_REQUIRE_EQUAL(buffer[8], 0xFF);
 }
 
 //-----------------------------------------------------------------------------

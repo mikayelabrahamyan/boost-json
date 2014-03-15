@@ -40,8 +40,8 @@ public:
     std::size_t put(); // Null
     std::size_t put(bool);
     std::size_t put(int);
-    std::size_t put(protoc::int64_t);
     std::size_t put(unsigned int);
+    std::size_t put(protoc::int64_t);
     std::size_t put(protoc::uint64_t);
     std::size_t put(protoc::float32_t);
     std::size_t put(protoc::float64_t);
@@ -50,9 +50,24 @@ public:
 
 private:
     std::size_t put_int8(protoc::int8_t);
+    std::size_t put_uint8(protoc::uint8_t);
     std::size_t put_int16(protoc::int16_t);
+    std::size_t put_uint16(protoc::uint16_t);
     std::size_t put_int32(protoc::int32_t);
+    std::size_t put_uint32(protoc::uint32_t);
     std::size_t put_int64(protoc::int64_t);
+    std::size_t put_uint64(protoc::uint64_t);
+
+    std::size_t write(protoc::int8_t);
+    std::size_t write(protoc::uint8_t);
+    std::size_t write(protoc::int16_t);
+    std::size_t write(protoc::uint16_t);
+    std::size_t write(protoc::int32_t);
+    std::size_t write(protoc::uint32_t);
+    std::size_t write(protoc::int64_t);
+    std::size_t write(protoc::uint64_t);
+    std::size_t write(protoc::float32_t);
+    std::size_t write(protoc::float64_t);
 
 private:
     output& buffer;
