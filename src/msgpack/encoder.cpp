@@ -33,31 +33,12 @@ encoder::encoder(output& buffer)
 
 std::size_t encoder::put()
 {
-    const output::value_type type(code_null);
-    const std::size_t size = sizeof(type);
-
-    if (!buffer.grow(size))
-    {
-        return 0;
-    }
-
-    buffer.write(type);
-
-    return size;
+    return put_token(code_null);
 }
 
 std::size_t encoder::put(bool value)
 {
-    const std::size_t size = sizeof(output::value_type);
-
-    if (!buffer.grow(size))
-    {
-        return 0;
-    }
-
-    buffer.write((value) ? code_true : code_false);
-
-    return size;
+    return put_token((value) ? code_true : code_false);
 }
 
 std::size_t encoder::put(int value)
@@ -284,6 +265,100 @@ std::size_t encoder::put(const unsigned char * value, std::size_t length)
     }
 
     return sizeof(output::value_type) + size + length;
+}
+
+std::size_t encoder::put_array_begin(std::size_t count)
+{
+    switch (count)
+    {
+    case 0:
+        return put_token(code_fixarray_0);
+
+    case 1:
+        return put_token(code_fixarray_1);
+
+    case 2:
+        return put_token(code_fixarray_2);
+
+    case 3:
+        return put_token(code_fixarray_3);
+
+    case 4:
+        return put_token(code_fixarray_4);
+
+    case 5:
+        return put_token(code_fixarray_5);
+
+    case 6:
+        return put_token(code_fixarray_6);
+
+    case 7:
+        return put_token(code_fixarray_7);
+
+    case 8:
+        return put_token(code_fixarray_8);
+
+    case 9:
+        return put_token(code_fixarray_9);
+
+    case 10:
+        return put_token(code_fixarray_10);
+
+    case 11:
+        return put_token(code_fixarray_11);
+
+    case 12:
+        return put_token(code_fixarray_12);
+
+    case 13:
+        return put_token(code_fixarray_13);
+
+    case 14:
+        return put_token(code_fixarray_14);
+
+    case 15:
+        return put_token(code_fixarray_15);
+
+    default:
+        if (count <= 0xFFFF)
+        {
+            const std::size_t size = sizeof(output::value_type) + sizeof(protoc::uint16_t);
+            if (!buffer.grow(size))
+            {
+                return 0;
+            }
+            buffer.write(code_array16);
+            write(protoc::uint16_t(count));
+            return size;
+        }
+        else
+        {
+            const std::size_t size = sizeof(output::value_type) + sizeof(protoc::uint32_t);
+            if (!buffer.grow(size))
+            {
+                return 0;
+            }
+            buffer.write(code_array32);
+            write(protoc::uint32_t(count));
+            return size;
+        }
+    }
+
+    return 0;
+}
+
+std::size_t encoder::put_token(output::value_type value)
+{
+    const std::size_t size = sizeof(value);
+
+    if (!buffer.grow(size))
+    {
+        return 0;
+    }
+
+    buffer.write(value);
+
+    return size;
 }
 
 std::size_t encoder::put_int8(protoc::int8_t value)

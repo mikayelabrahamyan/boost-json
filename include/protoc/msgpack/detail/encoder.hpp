@@ -49,7 +49,10 @@ public:
     std::size_t put(const std::string&);
     std::size_t put(const unsigned char *, std::size_t);
 
+    std::size_t put_array_begin(std::size_t);
+
 private:
+    std::size_t put_token(output::value_type);
     std::size_t put_int8(protoc::int8_t);
     std::size_t put_uint8(protoc::uint8_t);
     std::size_t put_int16(protoc::int16_t);
