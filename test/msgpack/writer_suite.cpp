@@ -109,6 +109,52 @@ BOOST_AUTO_TEST_CASE(test_double_zero)
                                     expected, expected + sizeof(expected));
 }
 
+BOOST_AUTO_TEST_CASE(test_literal_empty)
+{
+    test_vector buffer;
+    format::writer writer(buffer);
+    BOOST_REQUIRE_EQUAL(writer.write(""), 1);
+
+    format::writer::value_type expected[] = { detail::code_fixstr_0 };
+    BOOST_REQUIRE_EQUAL_COLLECTIONS(buffer.begin(), buffer.end(),
+                                    expected, expected + sizeof(expected));
+}
+
+BOOST_AUTO_TEST_CASE(test_literal_alpha)
+{
+    test_vector buffer;
+    format::writer writer(buffer);
+    BOOST_REQUIRE_EQUAL(writer.write("ALPHA"), 6);
+
+    format::writer::value_type expected[] = { detail::code_fixstr_5, 0x41, 0x4C, 0x50, 0x48, 0x41 };
+    BOOST_REQUIRE_EQUAL_COLLECTIONS(buffer.begin(), buffer.end(),
+                                    expected, expected + sizeof(expected));
+}
+
+BOOST_AUTO_TEST_CASE(test_string_empty)
+{
+    test_vector buffer;
+    format::writer writer(buffer);
+    std::string text;
+    BOOST_REQUIRE_EQUAL(writer.write(text), 1);
+
+    format::writer::value_type expected[] = { detail::code_fixstr_0 };
+    BOOST_REQUIRE_EQUAL_COLLECTIONS(buffer.begin(), buffer.end(),
+                                    expected, expected + sizeof(expected));
+}
+
+BOOST_AUTO_TEST_CASE(test_string_alpha)
+{
+    test_vector buffer;
+    format::writer writer(buffer);
+    std::string text("ALPHA");
+    BOOST_REQUIRE_EQUAL(writer.write(text), 6);
+
+    format::writer::value_type expected[] = { detail::code_fixstr_5, 0x41, 0x4C, 0x50, 0x48, 0x41 };
+    BOOST_REQUIRE_EQUAL_COLLECTIONS(buffer.begin(), buffer.end(),
+                                    expected, expected + sizeof(expected));
+}
+
 //-----------------------------------------------------------------------------
 // Array
 //-----------------------------------------------------------------------------

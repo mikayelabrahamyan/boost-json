@@ -14,6 +14,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 #include <cstddef> // std::size_t
+#include <string>
 
 namespace protoc
 {
@@ -33,6 +34,8 @@ public:
     virtual size_type write(int) = 0;
     virtual size_type write(long long) = 0;
     virtual size_type write(double) = 0;
+    virtual size_type write(const char *) = 0;
+    virtual size_type write(const std::string&) = 0;
 
     virtual size_type array_begin() = 0;
     virtual size_type array_begin(size_type count) = 0;
