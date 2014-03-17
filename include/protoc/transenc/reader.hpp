@@ -21,8 +21,8 @@
 #include <stack>
 #include <protoc/reader.hpp>
 #include <protoc/token.hpp>
-#include <protoc/transenc/token.hpp>
-#include <protoc/transenc/decoder.hpp>
+#include <protoc/transenc/detail/token.hpp>
+#include <protoc/transenc/detail/decoder.hpp>
 
 namespace protoc
 {
@@ -31,6 +31,8 @@ namespace transenc
 
 class reader : public protoc::reader
 {
+    typedef transenc::detail::decoder decoder_type;
+
 public:
     template <typename ForwardIterator>
     reader(ForwardIterator begin, ForwardIterator end);
@@ -51,7 +53,7 @@ public:
     virtual range_type get_range() const;
 
 private:
-    transenc::detail::decoder decoder;
+    decoder_type decoder;
     std::stack<transenc::detail::token> stack;
 };
 

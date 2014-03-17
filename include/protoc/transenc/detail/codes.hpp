@@ -1,20 +1,15 @@
-#ifndef PROTOC_TRANSENC_CODES_HPP
-#define PROTOC_TRANSENC_CODES_HPP
+#ifndef PROTOC_TRANSENC_DETAIL_CODES_HPP
+#define PROTOC_TRANSENC_DETAIL_CODES_HPP
 
 ///////////////////////////////////////////////////////////////////////////////
 //
 // http://protoc.sourceforge.net/
 //
-// Copyright (C) 2013 Bjorn Reese <breese@users.sourceforge.net>
+// Copyright (C) 2014 Bjorn Reese <breese@users.sourceforge.net>
 //
-// Permission to use, copy, modify, and distribute this software for any
-// purpose with or without fee is hereby granted, provided that the above
-// copyright notice and this permission notice appear in all copies.
-//
-// THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED
-// WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF
-// MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE. THE AUTHORS AND
-// CONTRIBUTORS ACCEPT NO RESPONSIBILITY IN ANY CONCEIVABLE MANNER.
+// Distributed under the Boost Software License, Version 1.0.
+//    (See accompanying file LICENSE_1_0.txt or copy at
+//          http://www.boost.org/LICENSE_1_0.txt)
 //
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -23,6 +18,8 @@
 namespace protoc
 {
 namespace transenc
+{
+namespace detail
 {
 
 typedef unsigned char value_type;
@@ -51,7 +48,8 @@ const value_type code_float64 = 0xD2;
 const value_type code_string_int64 = 0xD9;
 const value_type code_binary_int64 = 0xDB;
 
+} // namespace detail
 } // namespace transenc
 } // namespace protoc
 
-#endif // PROTOC_TRANSENC_CODES_HPP
+#endif // PROTOC_TRANSENC_DETAIL_CODES_HPP

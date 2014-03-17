@@ -17,7 +17,7 @@
 #include <boost/optional.hpp>
 #include <protoc/writer.hpp>
 #include <protoc/token.hpp>
-#include <protoc/transenc/encoder.hpp>
+#include <protoc/transenc/detail/encoder.hpp>
 
 namespace protoc
 {
@@ -26,7 +26,7 @@ namespace transenc
 
 class writer : public protoc::writer
 {
-    typedef transenc::encoder encoder_type;
+    typedef transenc::detail::encoder encoder_type;
 
 public:
     typedef encoder_type::output_type output_type;

@@ -23,6 +23,8 @@ namespace protoc
 {
 namespace transenc
 {
+namespace detail
+{
 
 class encoder : public protoc::encoder_base
 {
@@ -72,6 +74,7 @@ private:
     output_type& buffer;
 };
 
+} // namespace detail
 } // namespace transenc
 } // namespace protoc
 

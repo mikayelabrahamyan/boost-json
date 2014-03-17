@@ -16,12 +16,14 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 #include <limits>
-#include <protoc/transenc/codes.hpp>
-#include <protoc/transenc/encoder.hpp>
+#include <protoc/transenc/detail/codes.hpp>
+#include <protoc/transenc/detail/encoder.hpp>
 
 namespace protoc
 {
 namespace transenc
+{
+namespace detail
 {
 
 encoder::encoder(output_type& buffer)
@@ -502,5 +504,6 @@ std::size_t encoder::write(protoc::int64_t value)
     return sizeof(protoc::int64_t);
 }
 
+} // namespace detail
 } // namespace transenc
 } // namespace protoc

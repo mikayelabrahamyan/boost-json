@@ -21,7 +21,7 @@
 #include <string>
 #include <protoc/types.hpp>
 #include <protoc/input_range.hpp>
-#include <protoc/transenc/token.hpp>
+#include <protoc/transenc/detail/token.hpp>
 
 namespace protoc
 {

@@ -16,20 +16,20 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 #include <cassert>
-#include <protoc/transenc/codes.hpp>
-#include <protoc/transenc/decoder.hpp>
+#include <protoc/transenc/detail/codes.hpp>
+#include <protoc/transenc/detail/decoder.hpp>
 
 namespace
 {
 // Code patterns (masked by 1111 10000)
-const protoc::transenc::value_type code_pattern8 = 0xA0;
-const protoc::transenc::value_type code_pattern_length8 = 0xA8;
-const protoc::transenc::value_type code_pattern16 = 0xB0;
-const protoc::transenc::value_type code_pattern_length16 = 0xB8;
-const protoc::transenc::value_type code_pattern32 = 0xC0;
-const protoc::transenc::value_type code_pattern_length32 = 0xC8;
-const protoc::transenc::value_type code_pattern64 = 0xD0;
-const protoc::transenc::value_type code_pattern_length64 = 0xD8;
+const protoc::transenc::detail::decoder::value_type code_pattern8 = 0xA0;
+const protoc::transenc::detail::decoder::value_type code_pattern_length8 = 0xA8;
+const protoc::transenc::detail::decoder::value_type code_pattern16 = 0xB0;
+const protoc::transenc::detail::decoder::value_type code_pattern_length16 = 0xB8;
+const protoc::transenc::detail::decoder::value_type code_pattern32 = 0xC0;
+const protoc::transenc::detail::decoder::value_type code_pattern_length32 = 0xC8;
+const protoc::transenc::detail::decoder::value_type code_pattern64 = 0xD0;
+const protoc::transenc::detail::decoder::value_type code_pattern_length64 = 0xD8;
 } // anonymous namespace
 
 namespace protoc

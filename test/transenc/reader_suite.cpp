@@ -18,9 +18,10 @@
 #include <boost/test/unit_test.hpp>
 
 #include <protoc/transenc/reader.hpp>
-#include <protoc/transenc/codes.hpp>
+#include <protoc/transenc/detail/codes.hpp>
 
-using namespace protoc;
+namespace format = protoc::transenc;
+namespace detail = format::detail;
 
 BOOST_AUTO_TEST_SUITE(transenc_reader_suite)
 
@@ -30,52 +31,52 @@ BOOST_AUTO_TEST_SUITE(transenc_reader_suite)
 
 BOOST_AUTO_TEST_CASE(test_empty)
 {
-    transenc::reader::value_type input[] = {};
-    transenc::reader reader(input, input + sizeof(input));
-    BOOST_REQUIRE_EQUAL(reader.type(), token::token_eof);
+    format::reader::value_type input[] = {};
+    format::reader reader(input, input + sizeof(input));
+    BOOST_REQUIRE_EQUAL(reader.type(), protoc::token::token_eof);
 }
 
 BOOST_AUTO_TEST_CASE(test_false)
 {
-    transenc::reader::value_type input[] = { transenc::code_false };
-    transenc::reader reader(input, input + sizeof(input));
-    BOOST_REQUIRE_EQUAL(reader.type(), token::token_boolean);
+    format::reader::value_type input[] = { detail::code_false };
+    format::reader reader(input, input + sizeof(input));
+    BOOST_REQUIRE_EQUAL(reader.type(), protoc::token::token_boolean);
     BOOST_REQUIRE_EQUAL(reader.get_bool(), false);
     BOOST_REQUIRE_EQUAL(reader.next(), false);
-    BOOST_REQUIRE_EQUAL(reader.type(), token::token_eof);
+    BOOST_REQUIRE_EQUAL(reader.type(), protoc::token::token_eof);
 }
 
 BOOST_AUTO_TEST_CASE(test_true)
 {
-    transenc::reader::value_type input[] = { transenc::code_true };
-    transenc::reader reader(input, input + sizeof(input));
-    BOOST_REQUIRE_EQUAL(reader.type(), token::token_boolean);
+    format::reader::value_type input[] = { detail::code_true };
+    format::reader reader(input, input + sizeof(input));
+    BOOST_REQUIRE_EQUAL(reader.type(), protoc::token::token_boolean);
     BOOST_REQUIRE_EQUAL(reader.get_bool(), true);
     BOOST_REQUIRE(!reader.next());
 }
 
 BOOST_AUTO_TEST_CASE(test_null)
 {
-    transenc::reader::value_type input[] = { transenc::code_null };
-    transenc::reader reader(input, input + sizeof(input));
-    BOOST_REQUIRE_EQUAL(reader.type(), token::token_null);
+    format::reader::value_type input[] = { detail::code_null };
+    format::reader reader(input, input + sizeof(input));
+    BOOST_REQUIRE_EQUAL(reader.type(), protoc::token::token_null);
     BOOST_REQUIRE(!reader.next());
 }
 
 BOOST_AUTO_TEST_CASE(test_integer)
 {
-    transenc::reader::value_type input[] = { 0x01 };
-    transenc::reader reader(input, input + sizeof(input));
-    BOOST_REQUIRE_EQUAL(reader.type(), token::token_integer);
+    format::reader::value_type input[] = { 0x01 };
+    format::reader reader(input, input + sizeof(input));
+    BOOST_REQUIRE_EQUAL(reader.type(), protoc::token::token_integer);
     BOOST_REQUIRE_EQUAL(reader.get_int(), 1);
     BOOST_REQUIRE(!reader.next());
 }
 
 BOOST_AUTO_TEST_CASE(test_floating)
 {
-    transenc::reader::value_type input[] = { transenc::code_float64, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xF0, 0x3F };
-    transenc::reader reader(input, input + sizeof(input));
-    BOOST_REQUIRE_EQUAL(reader.type(), token::token_floating);
+    format::reader::value_type input[] = { detail::code_float64, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xF0, 0x3F };
+    format::reader reader(input, input + sizeof(input));
+    BOOST_REQUIRE_EQUAL(reader.type(), protoc::token::token_floating);
     BOOST_REQUIRE_EQUAL(reader.get_double(), 1.0);
     BOOST_REQUIRE(!reader.next());
 }
@@ -86,15 +87,15 @@ BOOST_AUTO_TEST_CASE(test_floating)
 
 BOOST_AUTO_TEST_CASE(test_record)
 {
-    transenc::reader::value_type input[] = { transenc::code_record_begin, transenc::code_record_end };
-    transenc::reader reader(input, input + sizeof(input));
-    BOOST_REQUIRE_EQUAL(reader.type(), token::token_record_begin);
+    format::reader::value_type input[] = { detail::code_record_begin, detail::code_record_end };
+    format::reader reader(input, input + sizeof(input));
+    BOOST_REQUIRE_EQUAL(reader.type(), protoc::token::token_record_begin);
     BOOST_REQUIRE_EQUAL(reader.size(), 0);
     BOOST_REQUIRE(reader.next());
-    BOOST_REQUIRE_EQUAL(reader.type(), token::token_record_end);
+    BOOST_REQUIRE_EQUAL(reader.type(), protoc::token::token_record_end);
     BOOST_REQUIRE_EQUAL(reader.size(), 1);
     BOOST_REQUIRE(!reader.next());
-    BOOST_REQUIRE_EQUAL(reader.type(), token::token_eof);
+    BOOST_REQUIRE_EQUAL(reader.type(), protoc::token::token_eof);
     BOOST_REQUIRE_EQUAL(reader.size(), 0);
 }
 
