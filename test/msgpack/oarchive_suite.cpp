@@ -19,7 +19,7 @@
 #include <protoc/msgpack/map.hpp>
 
 namespace format = protoc::msgpack;
-namespace detail = protoc::msgpack::detail;
+namespace detail = format::detail;
 
 BOOST_AUTO_TEST_SUITE(msgpack_oarchive_suite)
 

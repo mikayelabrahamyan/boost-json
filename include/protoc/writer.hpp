@@ -40,6 +40,9 @@ public:
     virtual size_type write(const std::string&) = 0;
     virtual size_type write(const value_type *, size_type) = 0;
 
+    virtual size_type record_begin() = 0;
+    virtual size_type record_end() = 0;
+
     virtual size_type array_begin() = 0;
     virtual size_type array_begin(size_type count) = 0;
     virtual size_type array_end() = 0;

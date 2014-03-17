@@ -22,7 +22,7 @@
 #include <boost/archive/detail/common_oarchive.hpp>
 #include <boost/archive/detail/register_archive.hpp>
 #include <protoc/types.hpp>
-#include <protoc/transenc/encoder.hpp>
+#include <protoc/transenc/writer.hpp>
 
 namespace protoc
 {
@@ -35,7 +35,7 @@ class oarchive
     friend class boost::archive::save_access;
 
 public:
-    oarchive(transenc::encoder&);
+    oarchive(transenc::writer&);
 
     void save();
     void save(bool);
@@ -79,7 +79,7 @@ public:
     void save_override(const boost::archive::class_name_type&, int) {}
 
 protected:
-    transenc::encoder& encoder;
+    transenc::writer& writer;
 };
 
 } // namespace transenc
@@ -92,94 +92,94 @@ namespace protoc
 namespace transenc
 {
 
-inline oarchive::oarchive(transenc::encoder& encoder)
-    : encoder(encoder)
+inline oarchive::oarchive(transenc::writer& writer)
+    : writer(writer)
 {
 }
 
 inline void oarchive::save()
 {
-    encoder.put();
+    writer.write();
 }
 
 inline void oarchive::save(bool value)
 {
-    encoder.put(value);
+    writer.write(value);
 }
 
 inline void oarchive::save(int value)
 {
-    encoder.put(value);
+    writer.write(value);
 }
 
 inline void oarchive::save(long long value)
 {
-    encoder.put(value);
+    writer.write(value);
 }
 
 inline void oarchive::save(float value)
 {
-    encoder.put(value);
+    writer.write(value);
 }
 
 inline void oarchive::save(double value)
 {
-    encoder.put(value);
+    writer.write(value);
 }
 
 inline void oarchive::save(const char *value)
 {
-    encoder.put(value);
+    writer.write(value);
 }
 
 inline void oarchive::save(const std::string& value)
 {
-    encoder.put(value);
+    writer.write(value);
 }
 
 inline void oarchive::save(const unsigned char *data, std::size_t size)
 {
-    encoder.put(data, size);
+    writer.write(data, size);
 }
 
 inline void oarchive::save_record_begin()
 {
-    encoder.put_record_begin();
+    writer.record_begin();
 }
 
 inline void oarchive::save_record_end()
 {
-    encoder.put_record_end();
+    writer.record_end();
 }
 
 inline void oarchive::save_array_begin()
 {
-    encoder.put_array_begin();
+    writer.array_begin();
 }
 
 inline void oarchive::save_array_begin(std::size_t size)
 {
-    encoder.put_array_begin(size);
+    writer.array_begin(size);
 }
 
 inline void oarchive::save_array_end()
 {
-    encoder.put_array_end();
+    writer.array_end();
 }
 
 inline void oarchive::save_map_begin()
 {
-    encoder.put_map_begin();
+    writer.map_begin();
 }
 
 inline void oarchive::save_map_begin(std::size_t size)
 {
-    encoder.put_map_begin(size);
+    writer.map_begin(size);
 }
 
 inline void oarchive::save_map_end()
 {
-    encoder.put_map_end();
+    writer.map_end();
 }
 
 } // namespace transenc

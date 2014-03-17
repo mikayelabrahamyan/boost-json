@@ -5,16 +5,11 @@
 //
 // http://protoc.sourceforge.net/
 //
-// Copyright (C) 2013 Bjorn Reese <breese@users.sourceforge.net>
+// Copyright (C) 2014 Bjorn Reese <breese@users.sourceforge.net>
 //
-// Permission to use, copy, modify, and distribute this software for any
-// purpose with or without fee is hereby granted, provided that the above
-// copyright notice and this permission notice appear in all copies.
-//
-// THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED
-// WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF
-// MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE. THE AUTHORS AND
-// CONTRIBUTORS ACCEPT NO RESPONSIBILITY IN ANY CONCEIVABLE MANNER.
+// Distributed under the Boost Software License, Version 1.0.
+//    (See accompanying file LICENSE_1_0.txt or copy at
+//          http://www.boost.org/LICENSE_1_0.txt)
 //
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -33,9 +28,9 @@ class encoder : public protoc::encoder_base
 {
 public:
     typedef unsigned char value_type;
-    typedef protoc::output<value_type> output;
+    typedef protoc::output<value_type> output_type;
 
-    encoder(output&);
+    encoder(output_type&);
     encoder(const encoder&);
 
     std::size_t put(); // Null
@@ -62,7 +57,7 @@ private:
     std::size_t put_int16(protoc::int16_t);
     std::size_t put_int32(protoc::int32_t);
     std::size_t put_int64(protoc::int64_t);
-    std::size_t put_token(output::value_type);
+    std::size_t put_token(value_type);
     std::size_t put_size_t(std::size_t);
 
     std::size_t write(protoc::int8_t);
@@ -74,10 +69,10 @@ private:
     std::size_t write(protoc::int64_t);
 
 private:
-    output& buffer;
+    output_type& buffer;
 };
 
-}
-}
+} // namespace transenc
+} // namespace protoc
 
 #endif /* PROTOC_TRANSENC_ENCODER_HPP */

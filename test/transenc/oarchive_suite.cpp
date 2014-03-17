@@ -20,6 +20,7 @@
 #include <sstream>
 #include <boost/serialization/split_member.hpp>
 #include <protoc/exceptions.hpp>
+#include <protoc/transenc/codes.hpp>
 #include <protoc/transenc/stream_oarchive.hpp>
 #include <protoc/transenc/string.hpp>
 #include <protoc/transenc/vector.hpp>
@@ -28,7 +29,9 @@
 #include <protoc/transenc/optional.hpp>
 #include <protoc/serialization/nvp.hpp>
 
-using namespace protoc;
+using namespace protoc; // FIXME: Remove
+namespace format = protoc::transenc;
+namespace detail = format; // FIXME ::detail;
 
 BOOST_AUTO_TEST_SUITE(transenc_oarchive_suite)
 
@@ -380,7 +383,11 @@ BOOST_AUTO_TEST_CASE(test_vector_bool_empty)
     transenc::stream_oarchive ar(result);
     std::vector<bool> value;
     ar << value;
-    BOOST_REQUIRE_EQUAL(result.str().data(), "\x92\x00\x93");
+
+    char expected[] = { detail::code_array_begin, 0x00, detail::code_array_end };
+    std::string got = result.str();
+    BOOST_REQUIRE_EQUAL_COLLECTIONS(got.begin(), got.end(),
+                                    expected, expected + sizeof(expected));
 }
 
 BOOST_AUTO_TEST_CASE(test_vector_bool_one)
@@ -390,7 +397,11 @@ BOOST_AUTO_TEST_CASE(test_vector_bool_one)
     std::vector<bool> value;
     value.push_back(true);
     ar << value;
-    BOOST_REQUIRE_EQUAL(result.str().data(), "\x92\x01\x81\x93");
+
+    char expected[] = { detail::code_array_begin, 0x01, detail::code_true, detail::code_array_end };
+    std::string got = result.str();
+    BOOST_REQUIRE_EQUAL_COLLECTIONS(got.begin(), got.end(),
+                                    expected, expected + sizeof(expected));
 }
 
 BOOST_AUTO_TEST_CASE(test_vector_bool_two)
