@@ -42,7 +42,7 @@ public:
     virtual size_type write(double);
     virtual size_type write(const char *);
     virtual size_type write(const std::string&);
-    virtual size_type write(const_pointer, size_type);
+    virtual size_type write(const value_type *, size_type);
 
     virtual size_type array_begin();
     virtual size_type array_begin(size_type count);
@@ -132,7 +132,7 @@ inline writer::size_type writer::write(const std::string& value)
     return track(encoder.put(value));
 }
 
-inline writer::size_type writer::write(const_pointer data, size_type size)
+inline writer::size_type writer::write(const value_type *data, size_type size)
 {
     return track(encoder.put(data, size));
 }
