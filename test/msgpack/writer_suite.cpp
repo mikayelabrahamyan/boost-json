@@ -21,11 +21,11 @@ namespace format = protoc::msgpack;
 namespace detail = format::detail;
 
 template<std::size_t N>
-struct test_array : public protoc::output_array<unsigned char, N>
+struct test_array : public protoc::output_array<format::writer::value_type, N>
 {
 };
 
-struct test_vector : public protoc::output_vector<unsigned char>
+struct test_vector : public protoc::output_vector<format::writer::value_type>
 {
 };
 
@@ -151,6 +151,31 @@ BOOST_AUTO_TEST_CASE(test_string_alpha)
     BOOST_REQUIRE_EQUAL(writer.write(text), 6);
 
     format::writer::value_type expected[] = { detail::code_fixstr_5, 0x41, 0x4C, 0x50, 0x48, 0x41 };
+    BOOST_REQUIRE_EQUAL_COLLECTIONS(buffer.begin(), buffer.end(),
+                                    expected, expected + sizeof(expected));
+}
+
+BOOST_AUTO_TEST_CASE(test_binary_empty)
+{
+    test_vector buffer;
+    format::writer writer(buffer);
+    std::vector<format::writer::value_type> data;
+    BOOST_REQUIRE_EQUAL(writer.write(data.data(), data.size()), 2);
+
+    format::writer::value_type expected[] = { detail::code_bin8, 0x00 };
+    BOOST_REQUIRE_EQUAL_COLLECTIONS(buffer.begin(), buffer.end(),
+                                    expected, expected + sizeof(expected));
+}
+
+BOOST_AUTO_TEST_CASE(test_binary_one)
+{
+    test_vector buffer;
+    format::writer writer(buffer);
+    std::vector<format::writer::value_type> data;
+    data.push_back(0x12);
+    BOOST_REQUIRE_EQUAL(writer.write(data.data(), data.size()), 3);
+
+    format::writer::value_type expected[] = { detail::code_bin8, 0x01, 0x12 };
     BOOST_REQUIRE_EQUAL_COLLECTIONS(buffer.begin(), buffer.end(),
                                     expected, expected + sizeof(expected));
 }
