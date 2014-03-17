@@ -87,7 +87,7 @@ BOOST_AUTO_TEST_CASE(test_integer_zero)
 }
 
 //-----------------------------------------------------------------------------
-// Container
+// Array
 //-----------------------------------------------------------------------------
 
 BOOST_AUTO_TEST_CASE(test_array_empty)
@@ -115,6 +115,13 @@ BOOST_AUTO_TEST_CASE(test_array_one)
                                     expected, expected + sizeof(expected));
 }
 
+BOOST_AUTO_TEST_CASE(fail_array_no_count)
+{
+    test_vector buffer;
+    format::writer writer(buffer);
+    BOOST_REQUIRE_THROW(writer.array_begin(), protoc::invalid_value);
+}
+
 BOOST_AUTO_TEST_CASE(fail_array_count_too_small)
 {
     test_vector buffer;
@@ -130,6 +137,69 @@ BOOST_AUTO_TEST_CASE(fail_array_count_too_big)
     BOOST_REQUIRE_EQUAL(writer.array_begin(2), 1);
     BOOST_REQUIRE_EQUAL(writer.write(), 1);
     BOOST_REQUIRE_THROW(writer.array_end(), protoc::invalid_scope);
+}
+
+//-----------------------------------------------------------------------------
+// Map
+//-----------------------------------------------------------------------------
+
+BOOST_AUTO_TEST_CASE(test_map_empty)
+{
+    test_vector buffer;
+    format::writer writer(buffer);
+    BOOST_REQUIRE_EQUAL(writer.map_begin(0), 1);
+    BOOST_REQUIRE_EQUAL(writer.map_end(), 0);
+
+    format::writer::value_type expected[] = { detail::code_fixmap_0 };
+    BOOST_REQUIRE_EQUAL_COLLECTIONS(buffer.begin(), buffer.end(),
+                                    expected, expected + sizeof(expected));
+}
+
+BOOST_AUTO_TEST_CASE(test_map_one)
+{
+    test_vector buffer;
+    format::writer writer(buffer);
+    BOOST_REQUIRE_EQUAL(writer.map_begin(1), 1);
+    BOOST_REQUIRE_EQUAL(writer.write(1), 1);
+    BOOST_REQUIRE_EQUAL(writer.write(2), 1);
+    BOOST_REQUIRE_EQUAL(writer.map_end(), 0);
+
+    format::writer::value_type expected[] = { detail::code_fixmap_1, 0x01, 0x02 };
+    BOOST_REQUIRE_EQUAL_COLLECTIONS(buffer.begin(), buffer.end(),
+                                    expected, expected + sizeof(expected));
+}
+
+BOOST_AUTO_TEST_CASE(fail_map_no_count)
+{
+    test_vector buffer;
+    format::writer writer(buffer);
+    BOOST_REQUIRE_THROW(writer.map_begin(), protoc::invalid_value);
+}
+
+BOOST_AUTO_TEST_CASE(fail_map_count_too_small)
+{
+    test_vector buffer;
+    format::writer writer(buffer);
+    BOOST_REQUIRE_EQUAL(writer.map_begin(0), 1);
+    BOOST_REQUIRE_THROW(writer.write(), protoc::invalid_scope);
+}
+
+BOOST_AUTO_TEST_CASE(fail_map_count_too_big)
+{
+    test_vector buffer;
+    format::writer writer(buffer);
+    BOOST_REQUIRE_EQUAL(writer.map_begin(2), 1);
+    BOOST_REQUIRE_EQUAL(writer.write(), 1);
+    BOOST_REQUIRE_THROW(writer.map_end(), protoc::invalid_scope);
+}
+
+BOOST_AUTO_TEST_CASE(fail_map_count_odd)
+{
+    test_vector buffer;
+    format::writer writer(buffer);
+    BOOST_REQUIRE_EQUAL(writer.map_begin(1), 1);
+    BOOST_REQUIRE_EQUAL(writer.write(), 1);
+    BOOST_REQUIRE_THROW(writer.map_end(), protoc::invalid_scope);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

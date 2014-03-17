@@ -342,6 +342,86 @@ std::size_t encoder::put_array_begin(std::size_t count)
     return 0;
 }
 
+std::size_t encoder::put_map_begin(std::size_t count)
+{
+    switch (count)
+    {
+    case 0:
+        return put_token(code_fixmap_0);
+
+    case 1:
+        return put_token(code_fixmap_1);
+
+    case 2:
+        return put_token(code_fixmap_2);
+
+    case 3:
+        return put_token(code_fixmap_3);
+
+    case 4:
+        return put_token(code_fixmap_4);
+
+    case 5:
+        return put_token(code_fixmap_5);
+
+    case 6:
+        return put_token(code_fixmap_6);
+
+    case 7:
+        return put_token(code_fixmap_7);
+
+    case 8:
+        return put_token(code_fixmap_8);
+
+    case 9:
+        return put_token(code_fixmap_9);
+
+    case 10:
+        return put_token(code_fixmap_10);
+
+    case 11:
+        return put_token(code_fixmap_11);
+
+    case 12:
+        return put_token(code_fixmap_12);
+
+    case 13:
+        return put_token(code_fixmap_13);
+
+    case 14:
+        return put_token(code_fixmap_14);
+
+    case 15:
+        return put_token(code_fixmap_15);
+
+    default:
+        if (count <= 0xFFFF)
+        {
+            const std::size_t size = sizeof(value_type) + sizeof(protoc::uint16_t);
+            if (!buffer.grow(size))
+            {
+                return 0;
+            }
+            buffer.write(code_map16);
+            write(protoc::uint16_t(count));
+            return size;
+        }
+        else
+        {
+            const std::size_t size = sizeof(value_type) + sizeof(protoc::uint32_t);
+            if (!buffer.grow(size))
+            {
+                return 0;
+            }
+            buffer.write(code_map32);
+            write(protoc::uint32_t(count));
+            return size;
+        }
+    }
+
+    return 0;
+}
+
 std::size_t encoder::put_token(value_type value)
 {
     const std::size_t size = sizeof(value);

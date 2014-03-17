@@ -38,8 +38,13 @@ public:
     virtual size_type write(bool);
     virtual size_type write(int);
 
+    virtual size_type array_begin();
     virtual size_type array_begin(size_type count);
     virtual size_type array_end();
+
+    virtual size_type map_begin();
+    virtual size_type map_begin(size_type count);
+    virtual size_type map_end();
 
 private:
     size_type track(size_type);
@@ -96,6 +101,11 @@ inline writer::size_type writer::write(int value)
     return track(encoder.put(value));
 }
 
+inline writer::size_type writer::array_begin()
+{
+    throw invalid_value("Array count must be specified");
+}
+
 inline writer::size_type writer::array_begin(size_type count)
 {
     stack.push(element(protoc::token::token_array_begin, count));
@@ -103,6 +113,32 @@ inline writer::size_type writer::array_begin(size_type count)
 }
 
 inline writer::size_type writer::array_end()
+{
+    assert(!stack.empty());
+    if (stack.empty())
+        throw invalid_scope("Stack empty");
+
+    element& top = stack.top();
+    if (top.count != 0)
+        throw invalid_scope("Writing too few elements");
+
+    stack.pop();
+
+    return 0;
+}
+
+inline writer::size_type writer::map_begin()
+{
+    throw invalid_value("Map count must be specified");
+}
+
+inline writer::size_type writer::map_begin(size_type count)
+{
+    stack.push(element(protoc::token::token_map_begin, 2 * count));
+    return encoder.put_map_begin(count);
+}
+
+inline writer::size_type writer::map_end()
 {
     assert(!stack.empty());
     if (stack.empty())

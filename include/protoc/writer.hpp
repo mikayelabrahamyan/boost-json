@@ -32,8 +32,13 @@ public:
     virtual size_type write(bool) = 0;
     virtual size_type write(int) = 0;
 
+    virtual size_type array_begin() = 0;
     virtual size_type array_begin(size_type count) = 0;
     virtual size_type array_end() = 0;
+
+    virtual size_type map_begin() = 0;
+    virtual size_type map_begin(size_type count) = 0;
+    virtual size_type map_end() = 0;
 };
 
 } // namespace protoc

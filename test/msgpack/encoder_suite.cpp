@@ -582,4 +582,70 @@ BOOST_AUTO_TEST_CASE(test_array_begin_0x10000)
     BOOST_REQUIRE_EQUAL(buffer[4], 0x00);
 }
 
+//-----------------------------------------------------------------------------
+// Map
+//-----------------------------------------------------------------------------
+
+BOOST_AUTO_TEST_CASE(test_map_begin_empty)
+{
+    test_array<1> buffer;
+    format::encoder encoder(buffer);
+    BOOST_REQUIRE_EQUAL(encoder.put_map_begin(0), 1);
+    BOOST_REQUIRE_EQUAL(buffer.size(), 1);
+    BOOST_REQUIRE_EQUAL(buffer[0], format::code_fixmap_0);
+}
+
+BOOST_AUTO_TEST_CASE(test_map_begin_one)
+{
+    test_array<1> buffer;
+    format::encoder encoder(buffer);
+    BOOST_REQUIRE_EQUAL(encoder.put_map_begin(1), 1);
+    BOOST_REQUIRE_EQUAL(buffer.size(), 1);
+    BOOST_REQUIRE_EQUAL(buffer[0], format::code_fixmap_1);
+}
+
+BOOST_AUTO_TEST_CASE(test_map_begin_0x000F)
+{
+    test_array<1> buffer;
+    format::encoder encoder(buffer);
+    BOOST_REQUIRE_EQUAL(encoder.put_map_begin(0x000F), 1);
+    BOOST_REQUIRE_EQUAL(buffer.size(), 1);
+    BOOST_REQUIRE_EQUAL(buffer[0], format::code_fixmap_15);
+}
+
+BOOST_AUTO_TEST_CASE(test_map_begin_0x0010)
+{
+    test_array<3> buffer;
+    format::encoder encoder(buffer);
+    BOOST_REQUIRE_EQUAL(encoder.put_map_begin(0x0010), 3);
+    BOOST_REQUIRE_EQUAL(buffer.size(), 3);
+    BOOST_REQUIRE_EQUAL(buffer[0], format::code_map16);
+    BOOST_REQUIRE_EQUAL(buffer[1], 0x00);
+    BOOST_REQUIRE_EQUAL(buffer[2], 0x10);
+}
+
+BOOST_AUTO_TEST_CASE(test_map_begin_0xFFFF)
+{
+    test_array<3> buffer;
+    format::encoder encoder(buffer);
+    BOOST_REQUIRE_EQUAL(encoder.put_map_begin(0xFFFF), 3);
+    BOOST_REQUIRE_EQUAL(buffer.size(), 3);
+    BOOST_REQUIRE_EQUAL(buffer[0], format::code_map16);
+    BOOST_REQUIRE_EQUAL(buffer[1], 0xFF);
+    BOOST_REQUIRE_EQUAL(buffer[2], 0xFF);
+}
+
+BOOST_AUTO_TEST_CASE(test_map_begin_0x10000)
+{
+    test_array<5> buffer;
+    format::encoder encoder(buffer);
+    BOOST_REQUIRE_EQUAL(encoder.put_map_begin(0x10000), 5);
+    BOOST_REQUIRE_EQUAL(buffer.size(), 5);
+    BOOST_REQUIRE_EQUAL(buffer[0], format::code_map32);
+    BOOST_REQUIRE_EQUAL(buffer[1], 0x00);
+    BOOST_REQUIRE_EQUAL(buffer[2], 0x01);
+    BOOST_REQUIRE_EQUAL(buffer[3], 0x00);
+    BOOST_REQUIRE_EQUAL(buffer[4], 0x00);
+}
+
 BOOST_AUTO_TEST_SUITE_END()

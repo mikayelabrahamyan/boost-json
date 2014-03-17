@@ -45,6 +45,7 @@ public:
     std::size_t put(const unsigned char *, std::size_t);
 
     std::size_t put_array_begin(std::size_t);
+    std::size_t put_map_begin(std::size_t);
 
 private:
     std::size_t put_token(value_type);
