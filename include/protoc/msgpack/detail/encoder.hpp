@@ -28,9 +28,9 @@ class encoder
 {
 public:
     typedef unsigned char value_type;
-    typedef protoc::output<value_type> output;
+    typedef protoc::output<value_type> output_type;
 
-    encoder(output&);
+    encoder(output_type&);
 
     std::size_t put(); // Null
     std::size_t put(bool);
@@ -47,7 +47,8 @@ public:
     std::size_t put_array_begin(std::size_t);
 
 private:
-    std::size_t put_token(output::value_type);
+    std::size_t put_token(value_type);
+
     std::size_t put_int8(protoc::int8_t);
     std::size_t put_uint8(protoc::uint8_t);
     std::size_t put_int16(protoc::int16_t);
@@ -69,7 +70,7 @@ private:
     std::size_t write(protoc::float64_t);
 
 private:
-    output& buffer;
+    output_type& buffer;
 };
 
 } // namespace detail

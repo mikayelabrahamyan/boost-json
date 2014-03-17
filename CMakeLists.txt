@@ -79,6 +79,7 @@ add_executable(protoctest
   test/msgpack/decoder_suite.cpp
   test/msgpack/encoder_suite.cpp
   test/msgpack/reader_suite.cpp
+  test/msgpack/writer_suite.cpp
   test/msgpack/iarchive_suite.cpp
   test/msgpack/oarchive_suite.cpp
   test/transenc/decoder_suite.cpp
