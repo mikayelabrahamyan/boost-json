@@ -15,7 +15,7 @@
 
 #include <boost/archive/detail/common_oarchive.hpp>
 #include <string>
-#include <protoc/msgpack/detail/encoder.hpp>
+#include <protoc/msgpack/writer.hpp>
 
 namespace protoc
 {
@@ -28,7 +28,7 @@ class oarchive
     friend class boost::archive::save_access;
 
 public:
-    oarchive(msgpack::detail::encoder&);
+    oarchive(msgpack::writer&);
 
     void save();
     void save(bool);
@@ -72,7 +72,7 @@ public:
     void save_override(const boost::archive::class_name_type&, int) {}
 
 protected:
-    msgpack::detail::encoder& encoder;
+    msgpack::writer& writer;
 };
 
 } // namespace msgpack
@@ -87,49 +87,49 @@ namespace protoc
 namespace msgpack
 {
 
-inline oarchive::oarchive(msgpack::detail::encoder& encoder)
-    : encoder(encoder)
+inline oarchive::oarchive(msgpack::writer& writer)
+    : writer(writer)
 {
 }
 
 inline void oarchive::save()
 {
-    encoder.put();
+    writer.write();
 }
 
 inline void oarchive::save(bool value)
 {
-    encoder.put(value);
+    writer.write(value);
 }
 
 inline void oarchive::save(int value)
 {
-    encoder.put(value);
+    writer.write(value);
 }
 
 inline void oarchive::save(long long value)
 {
-    encoder.put(value);
+    writer.write(value);
 }
 
 inline void oarchive::save(float value)
 {
-    encoder.put(value);
+    writer.write(value);
 }
 
 inline void oarchive::save(double value)
 {
-    encoder.put(value);
+    writer.write(value);
 }
 
 inline void oarchive::save(const char *value)
 {
-    encoder.put(value);
+    writer.write(value);
 }
 
 inline void oarchive::save(const std::string& value)
 {
-    encoder.put(value);
+    writer.write(value);
 }
 
 } // namespace msgpack

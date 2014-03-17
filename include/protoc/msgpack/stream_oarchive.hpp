@@ -27,12 +27,12 @@ namespace msgpack
 // initialized before oarchive because it is passed as an argument to its
 // constructor
 class stream_oarchive
-    : private boost::base_from_member< protoc::output_stream<msgpack::detail::encoder::value_type> >,
-      private boost::base_from_member<msgpack::detail::encoder>,
+    : private boost::base_from_member< protoc::output_stream<msgpack::writer::value_type> >,
+      private boost::base_from_member<msgpack::writer>,
       public oarchive
 {
-    typedef protoc::output_stream<msgpack::detail::encoder::value_type> member1_type;
-    typedef msgpack::detail::encoder member2_type;
+    typedef protoc::output_stream<msgpack::writer::value_type> member1_type;
+    typedef msgpack::writer member2_type;
     typedef boost::base_from_member<member1_type> base_member1_type;
     typedef boost::base_from_member<member2_type> base_member2_type;
 

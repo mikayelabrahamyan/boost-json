@@ -97,13 +97,23 @@ BOOST_AUTO_TEST_CASE(test_long_zero)
                                     expected, expected + sizeof(expected));
 }
 
+BOOST_AUTO_TEST_CASE(test_float_zero)
+{
+    test_vector buffer;
+    format::writer writer(buffer);
+    BOOST_REQUIRE_EQUAL(writer.write(0.0f), 5);
+
+    format::writer::value_type expected[] = { detail::code_float32, 0x00, 0x00, 0x00, 0x00 };
+    BOOST_REQUIRE_EQUAL_COLLECTIONS(buffer.begin(), buffer.end(),
+                                    expected, expected + sizeof(expected));
+}
+
 BOOST_AUTO_TEST_CASE(test_double_zero)
 {
     test_vector buffer;
     format::writer writer(buffer);
     BOOST_REQUIRE_EQUAL(writer.write(0.0), 9);
 
-    // write(double) ought to select the smallest type, but it currently does not
     format::writer::value_type expected[] = { detail::code_float64, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
     BOOST_REQUIRE_EQUAL_COLLECTIONS(buffer.begin(), buffer.end(),
                                     expected, expected + sizeof(expected));

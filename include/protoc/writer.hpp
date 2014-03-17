@@ -35,6 +35,7 @@ public:
     virtual size_type write(bool) = 0;
     virtual size_type write(int) = 0;
     virtual size_type write(long long) = 0;
+    virtual size_type write(float) = 0;
     virtual size_type write(double) = 0;
     virtual size_type write(const char *) = 0;
     virtual size_type write(const std::string&) = 0;
