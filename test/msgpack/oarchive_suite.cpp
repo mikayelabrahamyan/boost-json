@@ -14,7 +14,9 @@
 
 #include <protoc/msgpack/detail/codes.hpp>
 #include <protoc/msgpack/stream_oarchive.hpp>
+#include <protoc/msgpack/string.hpp>
 #include <protoc/msgpack/vector.hpp>
+#include <protoc/msgpack/map.hpp>
 
 namespace format = protoc::msgpack;
 namespace detail = protoc::msgpack::detail;
@@ -165,7 +167,49 @@ BOOST_AUTO_TEST_CASE(test_vector_bool_empty)
     format::stream_oarchive ar(result);
     std::vector<bool> value;
     ar << value;
+
     char expected[] = { detail::code_fixarray_0 };
+    std::string got = result.str();
+    BOOST_REQUIRE_EQUAL_COLLECTIONS(got.begin(), got.end(),
+                                    expected, expected + sizeof(expected));
+}
+
+BOOST_AUTO_TEST_CASE(test_vector_bool_one)
+{
+    std::ostringstream result;
+    format::stream_oarchive ar(result);
+    std::vector<bool> value;
+    value.push_back(true);
+    ar << value;
+
+    char expected[] = { detail::code_fixarray_1, detail::code_true };
+    std::string got = result.str();
+    BOOST_REQUIRE_EQUAL_COLLECTIONS(got.begin(), got.end(),
+                                    expected, expected + sizeof(expected));
+}
+
+BOOST_AUTO_TEST_CASE(test_map_bool_empty)
+{
+    std::ostringstream result;
+    format::stream_oarchive ar(result);
+    std::map<std::string, bool> value;
+    ar << value;
+
+    char expected[] = { detail::code_fixmap_0 };
+    std::string got = result.str();
+    BOOST_REQUIRE_EQUAL_COLLECTIONS(got.begin(), got.end(),
+                                    expected, expected + sizeof(expected));
+}
+
+BOOST_AUTO_TEST_CASE(test_map_bool_one)
+{
+    std::ostringstream result;
+    format::stream_oarchive ar(result);
+    std::map<std::string, bool> value;
+    value["A"] = true;
+    ar << value;
+
+    char expected[] = { detail::code_fixmap_1, detail::code_fixstr_1, 0x41, detail::code_true };
     std::string got = result.str();
     BOOST_REQUIRE_EQUAL_COLLECTIONS(got.begin(), got.end(),
                                     expected, expected + sizeof(expected));
