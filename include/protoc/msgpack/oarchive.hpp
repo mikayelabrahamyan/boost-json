@@ -132,6 +132,41 @@ inline void oarchive::save(const std::string& value)
     writer.write(value);
 }
 
+inline void oarchive::save(const unsigned char *data, std::size_t size)
+{
+    writer.write(data, size);
+}
+
+inline void oarchive::save_array_begin()
+{
+    writer.array_begin();
+}
+
+inline void oarchive::save_array_begin(std::size_t size)
+{
+    writer.array_begin(size);
+}
+
+inline void oarchive::save_array_end()
+{
+    writer.array_end();
+}
+
+inline void oarchive::save_map_begin()
+{
+    writer.map_begin();
+}
+
+inline void oarchive::save_map_begin(std::size_t size)
+{
+    writer.map_begin(size);
+}
+
+inline void oarchive::save_map_end()
+{
+    writer.map_end();
+}
+
 } // namespace msgpack
 } // namespace protoc
 

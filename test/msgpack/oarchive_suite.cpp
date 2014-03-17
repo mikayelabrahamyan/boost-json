@@ -14,6 +14,7 @@
 
 #include <protoc/msgpack/detail/codes.hpp>
 #include <protoc/msgpack/stream_oarchive.hpp>
+#include <protoc/msgpack/vector.hpp>
 
 namespace format = protoc::msgpack;
 namespace detail = protoc::msgpack::detail;
@@ -121,6 +122,50 @@ BOOST_AUTO_TEST_CASE(test_const_float64_one)
     const protoc::float64_t value = 1.0;
     ar << value;
     char expected[] = { detail::code_float64, 0x3F, 0xF0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
+    std::string got = result.str();
+    BOOST_REQUIRE_EQUAL_COLLECTIONS(got.begin(), got.end(),
+                                    expected, expected + sizeof(expected));
+}
+
+//-----------------------------------------------------------------------------
+// Binary
+//-----------------------------------------------------------------------------
+
+BOOST_AUTO_TEST_CASE(test_binary_empty)
+{
+    std::ostringstream result;
+    format::stream_oarchive ar(result);
+    std::vector<unsigned char> value;
+    ar << value;
+    char expected[] = { detail::code_bin8, 0x00 };
+    std::string got = result.str();
+    BOOST_REQUIRE_EQUAL_COLLECTIONS(got.begin(), got.end(),
+                                    expected, expected + sizeof(expected));
+}
+
+BOOST_AUTO_TEST_CASE(test_binary_one)
+{
+    std::ostringstream result;
+    format::stream_oarchive ar(result);
+    std::vector<unsigned char> value(1, 0xFF);
+    ar << value;
+    char expected[] = { detail::code_bin8, 0x01, 0xFF };
+    std::string got = result.str();
+    BOOST_REQUIRE_EQUAL_COLLECTIONS(got.begin(), got.end(),
+                                    expected, expected + sizeof(expected));
+}
+
+//-----------------------------------------------------------------------------
+// Container
+//-----------------------------------------------------------------------------
+
+BOOST_AUTO_TEST_CASE(test_vector_bool_empty)
+{
+    std::ostringstream result;
+    format::stream_oarchive ar(result);
+    std::vector<bool> value;
+    ar << value;
+    char expected[] = { detail::code_fixarray_0 };
     std::string got = result.str();
     BOOST_REQUIRE_EQUAL_COLLECTIONS(got.begin(), got.end(),
                                     expected, expected + sizeof(expected));
