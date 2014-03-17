@@ -31,6 +31,7 @@ public:
     virtual size_type write() = 0; // Null
     virtual size_type write(bool) = 0;
     virtual size_type write(int) = 0;
+    virtual size_type write(long long) = 0;
 
     virtual size_type array_begin() = 0;
     virtual size_type array_begin(size_type count) = 0;

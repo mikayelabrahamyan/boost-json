@@ -86,6 +86,17 @@ BOOST_AUTO_TEST_CASE(test_integer_zero)
                                     expected, expected + sizeof(expected));
 }
 
+BOOST_AUTO_TEST_CASE(test_long_zero)
+{
+    test_vector buffer;
+    format::writer writer(buffer);
+    BOOST_REQUIRE_EQUAL(writer.write(0LL), 1);
+
+    format::writer::value_type expected[] = { 0x00 };
+    BOOST_REQUIRE_EQUAL_COLLECTIONS(buffer.begin(), buffer.end(),
+                                    expected, expected + sizeof(expected));
+}
+
 //-----------------------------------------------------------------------------
 // Array
 //-----------------------------------------------------------------------------

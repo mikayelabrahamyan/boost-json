@@ -37,6 +37,7 @@ public:
     virtual size_type write(); // Null
     virtual size_type write(bool);
     virtual size_type write(int);
+    virtual size_type write(long long);
 
     virtual size_type array_begin();
     virtual size_type array_begin(size_type count);
@@ -99,6 +100,11 @@ inline writer::size_type writer::write(bool value)
 inline writer::size_type writer::write(int value)
 {
     return track(encoder.put(value));
+}
+
+inline writer::size_type writer::write(long long value)
+{
+    return track(encoder.put(protoc::int64_t(value)));
 }
 
 inline writer::size_type writer::array_begin()
