@@ -42,7 +42,11 @@ BOOST_AUTO_TEST_CASE(test_empty)
 {
     std::ostringstream result;
     format::stream_oarchive ar(result);
-    BOOST_REQUIRE_EQUAL(result.str().data(), "");
+
+    char expected[] = { };
+    std::string got = result.str();
+    BOOST_REQUIRE_EQUAL_COLLECTIONS(got.begin(), got.end(),
+                                    expected, expected + sizeof(expected));
 }
 
 BOOST_AUTO_TEST_CASE(test_false)
@@ -51,7 +55,11 @@ BOOST_AUTO_TEST_CASE(test_false)
     format::stream_oarchive out(result);
     bool value = false;
     out << value;
-    BOOST_REQUIRE_EQUAL(result.str().data(), "\x80");
+
+    char expected[] = { detail::code_false };
+    std::string got = result.str();
+    BOOST_REQUIRE_EQUAL_COLLECTIONS(got.begin(), got.end(),
+                                    expected, expected + sizeof(expected));
 }
 
 BOOST_AUTO_TEST_CASE(test_true)
@@ -60,7 +68,11 @@ BOOST_AUTO_TEST_CASE(test_true)
     format::stream_oarchive ar(result);
     bool value = true;
     ar << value;
-    BOOST_REQUIRE_EQUAL(result.str().data(), "\x81");
+
+    char expected[] = { detail::code_true };
+    std::string got = result.str();
+    BOOST_REQUIRE_EQUAL_COLLECTIONS(got.begin(), got.end(),
+                                    expected, expected + sizeof(expected));
 }
 
 BOOST_AUTO_TEST_CASE(test_const_false)
@@ -69,7 +81,11 @@ BOOST_AUTO_TEST_CASE(test_const_false)
     format::stream_oarchive ar(result);
     const bool value = false;
     ar << value;
-    BOOST_REQUIRE_EQUAL(result.str().data(), "\x80");
+
+    char expected[] = { detail::code_false };
+    std::string got = result.str();
+    BOOST_REQUIRE_EQUAL_COLLECTIONS(got.begin(), got.end(),
+                                    expected, expected + sizeof(expected));
 }
 
 BOOST_AUTO_TEST_CASE(test_const_true)
@@ -78,7 +94,11 @@ BOOST_AUTO_TEST_CASE(test_const_true)
     format::stream_oarchive ar(result);
     const bool value = true;
     ar << value;
-    BOOST_REQUIRE_EQUAL(result.str().data(), "\x81");
+
+    char expected[] = { detail::code_true };
+    std::string got = result.str();
+    BOOST_REQUIRE_EQUAL_COLLECTIONS(got.begin(), got.end(),
+                                    expected, expected + sizeof(expected));
 }
 
 //-----------------------------------------------------------------------------
@@ -91,7 +111,11 @@ BOOST_AUTO_TEST_CASE(test_int_zero)
     format::stream_oarchive ar(result);
     int value = 0;
     ar << value;
-    BOOST_REQUIRE_EQUAL(result.str().data(), "\x00");
+
+    char expected[] = { 0x00 };
+    std::string got = result.str();
+    BOOST_REQUIRE_EQUAL_COLLECTIONS(got.begin(), got.end(),
+                                    expected, expected + sizeof(expected));
 }
 
 BOOST_AUTO_TEST_CASE(test_const_int_zero)
@@ -100,7 +124,11 @@ BOOST_AUTO_TEST_CASE(test_const_int_zero)
     format::stream_oarchive ar(result);
     const int value = 0;
     ar << value;
-    BOOST_REQUIRE_EQUAL(result.str().data(), "\x00");
+
+    char expected[] = { 0x00 };
+    std::string got = result.str();
+    BOOST_REQUIRE_EQUAL_COLLECTIONS(got.begin(), got.end(),
+                                    expected, expected + sizeof(expected));
 }
 
 BOOST_AUTO_TEST_CASE(test_int_one)
@@ -109,7 +137,11 @@ BOOST_AUTO_TEST_CASE(test_int_one)
     format::stream_oarchive ar(result);
     int value = 1;
     ar << value;
-    BOOST_REQUIRE_EQUAL(result.str().data(), "\x01");
+
+    char expected[] = { 0x01 };
+    std::string got = result.str();
+    BOOST_REQUIRE_EQUAL_COLLECTIONS(got.begin(), got.end(),
+                                    expected, expected + sizeof(expected));
 }
 
 BOOST_AUTO_TEST_CASE(test_int_minus_one)
@@ -118,7 +150,11 @@ BOOST_AUTO_TEST_CASE(test_int_minus_one)
     format::stream_oarchive ar(result);
     int value = -1;
     ar << value;
-    BOOST_REQUIRE_EQUAL(result.str().data(), "\xFF");
+
+    char expected[] = { 0xFF };
+    std::string got = result.str();
+    BOOST_REQUIRE_EQUAL_COLLECTIONS(got.begin(), got.end(),
+                                    expected, expected + sizeof(expected));
 }
 
 BOOST_AUTO_TEST_CASE(test_int_minus_128)
@@ -127,7 +163,11 @@ BOOST_AUTO_TEST_CASE(test_int_minus_128)
     format::stream_oarchive ar(result);
     int value = -128;
     ar << value;
-    BOOST_REQUIRE_EQUAL(result.str().data(), "\xA0\x80");
+
+    char expected[] = { detail::code_int8, 0x80 };
+    std::string got = result.str();
+    BOOST_REQUIRE_EQUAL_COLLECTIONS(got.begin(), got.end(),
+                                    expected, expected + sizeof(expected));
 }
 
 BOOST_AUTO_TEST_CASE(test_int16)
@@ -136,7 +176,11 @@ BOOST_AUTO_TEST_CASE(test_int16)
     format::stream_oarchive ar(result);
     int value = 1 << 8;
     ar << value;
-    BOOST_REQUIRE_EQUAL(result.str().data(), "\xB0\x00\x01");
+
+    char expected[] = { detail::code_int16, 0x00, 0x01 };
+    std::string got = result.str();
+    BOOST_REQUIRE_EQUAL_COLLECTIONS(got.begin(), got.end(),
+                                    expected, expected + sizeof(expected));
 }
 
 BOOST_AUTO_TEST_CASE(test_const_int16)
@@ -145,7 +189,11 @@ BOOST_AUTO_TEST_CASE(test_const_int16)
     format::stream_oarchive ar(result);
     const int value = 1 << 8;
     ar << value;
-    BOOST_REQUIRE_EQUAL(result.str().data(), "\xB0\x00\x01");
+
+    char expected[] = { detail::code_int16, 0x00, 0x01 };
+    std::string got = result.str();
+    BOOST_REQUIRE_EQUAL_COLLECTIONS(got.begin(), got.end(),
+                                    expected, expected + sizeof(expected));
 }
 
 BOOST_AUTO_TEST_CASE(test_int32)
@@ -154,7 +202,11 @@ BOOST_AUTO_TEST_CASE(test_int32)
     format::stream_oarchive ar(result);
     int value = 1 << 16;
     ar << value;
-    BOOST_REQUIRE_EQUAL(result.str().data(), "\xC0\x00\x00\x00\x01");
+
+    char expected[] = { detail::code_int32, 0x00, 0x00, 0x01, 0x00 };
+    std::string got = result.str();
+    BOOST_REQUIRE_EQUAL_COLLECTIONS(got.begin(), got.end(),
+                                    expected, expected + sizeof(expected));
 }
 
 BOOST_AUTO_TEST_CASE(test_const_int32)
@@ -163,7 +215,11 @@ BOOST_AUTO_TEST_CASE(test_const_int32)
     format::stream_oarchive ar(result);
     const int value = 1 << 16;
     ar << value;
-    BOOST_REQUIRE_EQUAL(result.str().data(), "\xC0\x00\x00\x00\x01");
+
+    char expected[] = { detail::code_int32, 0x00, 0x00, 0x01, 0x00 };
+    std::string got = result.str();
+    BOOST_REQUIRE_EQUAL_COLLECTIONS(got.begin(), got.end(),
+                                    expected, expected + sizeof(expected));
 }
 
 BOOST_AUTO_TEST_CASE(test_int64)
@@ -172,7 +228,11 @@ BOOST_AUTO_TEST_CASE(test_int64)
     format::stream_oarchive ar(result);
     long long value = 1LL << 32;
     ar << value;
-    BOOST_REQUIRE_EQUAL(result.str().data(), "\xD0\x00\x00\x00\x00\x00\x00\x00\x01");
+
+    char expected[] = { detail::code_int64, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00 };
+    std::string got = result.str();
+    BOOST_REQUIRE_EQUAL_COLLECTIONS(got.begin(), got.end(),
+                                    expected, expected + sizeof(expected));
 }
 
 BOOST_AUTO_TEST_CASE(test_const_int64)
@@ -181,7 +241,11 @@ BOOST_AUTO_TEST_CASE(test_const_int64)
     format::stream_oarchive ar(result);
     const long long value = 1LL << 32;
     ar << value;
-    BOOST_REQUIRE_EQUAL(result.str().data(), "\xD0\x00\x00\x00\x00\x00\x00\x00\x01");
+
+    char expected[] = { detail::code_int64, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00 };
+    std::string got = result.str();
+    BOOST_REQUIRE_EQUAL_COLLECTIONS(got.begin(), got.end(),
+                                    expected, expected + sizeof(expected));
 }
 
 BOOST_AUTO_TEST_CASE(test_int_all_types)
@@ -191,13 +255,17 @@ BOOST_AUTO_TEST_CASE(test_int_all_types)
     int alpha = 1;
     int bravo = 0x0100;
     int charlie = 0x010000;
-    int delta = 0x01000000;
+    long long delta = 0x0100000000LL;
     ar << alpha << bravo << charlie << delta;
-    BOOST_REQUIRE_EQUAL(result.str().data(),
-                        "\x01"
-                        "\xB0\x00\x01"
-                        "\xC0\x00\x01\x00\x00"
-                        "\xD0\x00\x00\x00\x01\x00\x00\x00\x00");
+
+
+    char expected[] = { 0x01,
+                        detail::code_int16, 0x00, 0x01,
+                        detail::code_int32, 0x00, 0x00, 0x01, 0x00,
+                        detail::code_int64, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00 };
+    std::string got = result.str();
+    BOOST_REQUIRE_EQUAL_COLLECTIONS(got.begin(), got.end(),
+                                    expected, expected + sizeof(expected));
 }
 
 //-----------------------------------------------------------------------------
@@ -210,7 +278,11 @@ BOOST_AUTO_TEST_CASE(test_float32_one)
     format::stream_oarchive ar(result);
     protoc::float32_t value = 1.0f;
     ar << value;
-    BOOST_REQUIRE_EQUAL(result.str().data(), "\xC2\x00\x00\x80\x3F");
+
+    char expected[] = { detail::code_float32, 0x00, 0x00, 0x80, 0x3F };
+    std::string got = result.str();
+    BOOST_REQUIRE_EQUAL_COLLECTIONS(got.begin(), got.end(),
+                                    expected, expected + sizeof(expected));
 }
 
 BOOST_AUTO_TEST_CASE(test_const_float32_one)
@@ -219,7 +291,11 @@ BOOST_AUTO_TEST_CASE(test_const_float32_one)
     format::stream_oarchive ar(result);
     const protoc::float32_t value = 1.0f;
     ar << value;
-    BOOST_REQUIRE_EQUAL(result.str().data(), "\xC2\x00\x00\x80\x3F");
+
+    char expected[] = { detail::code_float32, 0x00, 0x00, 0x80, 0x3F };
+    std::string got = result.str();
+    BOOST_REQUIRE_EQUAL_COLLECTIONS(got.begin(), got.end(),
+                                    expected, expected + sizeof(expected));
 }
 
 BOOST_AUTO_TEST_CASE(test_float64_one)
@@ -228,7 +304,11 @@ BOOST_AUTO_TEST_CASE(test_float64_one)
     format::stream_oarchive ar(result);
     protoc::float64_t value = 1.0;
     ar << value;
-    BOOST_REQUIRE_EQUAL(result.str().data(), "\xD2\x00\x00\x00\x00\x00\x00\xF0\x3F");
+
+    char expected[] = { detail::code_float64, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xF0, 0x3F };
+    std::string got = result.str();
+    BOOST_REQUIRE_EQUAL_COLLECTIONS(got.begin(), got.end(),
+                                    expected, expected + sizeof(expected));
 }
 
 BOOST_AUTO_TEST_CASE(test_const_float64_one)
@@ -237,7 +317,11 @@ BOOST_AUTO_TEST_CASE(test_const_float64_one)
     format::stream_oarchive ar(result);
     const protoc::float64_t value = 1.0;
     ar << value;
-    BOOST_REQUIRE_EQUAL(result.str().data(), "\xD2\x00\x00\x00\x00\x00\x00\xF0\x3F");
+
+    char expected[] = { detail::code_float64, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xF0, 0x3F };
+    std::string got = result.str();
+    BOOST_REQUIRE_EQUAL_COLLECTIONS(got.begin(), got.end(),
+                                    expected, expected + sizeof(expected));
 }
 
 //-----------------------------------------------------------------------------
@@ -250,7 +334,11 @@ BOOST_AUTO_TEST_CASE(test_string_empty)
     format::stream_oarchive ar(result);
     std::string value("");
     ar << value;
-    BOOST_REQUIRE_EQUAL(result.str().data(), "\xA9\x00");
+
+    char expected[] = { detail::code_string_int8, 0x00 };
+    std::string got = result.str();
+    BOOST_REQUIRE_EQUAL_COLLECTIONS(got.begin(), got.end(),
+                                    expected, expected + sizeof(expected));
 }
 
 BOOST_AUTO_TEST_CASE(test_const_string_empty)
@@ -259,42 +347,62 @@ BOOST_AUTO_TEST_CASE(test_const_string_empty)
     format::stream_oarchive ar(result);
     const std::string value("");
     ar << value;
-    BOOST_REQUIRE_EQUAL(result.str().data(), "\xA9\x00");
+
+    char expected[] = { detail::code_string_int8, 0x00 };
+    std::string got = result.str();
+    BOOST_REQUIRE_EQUAL_COLLECTIONS(got.begin(), got.end(),
+                                    expected, expected + sizeof(expected));
 }
 
 BOOST_AUTO_TEST_CASE(test_string_a)
 {
     std::ostringstream result;
     format::stream_oarchive ar(result);
-    std::string value("a");
+    std::string value("A");
     ar << value;
-    BOOST_REQUIRE_EQUAL(result.str().data(), "\xA9\x01" "a");
+
+    char expected[] = { detail::code_string_int8, 0x01, 0x41 };
+    std::string got = result.str();
+    BOOST_REQUIRE_EQUAL_COLLECTIONS(got.begin(), got.end(),
+                                    expected, expected + sizeof(expected));
 }
 
 BOOST_AUTO_TEST_CASE(test_string_alpha)
 {
     std::ostringstream result;
     format::stream_oarchive ar(result);
-    std::string value("alpha");
+    std::string value("ALPHA");
     ar << value;
-    BOOST_REQUIRE_EQUAL(result.str().data(), "\xA9\x05" "alpha");
+
+    char expected[] = { detail::code_string_int8, 0x05, 0x41, 0x4C, 0x50, 0x48, 0x41 };
+    std::string got = result.str();
+    BOOST_REQUIRE_EQUAL_COLLECTIONS(got.begin(), got.end(),
+                                    expected, expected + sizeof(expected));
 }
 
 BOOST_AUTO_TEST_CASE(test_literal_alpha)
 {
     std::ostringstream result;
     format::stream_oarchive ar(result);
-    const char *value = "alpha";
+    const char *value = "ALPHA";
     ar << value;
-    BOOST_REQUIRE_EQUAL(result.str().data(), "\xA9\x05" "alpha");
+
+    char expected[] = { detail::code_string_int8, 0x05, 0x41, 0x4C, 0x50, 0x48, 0x41 };
+    std::string got = result.str();
+    BOOST_REQUIRE_EQUAL_COLLECTIONS(got.begin(), got.end(),
+                                    expected, expected + sizeof(expected));
 }
 
 BOOST_AUTO_TEST_CASE(test_literal_alpha_2)
 {
     std::ostringstream result;
     format::stream_oarchive ar(result);
-    ar << "alpha";
-    BOOST_REQUIRE_EQUAL(result.str().data(), "\xA9\x05" "alpha");
+    ar << "ALPHA";
+
+    char expected[] = { detail::code_string_int8, 0x05, 0x41, 0x4C, 0x50, 0x48, 0x41 };
+    std::string got = result.str();
+    BOOST_REQUIRE_EQUAL_COLLECTIONS(got.begin(), got.end(),
+                                    expected, expected + sizeof(expected));
 }
 
 //-----------------------------------------------------------------------------
@@ -307,7 +415,11 @@ BOOST_AUTO_TEST_CASE(test_pair)
     format::stream_oarchive ar(result);
     std::pair<std::string, bool> value("A", true);
     ar << value;
-    BOOST_REQUIRE_EQUAL(result.str().data(), "\x90" "\xA9\x01" "A" "\x81" "\x91");
+
+    char expected[] = { detail::code_record_begin, detail::code_string_int8, 0x01, 0x41, detail::code_true, detail::code_record_end };
+    std::string got = result.str();
+    BOOST_REQUIRE_EQUAL_COLLECTIONS(got.begin(), got.end(),
+                                    expected, expected + sizeof(expected));
 }
 
 BOOST_AUTO_TEST_CASE(test_const_pair)
@@ -316,7 +428,11 @@ BOOST_AUTO_TEST_CASE(test_const_pair)
     format::stream_oarchive ar(result);
     const std::pair<std::string, bool> value("A", true);
     ar << value;
-    BOOST_REQUIRE_EQUAL(result.str().data(), "\x90" "\xA9\x01" "A" "\x81" "\x91");
+
+    char expected[] = { detail::code_record_begin, detail::code_string_int8, 0x01, 0x41, detail::code_true, detail::code_record_end };
+    std::string got = result.str();
+    BOOST_REQUIRE_EQUAL_COLLECTIONS(got.begin(), got.end(),
+                                    expected, expected + sizeof(expected));
 }
 
 //-----------------------------------------------------------------------------
@@ -329,7 +445,11 @@ BOOST_AUTO_TEST_CASE(test_optional)
     format::stream_oarchive ar(result);
     boost::optional<std::string> value("A");
     ar << value;
-    BOOST_REQUIRE_EQUAL(result.str().data(), "\xA9\x01" "A");
+
+    char expected[] = { detail::code_string_int8, 0x01, 0x41 };
+    std::string got = result.str();
+    BOOST_REQUIRE_EQUAL_COLLECTIONS(got.begin(), got.end(),
+                                    expected, expected + sizeof(expected));
 }
 
 BOOST_AUTO_TEST_CASE(test_optional_null)
@@ -338,7 +458,11 @@ BOOST_AUTO_TEST_CASE(test_optional_null)
     format::stream_oarchive ar(result);
     boost::optional<std::string> value;
     ar << value;
-    BOOST_REQUIRE_EQUAL(result.str().data(), "\x82");
+
+    char expected[] = { detail::code_null };
+    std::string got = result.str();
+    BOOST_REQUIRE_EQUAL_COLLECTIONS(got.begin(), got.end(),
+                                    expected, expected + sizeof(expected));
 }
 
 BOOST_AUTO_TEST_CASE(test_const_optional)
@@ -347,7 +471,11 @@ BOOST_AUTO_TEST_CASE(test_const_optional)
     format::stream_oarchive ar(result);
     const boost::optional<std::string> value("A");
     ar << value;
-    BOOST_REQUIRE_EQUAL(result.str().data(), "\xA9\x01" "A");
+
+    char expected[] = { detail::code_string_int8, 0x01, 0x41 };
+    std::string got = result.str();
+    BOOST_REQUIRE_EQUAL_COLLECTIONS(got.begin(), got.end(),
+                                    expected, expected + sizeof(expected));
 }
 
 BOOST_AUTO_TEST_CASE(test_const_optional_null)
@@ -356,7 +484,11 @@ BOOST_AUTO_TEST_CASE(test_const_optional_null)
     format::stream_oarchive ar(result);
     const boost::optional<std::string> value;
     ar << value;
-    BOOST_REQUIRE_EQUAL(result.str().data(), "\x82");
+
+    char expected[] = { detail::code_null };
+    std::string got = result.str();
+    BOOST_REQUIRE_EQUAL_COLLECTIONS(got.begin(), got.end(),
+                                    expected, expected + sizeof(expected));
 }
 
 //-----------------------------------------------------------------------------
@@ -369,7 +501,11 @@ BOOST_AUTO_TEST_CASE(test_nvp)
     format::stream_oarchive out(result);
     bool value = false;
     out << boost::serialization::make_nvp("value", value);
-    BOOST_REQUIRE_EQUAL(result.str().data(), "\x80");
+
+    char expected[] = { detail::code_false };
+    std::string got = result.str();
+    BOOST_REQUIRE_EQUAL_COLLECTIONS(got.begin(), got.end(),
+                                    expected, expected + sizeof(expected));
 }
 
 //-----------------------------------------------------------------------------
@@ -411,7 +547,11 @@ BOOST_AUTO_TEST_CASE(test_vector_bool_two)
     value.push_back(true);
     value.push_back(false);
     ar << value;
-    BOOST_REQUIRE_EQUAL(result.str().data(), "\x92\x02\x81\x80\x93");
+
+    char expected[] = { detail::code_array_begin, 0x02, detail::code_true, detail::code_false, detail::code_array_end };
+    std::string got = result.str();
+    BOOST_REQUIRE_EQUAL_COLLECTIONS(got.begin(), got.end(),
+                                    expected, expected + sizeof(expected));
 }
 
 BOOST_AUTO_TEST_CASE(test_set_int_empty)
@@ -420,7 +560,11 @@ BOOST_AUTO_TEST_CASE(test_set_int_empty)
     format::stream_oarchive ar(result);
     std::set<int> value;
     ar << value;
-    BOOST_REQUIRE_EQUAL(result.str().data(), "\x92\x82\x93");
+
+    char expected[] = { detail::code_array_begin, detail::code_null, detail::code_array_end };
+    std::string got = result.str();
+    BOOST_REQUIRE_EQUAL_COLLECTIONS(got.begin(), got.end(),
+                                    expected, expected + sizeof(expected));
 }
 
 BOOST_AUTO_TEST_CASE(test_set_int_one)
@@ -430,7 +574,11 @@ BOOST_AUTO_TEST_CASE(test_set_int_one)
     std::set<int> value;
     value.insert(1);
     ar << value;
-    BOOST_REQUIRE_EQUAL(result.str().data(), "\x92\x82\x01\x93");
+
+    char expected[] = { detail::code_array_begin, detail::code_null, 0x01, detail::code_array_end };
+    std::string got = result.str();
+    BOOST_REQUIRE_EQUAL_COLLECTIONS(got.begin(), got.end(),
+                                    expected, expected + sizeof(expected));
 }
 
 BOOST_AUTO_TEST_CASE(test_set_int_two)
@@ -441,7 +589,11 @@ BOOST_AUTO_TEST_CASE(test_set_int_two)
     value.insert(1);
     value.insert(2);
     ar << value;
-    BOOST_REQUIRE_EQUAL(result.str().data(), "\x92\x82\x01\x02\x93");
+
+    char expected[] = { detail::code_array_begin, detail::code_null, 0x01, 0x02, detail::code_array_end };
+    std::string got = result.str();
+    BOOST_REQUIRE_EQUAL_COLLECTIONS(got.begin(), got.end(),
+                                    expected, expected + sizeof(expected));
 }
 
 BOOST_AUTO_TEST_CASE(test_map_bool_empty)
@@ -450,7 +602,11 @@ BOOST_AUTO_TEST_CASE(test_map_bool_empty)
     format::stream_oarchive ar(result);
     std::map<std::string, bool> value;
     ar << value;
-    BOOST_REQUIRE_EQUAL(result.str().data(), "\x9C\x82\x9D");
+
+    char expected[] = { detail::code_map_begin, detail::code_null, detail::code_map_end };
+    std::string got = result.str();
+    BOOST_REQUIRE_EQUAL_COLLECTIONS(got.begin(), got.end(),
+                                    expected, expected + sizeof(expected));
 }
 
 BOOST_AUTO_TEST_CASE(test_map_bool_one)
@@ -460,7 +616,11 @@ BOOST_AUTO_TEST_CASE(test_map_bool_one)
     std::map<std::string, bool> value;
     value["A"] = true;
     ar << value;
-    BOOST_REQUIRE_EQUAL(result.str().data(), "\x9C\x82\x90" "\xA9\x01" "A" "\x81" "\x91\x9D");
+
+    char expected[] = { detail::code_map_begin, detail::code_null, detail::code_record_begin, detail::code_string_int8, 0x01, 0x41, detail::code_true, detail::code_record_end, detail::code_map_end };
+    std::string got = result.str();
+    BOOST_REQUIRE_EQUAL_COLLECTIONS(got.begin(), got.end(),
+                                    expected, expected + sizeof(expected));
 }
 
 BOOST_AUTO_TEST_CASE(test_map_bool_two)
@@ -471,7 +631,11 @@ BOOST_AUTO_TEST_CASE(test_map_bool_two)
     value["A"] = true;
     value["B"] = false;
     ar << value;
-    BOOST_REQUIRE_EQUAL(result.str().data(), "\x9C\x82\x90" "\xA9\x01" "A" "\x81" "\x91\x90" "\xA9\x01" "B" "\x80" "\x91\x9D");
+
+    char expected[] = { detail::code_map_begin, detail::code_null, detail::code_record_begin, detail::code_string_int8, 0x01, 0x41, detail::code_true, detail::code_record_end, detail::code_record_begin, detail::code_string_int8, 0x01, 0x42, detail::code_false, detail::code_record_end, detail::code_map_end };
+    std::string got = result.str();
+    BOOST_REQUIRE_EQUAL_COLLECTIONS(got.begin(), got.end(),
+                                    expected, expected + sizeof(expected));
 }
 
 //-----------------------------------------------------------------------------
@@ -547,18 +711,26 @@ BOOST_AUTO_TEST_CASE(test_struct_person)
 {
     std::ostringstream result;
     format::stream_oarchive ar(result);
-    person value("Kant", 127);
+    person value("KANT", 127);
     ar << value;
-    BOOST_REQUIRE_EQUAL(result.str().data(), "\x90" "\xA9\x04" "Kant" "\x7F" "\x91");
+
+    char expected[] = { detail::code_record_begin, detail::code_string_int8, 0x04, 0x4B, 0x41, 0x4E, 0x54, 0x7F, detail::code_record_end };
+    std::string got = result.str();
+    BOOST_REQUIRE_EQUAL_COLLECTIONS(got.begin(), got.end(),
+                                    expected, expected + sizeof(expected));
 }
 
 BOOST_AUTO_TEST_CASE(test_struct_split_person)
 {
     std::ostringstream result;
     format::stream_oarchive ar(result);
-    split_person value("Kant", 127);
+    split_person value("KANT", 127);
     ar << value;
-    BOOST_REQUIRE_EQUAL(result.str().data(), "\x90" "\xA9\x04" "Kant" "\x7F" "\x91");
+
+    char expected[] = { detail::code_record_begin, detail::code_string_int8, 0x04, 0x4B, 0x41, 0x4E, 0x54, 0x7F, detail::code_record_end };
+    std::string got = result.str();
+    BOOST_REQUIRE_EQUAL_COLLECTIONS(got.begin(), got.end(),
+                                    expected, expected + sizeof(expected));
 }
 
 //-----------------------------------------------------------------------------
@@ -571,7 +743,11 @@ BOOST_AUTO_TEST_CASE(test_binary_empty)
     format::stream_oarchive ar(result);
     std::vector<unsigned char> value;
     ar << value;
-    BOOST_REQUIRE_EQUAL(result.str().data(), "\xAB\x00");
+
+    char expected[] = { detail::code_binary_int8, 0x00 };
+    std::string got = result.str();
+    BOOST_REQUIRE_EQUAL_COLLECTIONS(got.begin(), got.end(),
+                                    expected, expected + sizeof(expected));
 }
 
 BOOST_AUTO_TEST_CASE(test_binary_one)
@@ -580,7 +756,11 @@ BOOST_AUTO_TEST_CASE(test_binary_one)
     format::stream_oarchive ar(result);
     std::vector<unsigned char> value(1, 0xFF);
     ar << value;
-    BOOST_REQUIRE_EQUAL(result.str().data(), "\xAB\x01\xFF");
+
+    char expected[] = { detail::code_binary_int8, 0x01, 0xFF };
+    std::string got = result.str();
+    BOOST_REQUIRE_EQUAL_COLLECTIONS(got.begin(), got.end(),
+                                    expected, expected + sizeof(expected));
 }
 
 BOOST_AUTO_TEST_CASE(test_binary_two)
@@ -589,7 +769,11 @@ BOOST_AUTO_TEST_CASE(test_binary_two)
     format::stream_oarchive ar(result);
     std::vector<unsigned char> value(2, 0xFF);
     ar << value;
-    BOOST_REQUIRE_EQUAL(result.str().data(), "\xAB\x02\xFF\xFF");
+
+    char expected[] = { detail::code_binary_int8, 0x02, 0xFF, 0xFF };
+    std::string got = result.str();
+    BOOST_REQUIRE_EQUAL_COLLECTIONS(got.begin(), got.end(),
+                                    expected, expected + sizeof(expected));
 }
 
 BOOST_AUTO_TEST_SUITE_END()
