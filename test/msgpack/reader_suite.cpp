@@ -12,6 +12,7 @@
 
 #include <boost/test/unit_test.hpp>
 
+#include <protoc/exceptions.hpp>
 #include <protoc/msgpack/reader.hpp>
 #include <protoc/msgpack/detail/codes.hpp>
 

@@ -12,6 +12,7 @@
 
 #include <boost/test/unit_test.hpp>
 
+#include <protoc/exceptions.hpp>
 #include <protoc/output_vector.hpp>
 #include <protoc/output_array.hpp>
 #include <protoc/msgpack/writer.hpp>

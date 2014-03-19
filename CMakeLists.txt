@@ -55,8 +55,9 @@ add_library(protoc STATIC
   src/json/decoder.cpp
   src/json/encoder.cpp
   src/msgpack/decoder.cpp
-  src/msgpack/decoder.cpp
   src/msgpack/encoder.cpp
+  src/msgpack/reader.cpp
+  src/msgpack/writer.cpp
   src/transenc/decoder.cpp
   src/transenc/encoder.cpp
   src/ubjson/decoder.cpp
