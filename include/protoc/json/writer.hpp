@@ -150,6 +150,8 @@ inline void writer::write_record_end()
 
 inline void writer::write_map_begin()
 {
+    validate();
+    stack.top().write_separator();
     stack.push(frame(encoder, detail::token_object_end));
     encoder.put_map_begin();
 }

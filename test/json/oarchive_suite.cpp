@@ -22,7 +22,7 @@
 #include <protoc/json/set.hpp>
 #include <protoc/json/map.hpp>
 #include <protoc/json/optional.hpp>
-#include <protoc/serialization/nvp.hpp>
+#include <protoc/json/nvp.hpp>
 
 using namespace protoc;
 
@@ -294,7 +294,7 @@ BOOST_AUTO_TEST_CASE(test_nvp)
     json::stream_oarchive out(result);
     bool value = false;
     out << boost::serialization::make_nvp("value", value);
-    BOOST_REQUIRE_EQUAL(result.str().data(), "false");
+    BOOST_REQUIRE_EQUAL(result.str().data(), "{\"value\":false}");
 }
 //-----------------------------------------------------------------------------
 // Container
@@ -414,7 +414,7 @@ BOOST_AUTO_TEST_CASE(test_array_struct)
     json::stream_oarchive ar(result);
     person value("Kant", 127);
     ar << value;
-    BOOST_REQUIRE_EQUAL(result.str().data(), "[\"Kant\",127]");
+    BOOST_REQUIRE_EQUAL(result.str().data(), "[{\"name\":\"Kant\"},{\"age\":127}]");
 }
 
 BOOST_AUTO_TEST_SUITE_END()
