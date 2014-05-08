@@ -583,36 +583,38 @@ token decoder::next_string()
     ++input; // Skip initial '"'
 
     input_range::const_iterator begin = input.begin();
-    while (!input.empty())
+    input_range::const_iterator last = input.end();
+    input_range::const_iterator first = begin;
+    while (first <= last)
     {
-        const input_range::size_type amount = extra_bytes(*input);
+        const input_range::size_type amount = extra_bytes(*first);
 
         if (amount > 0)
         {
             // Skip UTF-8 characters
 
-            if (input.size() <= amount)
-                return token_error;
+            if ((first - begin) <= amount)
+                goto error;
 
-            ++input;
+            ++first;
 
             for (input_range::size_type i = 0; i < amount; ++i)
             {
                 // Check for 10xxxxxx pattern of subsequent bytes
-                if ((*input & 0xC0) != 0x80)
+                if ((*first & 0xC0) != 0x80)
                     return token_error;
-                ++input;
+                ++first;
             }
         }
         else
         {
-            if (*input == '\\')
+            if (*first == '\\')
             {
                 // Handle escaped character
-                ++input;
-                if (input.empty())
-                    return token_eof;
-                switch (*input)
+                ++first;
+                if (first == last)
+                    goto eof;
+                switch (*first)
                 {
                 case '"':
                 case '\\':
@@ -625,43 +627,62 @@ token decoder::next_string()
                     break;
 
                 case 'u':
-                    ++input;
-                    if (input.empty())
-                        return token_eof;
-                    if (!is_hexdigit(*input))
-                        return token_error;
-                    ++input;
-                    if (input.empty())
-                        return token_eof;
-                    if (!is_hexdigit(*input))
-                        return token_error;
-                    ++input;
-                    if (input.empty())
-                        return token_eof;
-                    if (!is_hexdigit(*input))
-                        return token_error;
-                    ++input;
-                    if (input.empty())
-                        return token_eof;
-                    if (!is_hexdigit(*input))
-                        return token_error;
+                    ++first;
+                    switch (last - first)
+                    {
+                    case 0:
+                        goto eof;
+                    case 1:
+                        if (!is_hexdigit(first[0]))
+                            goto error;
+                        goto eof;
+                    case 2:
+                        if (!is_hexdigit(first[0]))
+                            goto error;
+                        if (!is_hexdigit(first[1]))
+                            goto error;
+                        goto eof;
+                    case 3:
+                        if (!is_hexdigit(first[0]))
+                            goto error;
+                        if (!is_hexdigit(first[1]))
+                            goto error;
+                        if (!is_hexdigit(first[2]))
+                            goto error;
+                        goto eof;
+                    default:
+                        break;
+                    }
+                    if (!is_hexdigit(first[0]))
+                        goto error;
+                    if (!is_hexdigit(first[1]))
+                        goto error;
+                    if (!is_hexdigit(first[2]))
+                        goto error;
+                    if (!is_hexdigit(first[3]))
+                        goto error;
                     break;
 
                 default:
-                    return token_error;
+                    goto error;
                 }
             }
-            else if (*input == '"')
+            else if (*first == '"')
             {
                 // Handle end of string
-                current.range = input_range(begin, input.begin());
-                ++input; // Skip terminating '"'
+                current.range = input_range(begin, first);
+                input += (first - begin) + 1; // Skip terminating '"'
                 return token_string;
             }
-            ++input;
+            ++first;
         }
     }
+ eof:
     return token_eof;
+
+ error:
+    input += (first - begin);
+    return token_error;
 }
 
 void decoder::skip_whitespaces()
