@@ -22,6 +22,7 @@
 #include <protoc/exceptions.hpp>
 #include <protoc/transenc/detail/codes.hpp>
 #include <protoc/transenc/stream_oarchive.hpp>
+#include <protoc/transenc/vector_oarchive.hpp>
 #include <protoc/transenc/string.hpp>
 #include <protoc/transenc/vector.hpp>
 #include <protoc/transenc/set.hpp>
@@ -33,6 +34,23 @@ namespace format = protoc::transenc;
 namespace detail = format::detail;
 
 BOOST_AUTO_TEST_SUITE(transenc_oarchive_suite)
+
+//-----------------------------------------------------------------------------
+// Archive types
+//-----------------------------------------------------------------------------
+
+BOOST_AUTO_TEST_CASE(test_vector_oarchive)
+{
+    std::vector<unsigned char> result;
+    format::vector_oarchive ar(result);
+
+    bool value = false;
+    ar << value;
+
+    unsigned char expected[] = { detail::code_false };
+    BOOST_REQUIRE_EQUAL_COLLECTIONS(result.begin(), result.end(),
+                                    expected, expected + sizeof(expected));
+}
 
 //-----------------------------------------------------------------------------
 // Basic types
@@ -52,9 +70,9 @@ BOOST_AUTO_TEST_CASE(test_empty)
 BOOST_AUTO_TEST_CASE(test_false)
 {
     std::ostringstream result;
-    format::stream_oarchive out(result);
+    format::stream_oarchive ar(result);
     bool value = false;
-    out << value;
+    ar << value;
 
     char expected[] = { detail::code_false };
     std::string got = result.str();
