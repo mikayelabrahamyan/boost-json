@@ -144,12 +144,22 @@ inline writer::size_type writer::write(const value_type *data, size_type size)
 
 inline writer::size_type writer::record_begin()
 {
+    stack.push(element(protoc::token::token_record_begin));
     return encoder.put_record_begin();
 }
 
 inline writer::size_type writer::record_end()
 {
-    return encoder.put_record_end();
+    assert(!stack.empty());
+    if (stack.empty())
+        throw invalid_scope("Stack empty");
+
+    element& top = stack.top();
+    top.verify_end(protoc::token::token_record_begin);
+
+    stack.pop();
+
+    return track(encoder.put_record_end());
 }
 
 inline writer::size_type writer::array_begin()
@@ -175,7 +185,7 @@ inline writer::size_type writer::array_end()
 
     stack.pop();
 
-    return encoder.put_array_end();
+    return track(encoder.put_array_end());
 }
 
 inline writer::size_type writer::map_begin()
@@ -201,7 +211,7 @@ inline writer::size_type writer::map_end()
 
     stack.pop();
 
-    return encoder.put_map_end();
+    return track(encoder.put_map_end());
 }
 
 inline writer::size_type writer::track(size_type size)

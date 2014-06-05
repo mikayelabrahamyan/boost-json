@@ -751,6 +751,19 @@ BOOST_AUTO_TEST_CASE(test_struct_split_person)
                                     expected, expected + sizeof(expected));
 }
 
+BOOST_AUTO_TEST_CASE(test_vector_of_struct_person)
+{
+    std::ostringstream result;
+    format::stream_oarchive ar(result);
+    std::vector<person> persons;
+    persons.push_back(person("KANT", 127));
+    ar << persons;
+
+    char expected[] = { detail::code_array_begin, 0x01, detail::code_record_begin, detail::code_string_int8, 0x04, 0x4B, 0x41, 0x4E, 0x54, 0x7F, detail::code_record_end, detail::code_array_end };
+    std::string got = result.str();
+    BOOST_REQUIRE_EQUAL_COLLECTIONS(got.begin(), got.end(),
+                                    expected, expected + sizeof(expected));
+}
 //-----------------------------------------------------------------------------
 // Binary
 //-----------------------------------------------------------------------------
