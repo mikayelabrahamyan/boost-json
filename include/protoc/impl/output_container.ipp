@@ -49,10 +49,7 @@ void output_container<Value, Container>::write(const value_type *values,
 {
     if (grow(size))
     {
-        for (size_type i = 0; i < size; ++i)
-        {
-            write(values[i]);
-        }
+        buffer.insert(buffer.end(), values, values + size);
     }
 }
 

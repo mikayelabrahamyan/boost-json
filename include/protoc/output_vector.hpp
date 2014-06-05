@@ -50,6 +50,7 @@ private:
     // Implementation of protoc::output interface
     virtual bool grow(size_type delta);
     virtual void write(value_type value);
+    virtual void write(const value_type*, size_type);
 
 private:
     std::vector<value_type> buffer;

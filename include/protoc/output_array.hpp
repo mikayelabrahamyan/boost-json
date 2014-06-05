@@ -83,6 +83,16 @@ private:
         ++current;
     }
 
+    virtual void write(const value_type *values, size_type size)
+    {
+        assert(grow(size));
+        for (size_type i = 0; i < size; ++i)
+        {
+            current[i] = values[i];
+        }
+        current += size;
+    }
+
 private:
     value_type content[N]; // Fixed-size array
     iterator current;

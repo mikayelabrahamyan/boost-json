@@ -52,6 +52,15 @@ private:
         stream << value;
     }
 
+    virtual void write(const value_type *values, size_type size)
+    {
+        for (size_type i = 0; i < size; ++i)
+        {
+            assert(grow(1));
+            write(values[i]);
+        }
+    }
+
 private:
     std::ostream& stream;
 };

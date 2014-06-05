@@ -74,6 +74,16 @@ void output_vector<Value>::write(value_type value)
     buffer.push_back(value);
 }
 
+template <typename Value>
+void output_vector<Value>::write(const value_type *values,
+                                 size_type size)
+{
+    if (grow(size))
+    {
+        buffer.insert(buffer.end(), values, values + size);
+    }
+}
+
 } // namespace protoc
 
 #endif // PROTOC_IMPL_OUTPUT_VECTOR_IPP

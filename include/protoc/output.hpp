@@ -35,6 +35,7 @@ public:
 
     virtual bool grow(size_type) = 0;
     virtual void write(value_type) = 0;
+    virtual void write(const value_type*, size_type) = 0;
 };
 
 }

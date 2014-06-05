@@ -270,10 +270,8 @@ std::size_t encoder::put(const std::string& value)
         return 0;
     }
 
-    for (std::string::const_iterator it = value.begin(); it != value.end(); ++it)
-    {
-        buffer.write(*it);
-    }
+    buffer.write(reinterpret_cast<const value_type *>(value.data()),
+                 value.size());
 
     return sizeof(value_type) + size + length;
 }
@@ -319,10 +317,7 @@ std::size_t encoder::put(const unsigned char * value, std::size_t length)
         size = write(static_cast<int64_t>(length));
     }
 
-    for (std::size_t i = 0; i < length; ++i)
-    {
-        buffer.write(value[i]);
-    }
+    buffer.write(value, length);
 
     return sizeof(value_type) + size + length;
 }
