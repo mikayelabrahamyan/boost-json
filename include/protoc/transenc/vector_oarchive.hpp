@@ -15,6 +15,7 @@
 
 #include <vector>
 #include <boost/ref.hpp>
+#include <boost/utility/base_from_member.hpp>
 #include <protoc/output_container.hpp>
 #include <protoc/transenc/writer.hpp>
 #include <protoc/transenc/oarchive.hpp>
