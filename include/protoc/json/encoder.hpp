@@ -38,7 +38,7 @@ public:
 
     std::size_t put(); // Null
     std::size_t put(bool);
-    std::size_t put(int);
+    std::size_t put(protoc::int32_t);
     std::size_t put(protoc::int64_t);
     std::size_t put(protoc::float32_t);
     std::size_t put(protoc::float64_t);

@@ -58,7 +58,7 @@ std::size_t encoder::put(bool value)
     }
 }
 
-std::size_t encoder::put(int value)
+std::size_t encoder::put(protoc::int32_t value)
 {
     std::string work = boost::lexical_cast<std::string>(value);
     const std::string::size_type size = work.size();
