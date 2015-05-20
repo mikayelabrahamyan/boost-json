@@ -46,7 +46,7 @@ std::size_t encoder::put(bool value)
     return put_token((value) ? code_true : code_false);
 }
 
-std::size_t encoder::put(int value)
+std::size_t encoder::put(protoc::int32_t value)
 {
     if ((value <= std::numeric_limits<protoc::int8_t>::max()) &&
         (value >= std::numeric_limits<protoc::int8_t>::min()))
