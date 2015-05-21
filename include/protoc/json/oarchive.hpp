@@ -80,6 +80,8 @@ protected:
 
 BOOST_SERIALIZATION_REGISTER_ARCHIVE(protoc::json::oarchive);
 
+#include <protoc/types.hpp>
+
 namespace protoc
 {
 namespace json
@@ -107,7 +109,7 @@ inline void oarchive::save(int value)
 
 inline void oarchive::save(long long value)
 {
-    writer.write(value);
+    writer.write(static_cast<protoc::int64_t>(value));
 }
 
 inline void oarchive::save(float value)
