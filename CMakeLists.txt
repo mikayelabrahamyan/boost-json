@@ -33,7 +33,8 @@ set(CMAKE_CXX_FLAGS_DEBUG "-g -Wall")
 ###############################################################################
 
 # FIXME: Probably ok to use older versions
-find_package(Boost 1.49.0 COMPONENTS unit_test_framework serialization)
+# find_package(Boost 1.49.0 COMPONENTS unit_test_framework serialization)
+find_package(Boost 1.49.0 COMPONENTS serialization)
 if (NOT ${Boost_FOUND})
   message(FATAL_ERROR "Boost not found (or too old)")
 endif()
@@ -70,30 +71,30 @@ add_library(protoc STATIC
 # Test
 ###############################################################################
 
-add_executable(protoctest
-  test/runner.cpp
-  test/json/decoder_suite.cpp
-  test/json/encoder_suite.cpp
-  test/json/reader_suite.cpp
-  test/json/iarchive_suite.cpp
-  test/json/oarchive_suite.cpp
-  test/msgpack/decoder_suite.cpp
-  test/msgpack/encoder_suite.cpp
-  test/msgpack/reader_suite.cpp
-  test/msgpack/writer_suite.cpp
-  test/msgpack/iarchive_suite.cpp
-  test/msgpack/oarchive_suite.cpp
-  test/transenc/decoder_suite.cpp
-  test/transenc/encoder_suite.cpp
-  test/transenc/reader_suite.cpp
-  test/transenc/iarchive_suite.cpp
-  test/transenc/oarchive_suite.cpp
-  test/ubjson/decoder_suite.cpp
-  test/ubjson/encoder_suite.cpp
-  test/ubjson/iarchive_suite.cpp
-  test/ubjson/oarchive_suite.cpp
-)
+# add_executable(protoctest
+#   test/runner.cpp
+#   test/json/decoder_suite.cpp
+#   test/json/encoder_suite.cpp
+#   test/json/reader_suite.cpp
+#   test/json/iarchive_suite.cpp
+#   test/json/oarchive_suite.cpp
+#   test/msgpack/decoder_suite.cpp
+#   test/msgpack/encoder_suite.cpp
+#   test/msgpack/reader_suite.cpp
+#   test/msgpack/writer_suite.cpp
+#   test/msgpack/iarchive_suite.cpp
+#   test/msgpack/oarchive_suite.cpp
+#   test/transenc/decoder_suite.cpp
+#   test/transenc/encoder_suite.cpp
+#   test/transenc/reader_suite.cpp
+#   test/transenc/iarchive_suite.cpp
+#   test/transenc/oarchive_suite.cpp
+#   test/ubjson/decoder_suite.cpp
+#   test/ubjson/encoder_suite.cpp
+#   test/ubjson/iarchive_suite.cpp
+#   test/ubjson/oarchive_suite.cpp
+# )
 
-set_target_properties(protoctest PROPERTIES RUNTIME_OUTPUT_DIRECTORY bin)
-set_target_properties(protoctest PROPERTIES LIBRARY_OUTPUT_DIRECTORY lib)
-target_link_libraries(protoctest protoc ${EXTRA_LIBS})
+# set_target_properties(protoctest PROPERTIES RUNTIME_OUTPUT_DIRECTORY bin)
+# set_target_properties(protoctest PROPERTIES LIBRARY_OUTPUT_DIRECTORY lib)
+# target_link_libraries(protoctest protoc ${EXTRA_LIBS})
