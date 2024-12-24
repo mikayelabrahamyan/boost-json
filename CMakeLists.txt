@@ -23,7 +23,7 @@
 cmake_minimum_required(VERSION 2.8)
 project(protoc)
 
-set(CMAKE_CXX_FLAGS_DEBUG "-g -Wall")
+# set(CMAKE_CXX_FLAGS_DEBUG "-g -Wall")
 #add_definitions(-fmax-errors=1) # gcc
 #add_definitions(-ferror-limit=1) # clang
 #add_definitions(-ftemplate-backtrace-limit=0) # noisy clang
